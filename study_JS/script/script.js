@@ -27,11 +27,11 @@ var camelCase = 20; // В JavaScript привыкли писать типо came
 alert('Lets begin');
 console.log("lesson01");
 
-  let money = 10000;
+  let money = 1000;
   let income = 5000;
   let addExpenses = 700;
   let deposit = 300;
-  let misson = 90000;
+  let misson = 10000;
   let period = 5;
 
 console.log("Variable:", money, income, addExpenses, deposit, misson, period);
