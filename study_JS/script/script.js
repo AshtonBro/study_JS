@@ -31,7 +31,7 @@ console.log("lesson01");
   let income = 5000;
   let addExpenses = 700;
   let deposit = 300;
-  let misson = 10000;
+  let misson = 50000;
   let period = 5;
 
 console.log("Variable:", money, income, addExpenses, deposit, misson, period);
