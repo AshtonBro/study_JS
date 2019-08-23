@@ -1,8 +1,26 @@
 
+ 
+ let money  = 1356; 
+ let income  = 'js-developer'; 
+ let addExpenses = 'RentHouse, Petrol, Car, Education'; 
+ let deposit  = true;
+ let mission  = 100000;
+ let period  = 11; 
+ 
+console.log('Доход за месяц:', money);
+console.log('Дополнительный доход:', income);
+console.log(deposit);
 
+console.log('Количество символов:', income.length);
 
+console.log('Период месяцев:', period + '\n' + 'Цель заработать:', + mission, '$');
 
+console.log(addExpenses.toLowerCase());
+console.log(addExpenses.split());
 
+let budgetDay;
+console.log('Дневной бюджет:', money / 30);
+console.log('Остаток от деления:', money % 30);
 
 // СТРОКИ //
 
