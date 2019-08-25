@@ -1,0 +1,122 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+}
+*{
+    box-sizing: border-box;
+}
+.product-block {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    display: flex;
+    width: 1366px;
+    height: 682px;
+    background-color: #ffffff;
+    transform: translate(-50%,-50%);
+    border: 1px solid #dbd6d6;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.product {
+    display: flex;
+    width: 255px;
+    height: 470px;
+    box-shadow: 0 3px 15px rgba(34, 34, 34, 0.25);
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: "Open Sans";
+}
+.description_first_column {
+width: 176px;
+height: 53px;
+color: #508e00;
+font-size: 15px;
+font-weight: 700;
+line-height: 19px;
+}
+.description {
+    color: #111111;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 700;
+    line-height: 19px;  
+}
+
+.star-block {
+    margin: 0 auto;
+    outline: 1px solid green;
+    width: 180px;
+   display: flex;
+   justify-content: space-between;
+}
+
+.stars {
+    align-items: center;
+    display: flex;
+    padding: 0;
+    outline: 1px solid red;
+    width: 68px;
+}
+.star {
+    display: block;
+    width: 12px;
+    height: 12px;
+}
+.vnalichii {
+    display: flex;
+    align-items: center;
+    width: 100px;
+    outline: 1px solid blue;
+}
+.check {
+    margin-right: 5px;
+    display: block;
+}
+.text {
+    display: block;
+}
+.first-price {
+    width: 100px;
+    height: 15px;
+    text-decoration: line-through;
+    opacity: 0.7;
+    color: #202020;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+.second-price {
+    height: 19px;
+    color: #111111;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 20px;
+    width: 143px;
+}
+.saving {
+    width: 133px;
+    height: 15px;
+    color: #000000;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.star_second_item {
+width: 61px;
+height: 10px;
+color: #202020;
+font-family: "Open Sans";
+font-size: 12px;
+font-weight: 400;
+}
+.star-block {
+flex-direction: row;
+align-self: center;
+}
