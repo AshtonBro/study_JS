@@ -26,6 +26,7 @@ for (let i = 1; i <= Stepen; i++) {
 //Вывести первые две цифры результата возведения в степень
 console.log('Вывести первые две цифры: ',Result.toString().substring(0, 2));
 
+//Вывод общего результат
 console.log(arrNum);
 console.log('Производная числа: ', arrSave);
 console.log('Должно быть: ', numMustBe);
