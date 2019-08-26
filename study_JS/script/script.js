@@ -45,7 +45,7 @@ switch (budgetDay) {
 if (budgetDay >= 800) {
   console.log('Высокий уровень дохода');
 
-} else if (budgetDay >= 300) {
+} else if (budgetDay >= 300 && budgetDay < 300) {
   console.log('Средний уровень дохода');
 
 } else if (budgetDay >= 0) {
