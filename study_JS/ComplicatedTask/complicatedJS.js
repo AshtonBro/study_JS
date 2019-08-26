@@ -59,11 +59,8 @@ function showWeekDaysLang2DArray() {
   console.log('Многомерный массив',Array2d[document.getElementById("langType").selectedIndex][1]);
 }
 
-
-
-
 let newPeron = prompt('Введите ваше имя:');
 let result = (newPeron == "Артём") ? 'директор' :
  (newPeron == "Максим") ? 'преподаватель' : 'студент' ;
-console.log('Кто ты: ', result);
-
+console.log('Ваше имя:', newPeron);
+console.log('Должность:', result);
