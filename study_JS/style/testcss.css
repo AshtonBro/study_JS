@@ -4,10 +4,13 @@ body{
     margin-top: 50px;
     color: rgb(162, 179, 138);
     font-family: 'Courier New', Courier, monospace;
-    
 }
 .text{
     font-family: 'Courier New', Courier, monospace;
-    font-size: 15px;
-    color: rgb(206, 22, 206);
+    font-size: 20px;
+    color: rgb(75, 33, 75);
+}
+.choose{
+    font-size: 30px;
+    border: 1px solid red;
 }
