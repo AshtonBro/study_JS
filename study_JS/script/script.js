@@ -1,6 +1,172 @@
 'use strict';
 
-let money = +prompt('Ваш месячный доход'); 
+let money = +prompt('Ваш месячный доход', 5000); 
+let income = 'js-developer'; 
+let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую', 'Машина, Дома').split(" ");
+console.log('addExpenses в виде массива: ', addExpenses);
+
+let deposit = confirm('Есть ли у вас депозит в банке?');
+
+let showTypeOf = function(data){
+  console.log(data, typeof(data));
+};
+
+
+showTypeOf(money);
+showTypeOf(income);
+showTypeOf(deposit);
+
+
+
+let expensesMonth = prompt('Какие обязательные ежемесячные расходы у вас есть?');
+console.log('Обязательные ежемесячные расходы:', expensesMonth);
+let walletDamage = +prompt('Во сколько это обойдется ?');
+console.log('Обходится:', walletDamage, '$');
+let expensesMonth2 = prompt('Какие ещё обязательные ежемесячные расходы у вас есть?');
+console.log('Обязательные ежемесячные расходы:', expensesMonth2);
+let walletDamage2 = +prompt('Во сколько это обойдется ?');
+console.log('Обходится:', walletDamage2, '$');
+let budgetMonth = money - (walletDamage + walletDamage2);
+console.log('Доход за месяц составляет', budgetMonth, '$');
+let mission  = 100000;
+console.log('Цель: ', mission, '$');
+let periоd = mission / budgetMonth; 
+console.log('За сколько месяцев будет достигнута цель:', periоd);
+console.log('Количесвтво месяцев округляя в большую сторону:', Math.ceil(periоd));
+let budgetDay = budgetMonth / 30;
+console.log('Дневной бюджет:', budgetDay);
+console.log('Дневной бюджет округлив в меньшую сторону:', Math.floor(budgetDay));
+
+switch (budgetDay) {
+  case 800:
+    console.log('switch:', 'Высокий уровень дохода');
+    break;
+  case 300:
+    console.log('switch:', 'Средний уровень дохода');
+    break;
+  case 0:
+    console.log('switch:', 'Низкий уровень дохода');
+    break;
+}
+
+
+// let showTypeOf = function(data){
+//   console.log(data, typeof(data));
+// };
+
+// let getStatusIncome = function(){
+//   if (budgetDay >= 800) {
+//     return('Высокий уровень дохода');
+  
+//   } else if (budgetDay >= 300 && budgetDay < 300) {
+//     return('Средний уровень дохода');
+  
+//   } else if (budgetDay >= 0) {
+//     return('Низкий уровень дохода');
+  
+//   } else if (budgetDay < -budgetDay) {
+//     return('Что-то пошло не так');
+  
+//   } else {
+//     return('Некорректный ввод');
+//   }
+// };
+// console.log(getStatusIncome());
+
+
+
+
+// ФУНКЦИИ //
+
+/* Такое создание функици называеться Function decloration 
+// Таким методом можно вызвать функцию до её обьявления. в случае с let var и  function - javaScript проходит по
+//коду и обнаруживает вспывающие переменные и функции.Которые написаны в теле программы. интерпритаро 
+//заносит функцию и переменные в память и будто всё это находиться в 0 строчке которую не видим.
+outputMessage();  //Так вызываеться функция, обязательно оставил круглые скобки()
+                              // В круглых скобка заводяться параметры
+function outputMessage() {   // Обьявляем функцию. Имя должно быть глаголом т.к. явл тем действием которое оно делает 
+console.log('Hello Glo Academy');
+}
+
+
+// Второй метод это function difination expretion
+//  функциональное выражение 
+// Обьявленную таким образом функцию можно вызвать только после её обьявления
+const consoelMessage = function(){  // создаём переменную и вызываем функцию которая в { } выполняет своё действие 
+   console.log('hellо friend');
+};
+consoelMessage();
+
+// Также функицю можно вызвать с помощью конструктора
+const alertMessage = new Function('alert("HI!")');   // Функция с большой буквы
+alertMessage();
+
+// В функции должно быть одно дейсвие. */
+
+/*
+function outputMessage(name, age) { // В круглых скобках передаём параметр функции
+console.log('Hello ' + name);  // переменную можем использовать внутри  и видна она только внутри нашей функции
+console.log('My age: ' + age); 
+}
+outputMessage('Max', 18); //в нашу функицю можно передать данные, их называют аргументами
+
+let result = 0;
+const sum = function(a, b){ // таким способом мы можем вывести результат из функции, 
+  // если переменна result была создана в самой функции то вывести наружу у нас не получилось
+  result = a + b;
+};
+sum(3, 5);
+console.log('result: ', result);
+*/
+
+// Чистая функция - полностью изолирована от кода, нично на неё не может повлият и она сама кроме входных данных
+
+/*
+const sum = function(a, b){
+  return a + b; // чтобы вернуть значение используем операто return мы можем передать множество аргументов
+};
+                // Функция умеет возвращать какойто значение на своё место, 
+let result = sum(3, 5, 6, 7, 7, 4, 25); // тоесть туда где она была вызвана и мы можем присвоить её в переменную
+console.log('result: ', result); // Результат 8, потому что в параметрах функции указано только а и б
+//но что бы просмотреть все переданные аргументы
+// Для этого существуте псевдо массив arguments
+
+const sum2 = function(c, d){
+  console.log(arguments);
+  return c + d; // чтобы вернуть значение используем операто return мы можем передать множество аргументов
+};
+                // Функция умеет возвращать какойто значение на своё место, 
+let res = sum2(3, 5, 6, 7, 7, 4, 25); // тоесть туда где она была вызвана и мы можем присвоить её в переменную
+console.log('res: ', res); */
+
+/* 
+const sum = function(a, b){
+  console.log(a); //3
+  console.log(b); // undefined
+  return a + b;
+};
+
+let result = sum(3);
+console.log('result: ', result);*/
+
+/* 
+const sum = function(a, b){
+  if (!a){ // Для выражения a, унарное выражение !a эквивалентно выражению (a == 0), 
+    a = 0; //за исключением случаев, когда используются перегруженные операторы.
+  }
+  if (!b){
+    b = 0;
+  }
+  return a + b; //функция всегда что-то должна возвращать
+
+  console.log('hi'); // Не работает потому return останавливает код после его исползования
+};
+
+let result = sum(3); // result 3 потому что 3 + 0 = 3
+console.log('result: ', result);
+*/
+
+/* let money = +prompt('Ваш месячный доход'); 
 let income = 'js-developer'; 
 let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую').split(" ");
 console.log('addExpenses в виде массива: ', addExpenses);
@@ -57,19 +223,7 @@ if (budgetDay >= 800) {
 } else {
   console.log('Некорректный ввод');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 
 
 
