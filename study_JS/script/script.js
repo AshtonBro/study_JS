@@ -1,77 +1,74 @@
 'use strict';
 
-let money = +prompt('Ваш месячный доход', 5000); 
-let income = 'js-developer'; 
-let addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую', 'Машина, Дома').split(" ");
-console.log('addExpenses в виде массива: ', addExpenses);
-
+let money = +prompt('Каковы твои доходы?', 4000);
+let income = 'js-developer';
 let deposit = confirm('Есть ли у вас депозит в банке?');
+let expensesMonth = prompt('Какие обязательные ежемесячные расходы у вас есть?', 'Кватира, Кошка');
+let walletDamage = +prompt('Во сколько это обойдется ?', 37);
+let expensesMonth2 = prompt('Какие ещё обязательные ежемесячные расходы у вас есть?', 'Бензин');
+let walletDamage2 = +prompt('Во сколько это обойдется ?', 45);
+
+
+// Создаём функцию getExpensesMonth
+const getExpensesMonth = function (firstNum, secondNum) {
+  let sum = firstNum + secondNum;
+  return sum;
+};
+// Вызываем
+let ExpensesMonth = getExpensesMonth(walletDamage, walletDamage2);
+
+// Создаём функцию getAccumulatedMonth
+function getAccumulatedMonth(firstNum, secondNum) {
+ let saveMoney = firstNum - secondNum;
+ return saveMoney;
+}
+// Вызываем и выводим и сохраняем
+let accumulatedMonth = getAccumulatedMonth(money, ExpensesMonth);
+console.log('Накопления за месяц: ', accumulatedMonth, '$');
+
+
+//Cоздаём функцию getTargetMonth с функцией callback
+let mission  = 50000;
+const getTargetMonth = function(firstNum, secondNum, callback) {
+callback(firstNum, secondNum);
+};
+
+getTargetMonth(mission, accumulatedMonth, function(firstNum, secondNum){
+console.log('Cрок достижения цели в месяцах: ', Math.floor(firstNum / secondNum));
+});
+
+function budgetDay(firstNum, secondNum) {
+  return firstNum / secondNum;
+}
+
+let sumBD = budgetDay(accumulatedMonth, 30);
 
 let showTypeOf = function(data){
   console.log(data, typeof(data));
 };
 
-
 showTypeOf(money);
 showTypeOf(income);
 showTypeOf(deposit);
 
-
-
-let expensesMonth = prompt('Какие обязательные ежемесячные расходы у вас есть?');
-console.log('Обязательные ежемесячные расходы:', expensesMonth);
-let walletDamage = +prompt('Во сколько это обойдется ?');
-console.log('Обходится:', walletDamage, '$');
-let expensesMonth2 = prompt('Какие ещё обязательные ежемесячные расходы у вас есть?');
-console.log('Обязательные ежемесячные расходы:', expensesMonth2);
-let walletDamage2 = +prompt('Во сколько это обойдется ?');
-console.log('Обходится:', walletDamage2, '$');
-let budgetMonth = money - (walletDamage + walletDamage2);
-console.log('Доход за месяц составляет', budgetMonth, '$');
-let mission  = 100000;
-console.log('Цель: ', mission, '$');
-let periоd = mission / budgetMonth; 
-console.log('За сколько месяцев будет достигнута цель:', periоd);
-console.log('Количесвтво месяцев округляя в большую сторону:', Math.ceil(periоd));
-let budgetDay = budgetMonth / 30;
-console.log('Дневной бюджет:', budgetDay);
-console.log('Дневной бюджет округлив в меньшую сторону:', Math.floor(budgetDay));
-
-switch (budgetDay) {
-  case 800:
-    console.log('switch:', 'Высокий уровень дохода');
-    break;
-  case 300:
-    console.log('switch:', 'Средний уровень дохода');
-    break;
-  case 0:
-    console.log('switch:', 'Низкий уровень дохода');
-    break;
-}
-
-
-// let showTypeOf = function(data){
-//   console.log(data, typeof(data));
-// };
-
-// let getStatusIncome = function(){
-//   if (budgetDay >= 800) {
-//     return('Высокий уровень дохода');
+let getStatusIncome = function(){
+  if (sumBD >= 800) {
+    return('Высокий уровень дохода');
   
-//   } else if (budgetDay >= 300 && budgetDay < 300) {
-//     return('Средний уровень дохода');
+  } else if (sumBD >= 300 && sumBD < 300) {
+    return('Средний уровень дохода');
   
-//   } else if (budgetDay >= 0) {
-//     return('Низкий уровень дохода');
+  } else if (sumBD >= 0) {
+    return('Низкий уровень дохода');
   
-//   } else if (budgetDay < -budgetDay) {
-//     return('Что-то пошло не так');
+  } else if (sumBD < -sumBD) {
+    return('Что-то пошло не так');
   
-//   } else {
-//     return('Некорректный ввод');
-//   }
-// };
-// console.log(getStatusIncome());
+  } else {
+    return('Некорректный ввод');
+  }
+};
+console.log(getStatusIncome());
 
 
 
