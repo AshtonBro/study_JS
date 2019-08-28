@@ -1,21 +1,51 @@
 'use strict';
 
-let money = +prompt('Каковы твои доходы?', 4000);
+let money;
 let income = 'js-developer';
 let deposit = confirm('Есть ли у вас депозит в банке?');
-let expensesMonth = prompt('Какие обязательные ежемесячные расходы у вас есть?', 'Кватира, Кошка');
-let walletDamage = +prompt('Во сколько это обойдется ?', 37);
-let expensesMonth2 = prompt('Какие ещё обязательные ежемесячные расходы у вас есть?', 'Бензин');
-let walletDamage2 = +prompt('Во сколько это обойдется ?', 45);
+
+let start = function() {
+  do {
+    money = prompt('Каковы твои доходы?', 50000);
+  }
+  while(isNaN(money) || money === '' || money === null || money.includes(' ')); // добавил проверку на пробелы
+};
+start();
+
+
+let expensesMonth,
+    expensesMonth2;
 
 
 // Создаём функцию getExpensesMonth
-const getExpensesMonth = function (firstNum, secondNum) {
-  let sum = firstNum + secondNum;
+const getExpensesMonth = function () {
+
+  let sum = 0;
+  let checkSum;
+
+for (let i = 0; i < 2; i++) {
+    
+  if (i === 0) {
+      expensesMonth = prompt('Введите обязательную статью разходов', 'Кошка');
+    }
+    if (i === 1) {
+      expensesMonth2 = prompt('Введите обязательную статью разходов', 'Квартплата');
+    }
+ 
+    do { 
+      checkSum = +prompt('Во сколько это обойдется ?', 2500);
+    } while(isNaN(checkSum) || checkSum === 0 || checkSum === null); 
+
+  sum += checkSum;
+}
   return sum;
 };
+
+
 // Вызываем
-let ExpensesMonth = getExpensesMonth(walletDamage, walletDamage2);
+let ExpensesMonth = getExpensesMonth();
+console.log('Расходы за месяц: ', ExpensesMonth);
+
 
 // Создаём функцию getAccumulatedMonth
 function getAccumulatedMonth(firstNum, secondNum) {
@@ -24,16 +54,22 @@ function getAccumulatedMonth(firstNum, secondNum) {
 }
 // Вызываем и выводим и сохраняем
 let accumulatedMonth = getAccumulatedMonth(money, ExpensesMonth);
-console.log('Накопления за месяц: ', accumulatedMonth, '$');
+console.log('Накопления за месяц: ', accumulatedMonth);
 
 
 //Cоздаём функцию getTargetMonth с функцией callback
-let mission  = 50000;
+let mission  = 500000;
 const getTargetMonth = function(firstNum, secondNum, callback) {
+  if (typeof firstNum === 'number' && typeof secondNum === 'number'){
 callback(firstNum, secondNum);
+}
 };
 getTargetMonth(mission, accumulatedMonth, function(firstNum, secondNum){
-console.log('Cрок достижения цели в месяцах: ', Math.floor(firstNum / secondNum));
+  let Target = firstNum / secondNum;
+  if (Target < -Target) {
+    console.log('Цель не будет достигнута: ', Math.floor(Target));
+  }
+console.log('Cрок достижения цели в месяцах: ', Math.floor(Target));
 });
 
 function budgetDay(firstNum, secondNum) {
@@ -41,6 +77,7 @@ function budgetDay(firstNum, secondNum) {
 }
 
 let sumBD = budgetDay(accumulatedMonth, 30);
+console.log('sumBD: ', sumBD);
 
 let showTypeOf = function(data){
   console.log(data, typeof(data));
@@ -67,6 +104,128 @@ let getStatusIncome = function(){
   }
 };
 console.log(getStatusIncome());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ВСЁ О ЦИКЛАХ //
+
+// Циклческие операторы
+
+// Циклы имеют условия и выполняються пока эти условия являються истиной
+// Первый способ это While
+
+// let n = 0;
+
+// while(n < 5) { //Делай пока n меньше 5 
+//   console.log(n);
+//   n++; // но чтобы цикл не выполнялся бесконечно, будем увеличивать n на один каждую этерацию цикла на один
+// }
+
+// Второй способ это Do While
+// Если while выполняет условия пока условия являются истиной, то Do While в любом случае один 
+// раз исполнит итерацию цикла а потом только проверит т.е.
+// (Do)Сделай что-то а потом проверь (while)
+
+// do {
+//   console.log(n);
+//   n++;
+// }
+// while (n < 5);
+
+// Если мы в while запишем условия которые вернут нам false
+// то всё равно одна итерация цикла у нас пройдёт
+// do {
+//   console.log(n);
+//   n++;
+// }
+// while (n ===  5);
+
+// в случае с while то такой код выпониться ни разу
+// while (n ===  5) {
+//   console.log(n);
+//   n++;
+// }
+
+// Третий способ это for
+// В цикле for существует 3 аргумента
+// В начале цикла создаём переменную ;
+// Во втором мы пишем условия при котором цикл будет остановлен ;
+// В третьем пишем условие что будет происходит каждую итерацию цикла
+// Чтобы остановить цикл дострочно, используем команду break; 
+// let n = 0;
+// for (let i = 0; i < 5; i++) {
+
+//   if (i === 3) {
+//     break;
+//   }
+//   console.log('i: ', i);
+
+
+//Рекурсия//
+
+// В таком виде вы полняем одно и тоже действия пока колёс не останется 0 
+// но код повторяется и очень длинный. А если это число 30, нам же не надо 30 раз дублировать
+
+// function changeTires (snowTires) {
+//    /* демонтаж, разбортовка, забортовка, накачать
+//   сбалансировать, монтаж */
+//   if(snowTires > 0) {
+//     snowTires--;
+//     console.log(snowTires);
+//   }
+//   if(snowTires > 0) {
+//     snowTires--;
+//     console.log(snowTires);
+//   }
+//   if(snowTires > 0) {
+//     snowTires--;
+//     console.log(snowTires);
+//   }
+//   if(snowTires > 0) {
+//     snowTires--;
+//     console.log(snowTires);
+//   } if(snowTires > 0) {
+//     snowTires--;
+//     console.log(snowTires);
+//   }
+
+// }
+
+// changeTires(4);
+
+// Делаем следующее, мы будем выполнять код вне условий if а в условиях вызовим свою же функwb. (себя же)
+//changeTires и будем передовать парраметр showTires(кол-во колёс) и + (дикремент--), 
+// и так как мы каждый раз отнимаем по одному колесу нам будут приходить только оставшиеся колёса
+// и пока это условие выполняеться пока колёс не стало 0 функция будет перезапускаться - это и есть рекурсия
+// вызов функции внутри функции
+
+// function changeTires(showTires) {
+// showTires--;
+// console.log('showTires: ', showTires);
+
+// if (showTires > 0) {
+//   changeTires(showTires);
+// }
+// }
+
+// changeTires(30);
 
 
 
