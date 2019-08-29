@@ -1,31 +1,19 @@
-let arr = ['24456','7895','4592','2386','341','48','905'];
-console.log(arr);
+'use strict';
 
-let arry2 = [];
-for (let i = 0; i < arr.length; i++) {
-   if (arr[i].startsWith('2')){
-      arry2.push(arr[i]);
-     } else if (arr[i].startsWith('4')) {
-      arry2.push(arr[i]);
-     }  
+let week = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+console.log('Оригинал: ', week);
+for (let i = 5; i < week.length; i++) {
+    let newWek = week[i].italics();
+    week.splice(i,1, newWek);
 }
-console.log('Те, что начинаются с цифры 2 или 4: ', arry2);
+console.log('Со строчкой: ', week);
 
-let PrimeNumbers;
-let primeI;
-
- for (PrimeNumbers = 1; PrimeNumbers <= 100; PrimeNumbers++) {
-    let Flag = true;
-      for (primeI = 2; primeI < PrimeNumbers/2; primeI++) {
-        
-         if (PrimeNumbers % primeI == 0) {
-            Flag = false;
-            break;
-         }
-      } 
-      if(Flag) {
-         console.log('Простое число:' ,PrimeNumbers);
-         console.log('Делители этого числа: 1 и' ,primeI);
-      } 
+for (let i = 0; i < week.length; i++) {
+    console.log('в новой строчки: ', week[i]);
 }
 
+let d = new Date();
+let nindexDay = d.getDay();
+let newWek = week[nindexDay].bold();
+week.splice(nindexDay,1, newWek);
+console.log('Со строчкой и жирный: ', week);
