@@ -1,21 +1,41 @@
 'use strict';
-
-let money;
-let income = 'js-developer';
-let deposit = confirm('Есть ли у вас депозит в банке?');
-
-let start = function() {
-  do {
+let money,
+    start = function() {
+    do {
     money = prompt('Каковы твои доходы?', 50000);
-  }
-  while(isNaN(money) || money === '' || money === null || money.includes(' ')); // добавил проверку на пробелы
+    }
+    while(isNaN(money) || money === '' || money === null || money.includes(' ')); // добавил проверку на пробелы
 };
 start();
+
+let appData = {
+  income: {},
+  addIncome: [],
+  expenses: {},
+  addExpenses: [],
+  deposit: false,
+  mission: 500000,
+  period: 11,
+  // задаём метод asking (будем расспрашваить пользователя именно в этом методе)
+  asking: function() {
+    let addExpenses = prompt('Введите обязательную статью разходов', 'Кошка');
+       appData.addExpenses = addExpenses.toLowerCase().split(',');
+        appData.deposit = confirm('Есть ли у вас депозит в банке?');
+  }
+};
+
+let showTypeOf = function(data){
+  console.log(data, typeof(data));
+};
+showTypeOf(money);
+showTypeOf(appData.income);
+showTypeOf(appData.deposit);
+
+
 
 
 let expensesMonth,
     expensesMonth2;
-
 
 // Создаём функцию getExpensesMonth
 const getExpensesMonth = function () {
@@ -34,7 +54,8 @@ for (let i = 0; i < 2; i++) {
  
     do { 
       checkSum = +prompt('Во сколько это обойдется ?', 2500);
-    } while(isNaN(checkSum) || checkSum === 0 || checkSum === null); 
+    } 
+    while(isNaN(checkSum) || checkSum === 0 || checkSum === null); 
 
   sum += checkSum;
 }
@@ -58,13 +79,15 @@ console.log('Накопления за месяц: ', accumulatedMonth);
 
 
 //Cоздаём функцию getTargetMonth с функцией callback
-let mission  = 500000;
+
+
+
 const getTargetMonth = function(firstNum, secondNum, callback) {
   if (typeof firstNum === 'number' && typeof secondNum === 'number'){
 callback(firstNum, secondNum);
 }
 };
-getTargetMonth(mission, accumulatedMonth, function(firstNum, secondNum){
+getTargetMonth(appData.mission, accumulatedMonth, function(firstNum, secondNum){
   let Target = firstNum / secondNum;
   if (Target < -Target) {
     console.log('Цель не будет достигнута: ', Math.floor(Target));
@@ -79,12 +102,6 @@ function budgetDay(firstNum, secondNum) {
 let sumBD = budgetDay(accumulatedMonth, 30);
 console.log('sumBD: ', sumBD);
 
-let showTypeOf = function(data){
-  console.log(data, typeof(data));
-};
-showTypeOf(money);
-showTypeOf(income);
-showTypeOf(deposit);
 
 let getStatusIncome = function(){
   if (sumBD >= 800) {
@@ -108,18 +125,333 @@ console.log(getStatusIncome());
 
 
 
+// ОБЪЕКТЫ, МАССИВЫ //
+
+
+// обьекты - это коллекция данных, структура которая используеться для хранения любых данных, обьект
+// может содержать любой тип данных.
+
+// Обьявим обьект. 
+// первый способ
+// let car = {};
+// Второй способо с помощью конструктора
+// let obj = new Object();
+
+
+// зададим обьекту свойства или ключ в нашем случае (model и year), a 'mazda' и 2006 это значения
+// после того как обьект создан можно добавлять и изменять его свойства
+// let car = {
+//   model: 'mazda', year: 2006
+// };
+// let obj = new Object();
+
+// car.turbochargint = true;
+
+// obj.color = 'black';
+
+// car.style = obj; // мы получили вложенный обьект в обьекте car
+// console.log(car.style === obj); // true т.е эти обьекты ровны, но car.style это не совсем обьект
+// это ссылка на обьект, так как копировать обьекты ресурсно затратно JS скопировал сылку на объект data
+
+// к обьекту через точку можно добюавлять новые свойства
+// obj.color = 'red';
+
+// console.log(car);
+
+// car.style.color = 'blue';
+
+// console.log(car);
+
+// объекты могут содержать свойства с любым типом данных
+
+// let car = {
+//   marka: 'toyota',
+//   year: 2017,
+//   model: 'Land Cruser',
+//   turbochargint: true,
+//   specification: [],
+//   style: {
+//     color: 'blue'
+//   }
+// };
+
+// // помимо этого объекты могут содеражать функции
+// // открываем на обьект, через точку добовляем новое свойство ride и присваиваем функцию
+// // function expration
+// car.ride = function(speed) { // Такая функция внутри обьекта называеться методом обьекта
+//   console.log('Скорость машины: ' + speed + 'км.ч');
+// };
+
+// // вызвать метод можно таким образом
+// car.ride(60);
+
+// // присвои функцию
+// car.stop = stop;
+// car.stop();
+// console.log(car);
+
+// // Можем записать и function decloration (функция которая не привязана к переменной)
+// function stop() {
+// console.log('Машина стоит, скорость 0 км/ч');
+// }
+
+
+// let car = {
+//   marka: 'toyota',
+//   year: 2017,
+//   model: 'Land Cruser',
+//   turbochargint: true,
+//   specification: [],
+//   style: {
+//     color: 'blue'
+//   }
+// };
+
+// // обращаться к свойствам и обьектам можно через альтернативный способ Синтаксиса
+
+// console.log(car.model);
+// console.log(car['model']);
+
+// // добавлять свойство можно и так образом. Появиться новое свойство Place со значение city
+// // так же можно писать свойства с пробелами
+// car['Place'] = 'city';
+// car['Best palce'] = 'GLO';
+// console.log(car);
+
+// // так же эти занчения могут приходить из переменных
+
+// let titleTransmition = 'Коробка передач';
+// let bodyTransmition = 'Автоматическая коробка передач';
+
+// // мы присваиваем значение bodyTrans и вместо ключа указываем переменную title 
+// car[titleTransmition] = bodyTransmition; // в тком случае ковычки открывать не нужно потому что это 
+// // не строка, а переменная и передадим мы сюда уже значения.
+
+// console.log(car);
+
+// ЦИКЛ FOR IN
+// иногда нам надо перебрать все свойства в объекте 
+
+// let car = {
+// model: 'Toyota',
+// year: 2017,
+// turbochargint: true,
+// specification: [],
+//  style: {
+//   color: 'blue'
+//  }
+// };
+// спомощью цикла for in переберём все свойства в обьекте car
+// задаём for и в нём создаём переменную key, ключ это переменная будет содержать каждое свойство
+// или метод обьекта напрмер model, year, style etc
+// for(let key in car) {
+//   console.log('Ключ: ' + key + ' ', 'Занчение: ' + car[key]);
+// }
+// Мы получили
+// Ключ: model  Занчение: Toyota
+// script.js:234 Ключ: year  Занчение: 2017
+// script.js:234 Ключ: turbochargint  Занчение: true
+// script.js:234 Ключ: specification  Занчение: 
+// script.js:234 Ключ: style  Занчение: [object Object]
+
+// иногда нам необходимо узнать сколько всего свойство у обьекта
+// если вывесто с помошью length то мы получим ошибку undefined - свойство length у объекта не существует
+// for(let key in car) {
+//     console.log('Ключ: ' + key + ' ', 'Занчение: ' + car[key]);
+//   }
+// чтобы получить кол-во значений пишем инструкцию
+// конструктор Object к его свойству keys в скобка вписываем наш обьект, после скобок через точку пишем length
+// получаем кол-во обьектов (в нашем случае 5)
+
+// console.log(Object.keys(car).length);
 
 
 
+// И давайте также переберём массив 
+// let Massiv = [1,20,2,43,4,6,98,8,9];
+
+// Первый способо обычный цикл for
+// for (let i = 0; i < arrayM.length; i++) {
+//   console.log(arrayM[i]);
+// }
+
+// Воторой способ метод for each
+// берём наш массив через точко обьявляем метод foreach и вскобках пишем функцию callback.
+// callback функция запуститься только тогда когда запуститься метод foreach
+
+// это функция принимает три аргумента 
+// 1 это - item (перменная к которой при каждей итерации цикла присваивается новое значение массива)
+// 2 это - i (Это индекс элемента)
+// 3 это - array (сам массив)
+
+// Massiv.forEach(function(item, i, array){
+  //выводим элементы в консоль и получаем 
+// console.log(item, i, array);
+// });
+// 1 0 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// 2 1 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// 3 2 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// 4 3 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9] 
+// 5 4 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// 6 5 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// 7 6 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// 8 7 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+// 9 8 (9) [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+// Новый цикл который появился в новой спецификации этмо скрипт 2015
+// forof он очеень похож на forin отлечаеться только оператором, в место in пишем of
+// в консоле выводим сами элементы
+// for(let key of Massiv) {
+//   console.log(key);
+// }
+// при операторе in в консоле выведиться индексы
+// for(let key in Massiv) {
+//   console.log(key);
+// }
+
+// иногда нам необходимо удалить элемент из массива
+// оператор delete нам поможет
+// обявялем delete после пробела указываем наш массив и в квадратных скобках указываем [3] номер индекса
+// который хотим удалить
+// delete Massiv [3];
+// console.log(Massiv); [1, 20, 2, empty, 4, 6, 98, 8, 9] мы получили пустое место и undefined 
+
+// как удалять из объекта 
+// let obj = {
+  
+//   a: 3,
+//   b: true,
+//   c: 'z'
+// };
+// delete далее через пробел указываем наш объект. дальше через точку указываем свойство которое хотим удалить
+// delete obj.b;
+// console.log('obj: ', obj);       obj:  {a: 3, c: "z"}
+
+
+//МАССИВ
+
+
+// Массив в JS - это объект в которм ключи заполняються javaScriptom атоматически 
+// Массив как и объекты могут солержать любые типы данных и обькты и массивы
+// let arr = [1,2,3,4,5];
+// отличаются объекты от массиво, тем что ключи заполняються автоматически и присваиваеться 
+// порядковый номер - индекс
+
+// console.log(arr); // (5) [1, 2, 3, 4, 5]
+// обращаться к элементу можно с помощью квадратных скобок
+// console.log(arr[0]);  сейчас мы обратились к элементу с индексом 0 и получили значнеие 1
+
+// По индексу мы можем не только изменять элемент то и изменять его
+// arr[0] = 'cat'; 
+// console.log(arr); // (5) ["cat", 2, 3, 4, 5]
+
+// У масива есть свойство .length; это свойство хранить количество элементо в массиве
+// вот способ как добавить элемент в конец массива
+// arr[arr.length] = 'dog';  length длина массива всегда будет на единицу больше чем последний индекс массива
+// и таким образом мы указываем что последниму элементу с индексом 5 нам необходимо присвоить значение dog
+
+// так же мы можем добавить элемент с любым индексом
+// arr[10] = 'human'; (11) ["cat", 2, 3, 4, 5, "dog", empty × 4, "human"]
+// length показывает последний индекс элемент + 1 в данном случае длина будет 10 + 1 (11), и 4 элемента пропущены.
+// но на самом деле у нас 7 элементов в массиве
+// console.log(arr);
+
+// Массивы в javaScript являются объектами и их можно создавать с помощью конструктора
+
+// но если указать один элемент он станет длинной массива, зачем это нужно так и не понятно 
+// let array = new Array(55);
+// console.log(array); - log (55) [empty × 55]
+
+// В массиве также мы можем пропускать элементы и оставлять их пустыми
+// let massiv = [1,,,,,3,5,5];
+// console.log(massiv); (8) [1, empty × 4, 3, 5, 5]
+
+// let massiv = [1,2,3,4,5];
+// // ну а если мы присвои length какое число, то такая длинна у массива будет установлина 
+// massiv.length = 30;
+// console.log('massiv: ', massiv); (30) [1, 2, 3, 4, 5, empty × 25]
+
+// ну а если длинна length будет установлена меньше чем есть у елемнтов массиве
+// let massiv = [1,2,3,4,5];
+// // тогда лишние элементы будут удалены
+// massiv.length = 3;
+// console.log('massiv: ', massiv); (3) [1, 2, 3]
+
+// Методы массивов 
+
+// let array = ['Apple', 'Orange', 'Banana' ];
+// метод push от добавляет в конец один или несолько элементов
+// array.push('Tangerin');
+// есть похожий метод unshift, но он добавляет элемент в начало массива
+// array.unshift('Sosiges', 'Cookes');
+// console.log(array); (6) ["Sosiges", "Cookes", "Apple", "Orange", "Banana", "Tangerin"]
+
+// есть противоположные методы
+// метод pop и метод shift эти методы не принимают элементы
+
+// array.pop(); // метод pop удаляет последний элемент 
+// console.log(array); //["Sosiges", "Cookes", "Apple", "Orange"]
+
+// этот метод также возвращает удалённый элемент
+// console.log(array.pop()); // Banana т.е его можно сохранить в переменную
+// console.log(array.shift()); // Sosiges Делает всё тоже самое только с первым элементом массива
+// console.log(array); ["Cookes", "Apple", "Orange"]
+
+// метод sort - он сортирует массив по алфавиту
+// console.log(array.sort()); ["Apple", "Cookes", "Orange"] и он обязательно учитывает регистр
+
+// метод slice также работает и с массивом, указываем в параметре индекс и всё что дальше 
+// от указанного индекса включая его возващает метод slice
+// console.log(array.slice(2)); ["Orange"]
+// console.log(array.slice(1, 2));  ["Cookes"] через запятую мы указывает от кого до какого индекса 
+// нам возвращать элемент
+// console.log(array.slice(-2));  ["Cookes", "Orange"] так же мето принимает отрицательные значения, 
+// сколько нам необходимо вернуть с конца 
+// метод slice не меняет наш массив он возвращает новые
+// console.log(array);  ["Apple", "Cookes", "Orange"]
+
+// Следующйи метод splice он удаляет элементы и добавляет новые в массив
+// первым аргументом мы передаём индекс элемента с которым мы начинаем удаление
+// вторым аргуентом мы передаём количесвво, сколько элементов нам необходимо удалить
+// а все последующие элементы это занчения которые мы хотим вставить в массив в то место откуда удалили элементы
+// но сам метод splice возвращает нам удалённые элементы
+
+// console.log(array); ["Apple", "Orange", "Banana"] оригинальный массив
+// console.log(array.splice(1, 1, 'avocado', 'papaya')); ["Orange"] сохранён в методе, но удалён из массива
+// и на его место добавли элементы 
+// console.log(array); получилось ["Apple", "avocado", "papaya", "Banana"]
+
+// метод join данный метод нам возвращает строку которая была с конконтенирована из элементов массива
+// и по умолчанию проставил между элементам запятую ,
+// console.log(array.join()); Apple,Orange,Banana
+// но также он принимает аргумент и мы можем любую строку вставить которая будет раздлять наши элементы
+// console.log(array.join(' - '));
+
+//метод реверс возваращет нам обратный порядок массива и он изменяет текущий массив
+// console.log(array.reverse());
+
+// метод concat складывает исходный массив с другим массивом или элементами, но не изменяет текущий массив
+// а возвращает новый
+// console.log(array.concat(['avocado', 'papya', 'kiwi']));  ["Apple", "Orange", "Banana", "avocado", "papya", "kiwi"] 
+
+// так же можно добавить отдельно элемент от этого массива
+// console.log(array.concat(['avocado', 'papya', 'kiwi'], 'mango')); 
+// поулчаем большой массив ["Apple", "Orange", "Banana", "avocado", "papya", "kiwi", "mango"]
 
 
 
+// ПСЕВДОМАССИВ
 
+// Псевдомассивы - это обьект похож на массив, т.е у него структура совподает с массивами, есть
+// нумерованные свойства и lenght но методов массива у него нет
+// например мы изучили псевдомассив arguments 
 
-
-
-
-
+// function test() {
+//   console.log(arguments);
+//   console.log(arguments.length); // также мы можем вывести длинну массива (5)
+//   console.log(arguments.pop()); // но использовать метод массива не получиться arguments.pop is not a function
+// }
+//  test(1,2,3,4,5); // мы получим псевдомассив с элементами.
 
 
 
