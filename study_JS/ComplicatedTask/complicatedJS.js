@@ -11,15 +11,11 @@ for (let i = 0; i < arr.length; i++) {
 }
 console.log('Те, что начинаются с цифры 2 или 4: ', arry2);
 
-// Делитель числа 7: 1 и 7
-
 let PrimeNumbers;
 let primeI;
 
- for (PrimeNumbers = 2; PrimeNumbers <= 100; PrimeNumbers++) {
-
+ for (PrimeNumbers = 1; PrimeNumbers <= 100; PrimeNumbers++) {
     let Flag = true;
-
       for (primeI = 2; primeI < PrimeNumbers/2; primeI++) {
         
          if (PrimeNumbers % primeI == 0) {
