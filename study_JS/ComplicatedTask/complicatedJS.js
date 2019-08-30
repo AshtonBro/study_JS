@@ -14,6 +14,6 @@ for (let i = 0; i < week.length; i++) {
 
 let d = new Date();
 let nindexDay = d.getDay();
-let newWek = week[nindexDay].bold();
+let newWek = week[nindexDay - 1].bold();
 week.splice(nindexDay,1, newWek);
 console.log('Со строчкой и жирный: ', week);
