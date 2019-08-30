@@ -24,35 +24,42 @@ let appData = {
   budgetDay: 0,
   budgetMonth: 0,
   expensesMonth: 0,
-  // Задаём методы и функции
+// Задаём методы и функции
   
 // Asking
 asking: function() {
   if (confirm('Есть ли у вас дополнительный источник заработока ?')) {
-  let itemIncome = prompt('Какой у вас есть дополнительный заработок?', 'Таксую');
-  let cashIncome = +prompt('Сколько в месяц зарабатываешь на этом ?', 25000);
-  appData.income[itemIncome] = cashIncome;
+  
+  let itemIncome;
+  do {
+    itemIncome = prompt('Какой у вас есть дополнительный заработок?', 'Таксую');
+  }
+  while(!isNaN(itemIncome) ||  itemIncome === undefined || itemIncome.includes(' '));
+
+  let cashIncome;
+  do { 
+    cashIncome = +prompt('Сколько в месяц зарабатываешь на этом ?', 25000);
+    } while(isNaN(cashIncome) || cashIncome === 0 || cashIncome === null);
+    appData.income[itemIncome] = cashIncome;
   }
 
   appData.deposit = confirm('Есть ли у вас депозит в банке?');
-  let priceIncome;
+
   for (let i = 0; i < 2; i++) {
-  
     if (i === 0) {
-      
       do { 
-        appData.addExpenses[i] = prompt('Введите обязательную статью раcходов', 'Кошка');
-        
-      } while(appData.addExpenses.includes === '/[^\\\/&]*$/' || appData.addExpenses === null || appData.addExpenses === undefined || appData.addExpenses === Number); 
-    
+        appData.addExpenses[i] = prompt('Введите обязательную статью раcходов', 'кошка');
+      } while(!isNaN(appData.addExpenses) ||  appData.addExpenses === undefined || appData.addExpenses.includes(' '));
     }
     if (i === 1) {
-    appData.addExpenses[i] = prompt('Введите ещё обязательную статью раcходов', 'Квартплата');
+     do { 
+      appData.addExpenses[i] = prompt('Введите ещё обязательную статью раcходов', 'квартплата');
+      } while(!isNaN(appData.addExpenses[i]) || appData.addExpenses[i] === undefined || appData.addExpenses[i].includes(' '));
     }
     
+    let priceIncome;
     do { 
     priceIncome = +prompt('Во сколько это обойдется ?', 2500);
-    
     } while(isNaN(priceIncome) || priceIncome === 0 || priceIncome === null); 
     appData.expenses[appData.addExpenses[i]] = priceIncome;
   }
@@ -62,12 +69,11 @@ asking: function() {
 // GetExpensesMonth
 getExpensesMonth: function () {
 
-    for (let key in this.expenses) {
-      appData.expensesMonth += appData.expenses[key];
-    }
+  for (let key in this.expenses) {
+    appData.expensesMonth += appData.expenses[key];
+  }
     
-    console.log('Расходы за месяц: ', appData.expensesMonth);
-    
+  console.log('Расходы за месяц: ', appData.expensesMonth);
 },
 
 // getBudget
@@ -108,14 +114,34 @@ getStatusIncome: function() {
 // GetInfoDeposit
 getInfoDeposit: function() {
   if(appData.deposit) {
-    appData.percentDeposit = +prompt('Какой годовой процент ?', 10);
-    appData.moneyDeposit = +prompt('Какая сумма задожена ?', 10000);
+   do {
+     appData.percentDeposit = +prompt('Какой годовой процент ?', 10);
+   }
+   while(isNaN(appData.percentDeposit) || appData.percentDeposit === 0 || appData.percentDeposit === null);
+   do {
+     appData.moneyDeposit = +prompt('Какая сумма задожена ?', 10000);
+   }
+   while(isNaN(appData.moneyDeposit) || appData.moneyDeposit === 0 || appData.moneyDeposit === null);
+    
   }
 },
 
 //CalcSavedMoney
 calcSavedMoney: function() {
   return appData.budgetMonth * appData.period;
+},
+
+//AddToUpperCaseForFirstChar
+AddToUpperCaseForFirstChar: function() {
+    var result = ("");
+    for (let i = 0; i < appData.addExpenses.length; i++) {
+      let Element = appData.addExpenses[i];
+      let FirstElement = Element.substring(0, 1).toUpperCase();
+      let lastElement = Element.substring(1, Element.length);
+      //конкатенация строк
+      result += FirstElement + lastElement + ", ";
+    }
+    console.log('В строке с большой буквы: ', result);
 }
   
 };
@@ -127,10 +153,11 @@ appData.getTargetMonth();
 console.log(appData.getStatusIncome());
 appData.getInfoDeposit();
 appData.calcSavedMoney();
+appData.AddToUpperCaseForFirstChar();
+// for(let key in appData) {
+//   console.log('Наша программа включает в себя данные: ', appData[key]);
+// }
 
-for(let key in appData) {
-  console.log('Наша программа включает в себя данные: ', appData[key]);
-}
 
 
 
