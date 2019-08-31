@@ -133,7 +133,7 @@ calcSavedMoney: function() {
 
 //AddToUpperCaseForFirstChar
 AddToUpperCaseForFirstChar: function() {
-    var result = ("");
+    let result = ("");
     for (let i = 0; i < appData.addExpenses.length; i++) {
       let Element = appData.addExpenses[i];
       let FirstElement = Element.substring(0, 1).toUpperCase();
