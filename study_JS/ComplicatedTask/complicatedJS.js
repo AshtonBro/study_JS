@@ -1,31 +1,46 @@
-let arr = ['24456','7895','4592','2386','341','48','905'];
-console.log(arr);
+'use strict';
 
-let arry2 = [];
-for (let i = 0; i < arr.length; i++) {
-   if (arr[i].startsWith('2')){
-      arry2.push(arr[i]);
-     } else if (arr[i].startsWith('4')) {
-      arry2.push(arr[i]);
-     }  
-}
-console.log('Те, что начинаются с цифры 2 или 4: ', arry2);
+let newTitle = document.querySelector('title');
+newTitle.textContent = 'Сurrent time';
 
-let PrimeNumbers;
-let primeI;
+let myClock = document.getElementsByClassName('Clock');
 
- for (PrimeNumbers = 1; PrimeNumbers <= 100; PrimeNumbers++) {
-    let Flag = true;
-      for (primeI = 2; primeI < PrimeNumbers/2; primeI++) {
-        
-         if (PrimeNumbers % primeI == 0) {
-            Flag = false;
-            break;
-         }
-      } 
-      if(Flag) {
-         console.log('Простое число:' ,PrimeNumbers);
-         console.log('Делители этого числа: 1 и' ,primeI);
-      } 
+
+// function CurrentDate() {
+   
+
+//     myClock[0].innerHTML = strTime;
+
+//    //  setTimeout('formatAMPM()', 1000);
+//     return strTime;
+// } 
+
+
+function CurrentDate() {
+   let DateNow = new Date();
+   let hours = DateNow.getHours();
+   let minutes = DateNow.getMinutes();
+   let secunds = DateNow.getSeconds();
+   
+   let day = DateNow.getDay();
+   let month = DateNow.getMonth();
+   let year = DateNow.getFullYear();
+   
+   (function() { 
+      if (hours < 10 || day < 10 || month < 10) {
+         hours = '0'+hours;
+         day = '0'+day;
+        month = '0'+month;
+      }
+     })();
+
+   let allTime = hours + ':' + minutes + ':' + secunds + ' ' + day + '.'+ month + '.' + year;
+      console.log('time: ', allTime );
+
+     
+
+   myClock[0].innerHTML = allTime;
+   setTimeout('CurrentDate()', 1000);
+
 }
 
