@@ -1,3 +1,5 @@
+// Задание 1 //
+
 let books = document.querySelectorAll('.books');
 let book = document.querySelectorAll('.book');
 console.log('books: ',books);
@@ -40,5 +42,6 @@ let cloneEL = liElem[55].cloneNode(true);
 cloneEL.textContent = 'Глава 8: За пределами ES6';
 ulElem[5].appendChild(cloneEL);
 ulElem[5].insertBefore(cloneEL, liElem[56]);
+
 
 
