@@ -1,12 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
   
     <title>Basic steps on html</title> <!--Название документа, то как будет выглядить вкладка вашей страницы-->
     </head>
@@ -58,45 +56,44 @@
 
 <section style="background-color: honeydew">
 <h4>Тестируем виды списков</h4>
-<ul> <!-- * Маркированный список (Контейнером этого списка обозначаеться Тег <ul>)-->
+<ul class="collections collections-1"> <!-- * Маркированный список (Контейнером этого списка обозначаеться Тег <ul>)-->
 
     <!--Для задания внешнего вида маркеров применяем атрибут -->
     <li type="disc">Изучить html</li> <!--маркер в виде закрашенного круго (default)-->
     <li type="circle">Изучить css</li> <!--type = <circle> - маркер в виде не закрашенного круга-->
     <li type="square">Изучить js</li> <!--type = <circle> - маркер в виде не закрашенного квадрата -->
 </ul>
-<ol type="1"> <!--Нумерованный список (Контейнером этого списка обозначаеться Тег <ol>)-->
-    <li >Изучить html</li>
-    <li >Изучить css</li> 
-    <li >Изучить js</li> 
+<ol class="collections collections-2" type="1"> <!--Нумерованный список (Контейнером этого списка обозначаеться Тег <ol>)-->
+    <li class="elem elem-0">Изучить html</li>
+    <li class="elem elem-1">Изучить css</li> 
+    <li class="elem elem-2">Изучить js</li> 
 </ol>
-<ol type="A"> <!--Пункты обозначаются прописными латинскими буквами-->
-    <li >Изучить html</li>
-    <li >Изучить css</li> 
-    <li >Изучить js</li> 
+<ol class="collections collections-3" type="A"> <!--Пункты обозначаются прописными латинскими буквами-->
+        <li class="elem elem-0">Изучить html</li>
+        <li class="elem elem-1">Изучить css</li> 
+        <li class="elem elem-2">Изучить js</li> 
 </ol>
-<ol type="a"> <!--то же самое, но строчное начертание-->
-    <li >Изучить html</li>
-    <li >Изучить css</li> 
-    <li >Изучить js</li> 
+<ol class="collections collections-4" type="a"> <!--то же самое, но строчное начертание-->
+        <li class="elem elem-0">Изучить html</li>
+        <li class="elem elem-1">Изучить css</li> 
+        <li class="elem elem-2">Изучить js</li> 
 </ol>
-<ol type="I"> <!--Нумерация римскими цифрами в верхнем регистре-->
-    <li >Изучить html</li>
-    <li >Изучить css</li> 
-    <li >Изучить js</li> 
-    <li >Изучить php</li> 
+<ol class="collections collections-5" type="I"> <!--Нумерация римскими цифрами в верхнем регистре-->
+        <li class="elem elem-0">Изучить html</li>
+        <li class="elem elem-1">Изучить css</li> 
+        <li class="elem elem-2">Изучить js</li> 
 </ol> 
-<ol type="i"> <!--то же самое, но в нижнем регистре-->
-    <li >Изучить html</li>
-    <li >Изучить css</li> 
-    <li >Изучить js</li> 
+<ol class="collections collections-6"type="i"> <!--то же самое, но в нижнем регистре-->
+        <li class="elem elem-0">Изучить html</li>
+        <li class="elem elem-1">Изучить css</li> 
+        <li class="elem elem-2">Изучить js</li> 
 </ol>
-<ol start="3"> <!--Атрибут start начинает счёт от заданного числа-->
-        <li >Изучить html</li>
-        <li >Изучить css</li> 
-        <li >Изучить js</li> 
-        <li >Изучить php</li>
-        <li >Изучить MySQL</li>
+<ol class="collections collections-7" start="3"> <!--Атрибут start начинает счёт от заданного числа-->
+        <li class="elem elem-0">Изучить html</li>
+        <li class="elem elem-1">Изучить css</li> 
+        <li class="elem elem-2">Изучить js</li> 
+        <li class="elem elem-3">Изучить php</li>
+        <li class="elem elem-4">Изучить MySQL</li>
     </ol>
 
 <dl> <!--Контейнер dl для списка определений-->
@@ -274,7 +271,7 @@
 
   
 
-
+<script src="/scrr.js" async defer></script>
 </body>
 </html>
 
