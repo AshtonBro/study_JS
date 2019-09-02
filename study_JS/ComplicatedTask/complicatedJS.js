@@ -6,16 +6,6 @@ newTitle.textContent = 'Сurrent time';
 let myClock = document.getElementsByClassName('Clock');
 
 
-// function CurrentDate() {
-   
-
-//     myClock[0].innerHTML = strTime;
-
-//    //  setTimeout('formatAMPM()', 1000);
-//     return strTime;
-// } 
-
-
 function CurrentDate() {
    let DateNow = new Date();
    let hours = DateNow.getHours();
@@ -38,7 +28,6 @@ function CurrentDate() {
       console.log('time: ', allTime );
 
      
-
    myClock[0].innerHTML = allTime;
    setTimeout('CurrentDate()', 1000);
 
