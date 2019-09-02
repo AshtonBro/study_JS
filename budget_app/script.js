@@ -188,7 +188,6 @@ let targetAmount = document.querySelector('.target-amount');
 
 
 
-
 // DOM, BOM //
 
 // 2 основных стоба работы с браузером это BOM И DOM
