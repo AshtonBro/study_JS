@@ -162,10 +162,6 @@ appData.AddToUpperCaseForFirstChar();
 
 
 
-
-
-
-
 // ОБЪЕКТЫ, МАССИВЫ //
 
 
