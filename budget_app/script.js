@@ -1,95 +1,172 @@
 'use strict';
 
-
-let money,
-    start = function() {
-    do {
-    money = prompt('Каковы твои доходы?', 50000);
-    }
-    while(isNaN(money) || money === '' || money === null || money.includes(' ')); 
-};
-start();
+let start = document.getElementById('start');
+let cancel = document.getElementById('cancel');
+let buttonsPlus = document.getElementsByTagName('button');
+let incomePlus = buttonsPlus[0];
+let expensesPlus = buttonsPlus[1]; 
+let additionIncomeItem = document.querySelectorAll('.additional_income-item');
+let depositCheck = document.querySelector('#deposit-check');
+let allRightCollumn = document.getElementsByClassName('result-total');
+let budgetDayValue = allRightCollumn[1];
+let budgetMonthValue = allRightCollumn[0];
+let expensesMonthValue = allRightCollumn[2];
+let additionalIncomeValue = allRightCollumn[3];
+let additionalExpensesValue = allRightCollumn[4]; 
+let incomePeriodValue = allRightCollumn[5];
+let targetMonthValue = allRightCollumn[6];
+let salaryAmount = document.querySelector('.salary-amount');
+let expensesTitle = document.querySelector('.expenses-title');
+let expensesItems = document.querySelectorAll('.expenses-items');
+let additionalExpensesItem = document.querySelector('.additional_expenses-item');
+let periodSelect = document.querySelector('.period-select');
+let targetAmount = document.querySelector('.target-amount');
+let incomeItems = document.querySelectorAll('.income-items');
+let incomeTitle = document.querySelector('.income-title');
+let periodAmount = document.querySelector('.period-amount');
+let imputs = document.querySelectorAll('input');
 
 let appData = {
+  budget: 0,
   income: {},
+  incomeMonth: 0,
   addIncome: [],
-  expenses: {},
+  expenses: [],
   addExpenses: [],
   deposit: false,
   percentDeposit: 0,
   moneyDeposit: 0,
-  mission: 500000,
-  period: 11,
-  budget: money,
   budgetDay: 0,
   budgetMonth: 0,
   expensesMonth: 0,
-// Задаём методы и функции
-  
-// Asking
-asking: function() {
-  if (confirm('Есть ли у вас дополнительный источник заработока ?')) {
-  
-  let itemIncome;
-  do {
-    itemIncome = prompt('Какой у вас есть дополнительный заработок?', 'Таксую');
-  }
-  while(!isNaN(itemIncome) ||  itemIncome === undefined || itemIncome.includes(' '));
-
-  let cashIncome;
-  do { 
-    cashIncome = +prompt('Сколько в месяц зарабатываешь на этом ?', 25000);
-    } while(isNaN(cashIncome) || cashIncome === 0 || cashIncome === null);
-    appData.income[itemIncome] = cashIncome;
-  }
-
-  appData.deposit = confirm('Есть ли у вас депозит в банке?');
-
-  for (let i = 0; i < 2; i++) {
-    if (i === 0) {
-      do { 
-        appData.addExpenses[i] = prompt('Введите обязательную статью раcходов', 'кошка');
-      } while(!isNaN(appData.addExpenses) ||  appData.addExpenses === undefined || appData.addExpenses.includes(' '));
-    }
-    if (i === 1) {
-     do { 
-      appData.addExpenses[i] = prompt('Введите ещё обязательную статью раcходов', 'квартплата');
-      } while(!isNaN(appData.addExpenses[i]) || appData.addExpenses[i] === undefined || 
-      appData.addExpenses[i].includes(' '));
-    }
+    start: function() {
     
-    let priceIncome;
-    do { 
-    priceIncome = +prompt('Во сколько это обойдется ?', 2500);
-    } while(isNaN(priceIncome) || priceIncome === 0 || priceIncome === null); 
-    appData.expenses[appData.addExpenses[i]] = priceIncome;
+    if(salaryAmount.value === ''){
+      alert('Поле "Месячный доход" должны быть заполнено!');
+      return;
+    }
+
+    appData.budget = +salaryAmount.value;
+
+    appData.getExpenses();
+    appData.getIncome();
+    appData.getExpensesMonth();
+    appData.getAddExpenses();
+    appData.getAddIncome();
+    appData.getBudget();
+
+    appData.showResult();
+},
+
+showResult: function(){
+  budgetDayValue.value = Math.ceil(appData.budgetDay);
+  budgetMonthValue.value = appData.budgetMonth;
+  expensesMonthValue.value = appData.expensesMonth;
+  additionalExpensesValue.value = appData.addExpenses.join(', ');
+  additionalIncomeValue.value = appData.addIncome.join(', ');
+  targetMonthValue.value = Math.ceil(appData.getTargetMonth());
+  incomePeriodValue.value = appData.calcSavedMoney();
+},
+
+addIncomeBlock: function(){
+  let cloneIncomeItems = incomeItems[0].cloneNode(true);
+  console.log(event.target.value);
+  incomeItems[0].parentNode.insertBefore(cloneIncomeItems, incomePlus);
+  incomeItems = document.querySelectorAll('.income-items');
+
+ 
+  if(incomeItems.length === 3){
+    incomePlus.style.display = 'none';
+    }
+},
+
+addExpensesBlock: function(){
+  let cloneExpensesItems = expensesItems[0].cloneNode(true);
+
+  expensesItems[0].parentNode.insertBefore(cloneExpensesItems, expensesPlus);
+  expensesItems = document.querySelectorAll('.expenses-items');
+
+    if(expensesItems.length === 3){
+    expensesPlus.style.display = 'none';
+    }
+},
+
+getExpenses: function(){
+ expensesItems.forEach(function(item){
+  let itemExpenses = item.querySelector('.expenses-title').value;
+  let cashExpenses = +item.querySelector('.expenses-amount').value;
+  if (itemExpenses !== '' && cashExpenses !== '') {
+    appData.expenses[itemExpenses] = cashExpenses;
   }
-  
+ });
+},
+
+getIncome: function(){
+  incomeItems.forEach(function(item){
+  let itemIncome = item.querySelector('.income-title').value;
+  let cashIncome = +item.querySelector('.income-amount').value;
+  if (itemIncome !== '' && cashIncome !== '') {
+    appData.income[itemIncome] = cashIncome;
+    appData.incomeMonth += cashIncome;
+  }
+ });
+},
+
+getAddExpenses: function(){
+ let addExpenses = additionalExpensesItem.value.split(',');
+addExpenses.forEach(function(item){
+  item = item.trim();
+ if (item !== '') {
+ appData.addExpenses.push(item);
+ }
+});
+},
+
+getAddIncome: function(){
+  additionIncomeItem.forEach(function(item){
+    let itemValue = item.value.trim();
+    if (itemValue !== '') {
+      appData.addIncome.push(itemValue);
+    }
+  });
+}, 
+
+getPeriodSelect: function(event){
+  periodAmount.textContent = event.target.value;
+},
+
+stopCalculation: function(){
+  if(salaryAmount.value === ''){
+    alert('Не за будь заполнить поля!');
+    return;
+  }
+  start.style.display = 'none';
+  cancel.style.display = 'block';
+  imputs[0].disabled = true;
+  imputs[1].disabled = true;
+  imputs[3].disabled = true;
+  imputs[5].disabled = true;
+  imputs[7].disabled = true;
+  imputs[7].disabled = true;
+ 
 },
 
 // GetExpensesMonth
 getExpensesMonth: function () {
-
   for (let key in this.expenses) {
     appData.expensesMonth += appData.expenses[key];
   }
-    
-  console.log('Расходы за месяц: ', appData.expensesMonth);
 },
 
 // getBudget
 getBudget: function() {
-  appData.budgetMonth =  money - appData.expensesMonth;
+  appData.budgetMonth = appData.budget + appData.incomeMonth - appData.expensesMonth;
   appData.budgetDay = appData.budgetMonth / 30;
 },
 
 // GetTargetMonth
 getTargetMonth: function() {
-  let Target = appData.mission / appData.budgetMonth;
-  if (Target < -Target) {
-    console.log('Цель не будет достигнута: ', Math.floor(Target));
-  }
-  console.log('Cрок достижения цели в месяцах: ', Math.floor(Target));
+  return targetAmount.value / appData.budgetMonth;
 },
 
 // GetStatusIncome
@@ -111,7 +188,7 @@ getStatusIncome: function() {
       return('Некорректный ввод');
     }
   },
-    
+
 // GetInfoDeposit
 getInfoDeposit: function() {
   if(appData.deposit) {
@@ -129,7 +206,7 @@ getInfoDeposit: function() {
 
 //CalcSavedMoney
 calcSavedMoney: function() {
-  return appData.budgetMonth * appData.period;
+  return appData.budgetMonth * periodSelect.value;
 },
 
 //AddToUpperCaseForFirstChar
@@ -142,46 +219,320 @@ AddToUpperCaseForFirstChar: function() {
       //конкатенация строк
       result += FirstElement + lastElement + ", ";
     }
-    console.log('В строке с большой буквы: ', result);
 }
   
 };
 
-appData.asking();
-appData.getExpensesMonth();
-appData.getBudget();
-appData.getTargetMonth();
-console.log(appData.getStatusIncome());
-appData.getInfoDeposit();
-appData.calcSavedMoney();
-appData.AddToUpperCaseForFirstChar();
+start.addEventListener('click', appData.start);
+start.addEventListener('click', appData.stopCalculation);
+expensesPlus.addEventListener('click', appData.addExpensesBlock);
+incomePlus.addEventListener('click', appData.addIncomeBlock);
+periodSelect.addEventListener('change', appData.getPeriodSelect);
 
-let calculateButton = document.getElementById('start');
-console.log('calculateButton: ', calculateButton);
-let buttonsPlus = document.getElementsByTagName('button');
-let incomeAdd = buttonsPlus[0];
-console.log('incomeAdd: ', incomeAdd);
-let expensesAdd = buttonsPlus[1];
-console.log('expensesAdd: ', expensesAdd);
-let checkbox = document.querySelector('#deposit-check');
-console.log('checkbox: ', checkbox);
 
-let additionIncome = document.querySelectorAll('.additional_income-item');
-console.log('additionIncome: ', additionIncome);
+// appData.getTargetMonth();
+// appData.getInfoDeposit();
+// appData.calcSavedMoney();
+// appData.AddToUpperCaseForFirstChar();
 
-// правая сторона
-let allRightCollumn = document.getElementsByClassName('result-total');
-let budgetMonthValue = allRightCollumn[0];
-let budgetDayValue = allRightCollumn[1];
-let expensesMonthValue = allRightCollumn[2];
-let additionalIncomeValue = allRightCollumn[3];
-let additionalExpensesValue = allRightCollumn[4];
-let incomePeriodValue = allRightCollumn[5];
-let targetMonthValue = allRightCollumn[6];
 
-let salaryAmount = document.querySelector('.salary-amount');
-let periodSelect = document.querySelector('.period-select');
-let targetAmount = document.querySelector('.target-amount');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ОБРАБОТЧИКИ СОБЫТИЙ и ОСОБЕННОСТИ ИХ РАБОТЫ //
+
+/* Обработчик события 
+у нас есть большой квадрат и мы попробуем навешать на него обработчик собитый 
+
+let square = document.querySelector('.square');
+console.log('square: ', square);
+console.dir('square: ', square); - consloe dir, покажет нам элеменет в виде обьекта. Раскрыв который можем 
+посмотреть все свойства и методы. Мы можем увидить очень много методов начинающихся на 'on'.
+
+
+/// onclick ///  
+Навесим стандартный клик
+ square.onclick = function () {
+   console.log('Вы кликнули на квадрат')
+ }
+
+ В консоле во вкладке Elements где виден весь html код в оригинале, в правом углу есть вкладка
+ event listeners - там мы можем увидеть все обработчики событий для нашего элемента.
+
+ Вообще не желательно вешать такие обработчики событий которые начинаються на 'on' с ними етсь определённые проблемы
+ 
+ Теперь мы можем ограничить количество кликов на наш квадрат
+ для этого создаём каунтер и записываем в него количество кликов, т.е. сколько раз обработчик заходил в функцию.
+ И создадим условие
+
+let square = document.querySelector('.square');
+let count = 0;
+
+ square.onclick = function () {
+   if (count === 3) {
+     return;
+   }
+   count++;
+   console.log('Вы кликнули на квадрат');
+ }
+
+чтобьы отключить обработчик событий после выполнения условия - недостаточно просто return, нудно присвоить
+обработчику событий значение null 
+square.onclick = null;
+
+// ЗАПУСК 2Х ФУНКЦИЙ ПО ОДНОМУ УСЛОВИЮ //
+
+
+let count = 0;
+incomeAdd.onclick = function () {
+  if (count === 3) {
+    console.log('Опачки');
+    incomeAdd.onclick = null;
+    return;
+  }
+  count++;
+  console.log('Вы кликнули на квадрат');
+};
+
+incomeAdd.onclick = function() {
+console.log('Это вторая функция');
+};
+
+такой способ работает но не всегда и при этом когда первая функция перестаёт работать вторая заменяет её без возвратно.
+так что к нашему квадрату мы применил метод который опишем ниже
+
+/// НАВЕШИВАТЕЛЬ СЛУШАТЕЛЯ ///
+// addEventListener - Это Добавить событие слушатель! Этот метод принимает 3 параметра 2 из которых обязательные
+1 параметр - 'click' мы указываем само событие но уже без приставки 'on'
+2 параметр - function() мы передаём функцию которая будет обрабатывать событие
+3 параметр - 
+
+и мы можем навешивать несколько обработчиков событий на один тот же клик
+
+let count = 0;
+incomeAdd.addEventListener('click', function(){
+console.log('Слушатель на связи 0');
+});  
+
+
+incomeAdd.addEventListener('click', function(){
+console.log('Слушатель на связи 1');
+});  
+
+incomeAdd.addEventListener('click', function(){
+console.log('Слушатель на связи 2');
+});  
+в логе получаем 
+Слушатель на связи 0
+Слушатель на связи 1
+Слушатель на связи 2
+Для решение первой задачи чтобы ограничить количество кликов мы можем использовать метод
+removeEventListener - но для этого тебе нужно использовать именную функцию вместо анонимной
+
+/// removeEventListener ///
+Создаём функцию
+
+let count = 0;
+let clicked = function(){
+  count++;
+  if (count === 3){
+     incomeAdd.removeEventListener('click', clicked);
+     }
+  console.log('Слушатель на связи 0');
+};
+incomeAdd.addEventListener('click', clicked);
+
+УКАЖДОГО СОБЫТИЯ ЕСТЬ ОБЬЕКТ СОБЫТИЯ - этот обьект доступен только функции обработчики события, чтобы его получить 
+мы должны первым параметром функции указать его имя, указать можно кого угодно но приянято указать event или i
+
+incomeAdd.addEventListener('click', function(event){
+  console.log(event);
+});
+
+Развернув log мы получаем множетсво информации которая сможет пригодиться в будущем
+MouseEvent {isTrusted: true, screenX: 2980, screenY: 391, clientX: 420, clientY: 320, …}
+altKey: false
+bubbles: true
+button: 0
+buttons: 0
+cancelBubble: false
+cancelable: true
+clientX: 420
+clientY: 320
+composed: true
+ctrlKey: false
+currentTarget: null     !!!ВАЖНЫЙ ПАРАМЕТР!!!
+defaultPrevented: false
+detail: 1
+eventPhase: 0
+fromElement: null
+isTrusted: true
+layerX: 420
+layerY: 320
+metaKey: false
+movementX: 0
+movementY: 0
+offsetX: 16
+offsetY: 19
+pageX: 420
+pageY: 320
+path: (9) [button.btn_plus.income_add, div.income, div.data, div.calc, section.main, body, html, document, Window]
+relatedTarget: null
+returnValue: true
+screenX: 2980
+screenY: 391
+shiftKey: false
+sourceCapabilities: InputDeviceCapabilities {firesTouchEvents: false}
+srcElement: button.btn_plus.income_add
+target: button.btn_plus.income_add                                  !!!ВАЖНЫЙ ПАРАМЕТР!!!
+timeStamp: 3147.819999998319
+toElement: button.btn_plus.income_add
+type: "click"                                                       !!!ВАЖНЫЙ ПАРАМЕТР!!!
+view: Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, parent: Window, …}
+which: 1
+x: 420
+y: 320
+
+Какие ещё СОБЫТИЯ ПО МИМОМ click у нас есть
+
+let eventFunc = function(event) {
+  console.log(event.type);
+};
+водим по нашем квадрату и выдим что в консоле выводиться количество движений по элементу
+incomeAdd.addEventListener('click', eventFunc); - click 
+incomeAdd.addEventListener('mouseup', eventFunc); - срабатывет когда отпустить уже кликнувшую мышь
+incomeAdd.addEventListener('mousedown', eventFunc); - срабатывает когда нажать на мышь и неотпускать
+incomeAdd.addEventListener('mousemove', eventFunc); - слушает движение по элементу 
+incomeAdd.addEventListener('mouseenter', eventFunc); - когды мы наводим мышку на квадрат срабатывает mouseenter
+incomeAdd.addEventListener('mouseleave', eventFunc); - когда уводим мышку с квадрата срабатывает mouseleave
+
+incomeAdd.addEventListener('mouseout', eventFunc);
+incomeAdd.addEventListener('mouseover', eventFunc); - Данное событие работает также как и mouseenter, только 
+в отличии от mouseenter mouseover реагирует и на child элементы, т.е. когда в нашем квадрате есть ещё элементы
+mouseover mouseout реагируют на них тоже, а mouseenter и mouseleave буду реагировать только на весь элемент 
+как один главный. это стоит учитывать, когда мы захоти сделать эвент на элемент внутри другиго элемента.
+
+// ОЧЕНЬ ВАЖНАЯ ЧАСТЬ ТЕМЫ!! БУДЕМ ИСПОЛЗОВАТЬ ОЧЕНЬ ЧАСТО. 
+// СОБЫТИЯ КОТОРЫЕ ВОЗНИКАЮ ПРИ РАБОТЕ С ФОРМАМИ
+
+У нас есть imput форма и давайте получим это значение
+addEventListener('input', eventFunc)) приминяем событие импут - событые импут происходит когда мы меняем
+состояние нашего DOM элемента импут. У элемента импут есть свойство value - это то что мы видим в текстовом
+поле и каждый раз когда оно меняется срабатывает событие импут.
+Когда вводим, удаляем текст событие импут срабатывает столько раз сколько чаров мы ввели.
+console.log(document.querySelector('.salary-amount').addEventListener('input', eventFunc));
+
+Так же есть событие 'change' 
+addEventListener('change', eventFunc)); - это событие срабатывает когда мы теряем фокус от нашего импута
+и значение value поменялось
+console.log(document.querySelector('.salary-amount').addEventListener('change', eventFunc));
+
+Событие ''keydown''
+addEventListener(''keydown'', eventFunc)); - оно срабатывает когда мы зажимаем кнопку
+Событие 'keyup'
+addEventListener('keyup', eventFunc)); - это событие срабатывает когда мы отпускаем кнопку
+чаще это используеться при валидации, чтобы запретит ввод не нужных символов.
+Событие 'focus'
+addEventListener('focus', eventFunc)); - это событие используется когда пользователь на ввёл на форму
+и кликнул на неё, т.е. сфокусировался
+Событие 'blur'
+addEventListener('blur', eventFunc)); - срабатывает когда после фокуса пользователь кликнул мимо 
+сфокусированный формы
+
+Работает с range (полоска слайдер имеющая значени от и до)
+находим её и чтобы взять с неё значения использует событые change 
+document.querySelector('.period-select').addEventListener('change', eventFunc));
+console.log(event.target.value); - консольной командой можно взять его значение
+
+
+let eventFunc = function(event) {
+  console.log(event.type);
+  console.log(event.target.value);
+};
+
+console.log(document.querySelector('.period-select').addEventListener('change', eventFunc));
+
+// Событие Загрузки html документа //
+процесс загрузки html документа состоит из 3х стадий
+1 - это событие DOMContentLoaded (когда браузер полностьб загрузил html страницу и построил DOM дерево)
+2 - это событие load (когда loader загрузл все ресурсы)
+3 - это событие unload (уход со старницы)
+
+Первое событие происходит на самом документу тем самым обработчик событий мы можем повесить на 
+сам документ
+Обычно ставят в первой строчке перед use strict и загрывают функцию в конце кода.
+
+document.addEventListener('DOMContentLoaded', function(){
+  .
+  .
+  .
+  .
+  .
+  .
+}); - в таком случае наш JS дожидаеться когда загрузится вся страница а потом уже запускает 
+все скрипты 
+
+Так же есть событие widowunLoad - оно срабатывает когда загружается вся страница, включая её ресурсы
+стили, картинки, фреймы и тд.
+Используеться она очень редко поскольку обычно нет нуждны подгружать все ресурсы и это может
+сильно подгружать страницу.
+ В основном если нужен определённый ресурс, то событие unload можно 
+поставить не постредственно на нём.
+
+Ещё событие onunload - это когда человек уходит со страницы или закрывает окно на виндовс срабатывает 
+событие unload на него можно сделать что-то, что не требующие ожидание - например закрыть 
+вспомокательные поп окна, но оменить сам переход нельзя. 
+
+Зато есть событие onbeforeunload - оно используеться чаще и оно может отменить переход со страници
+можно вызвать этот обработчик события и спросить пользователя, а вы уверены, что хотите закрыть
+страницу, вы уверены что сохрании все данные
+
+window.onbeforeunload = function(){
+  return 'Вы точно сохранили все данные перед выходом ?';
+};
+
+Метод event.preventDefault() - этот метод отменяет стандартное событие браузера, т.е. станардное
+поведение браузера, когда кликаем на ссылку у нас должна открывать новая страница или по клику
+по фореме submin отправляется форма и можем отменять эти события пока пользователь не заполнил
+эту форму или отменять переход пользователья по ссылке на другую страницу и написать
+свои действия
+
+document.querySelector('#link').addEventListener('click', function(event){
+  event.preventDefault();
+  console.log('click');
+})
+
+Ещё с помощью event.preventDefault() мы можем использовать фишку ЗАПРЕТИТЬ КЛИК ПРАВОЙ КНОПКОЙ МЫШКИ
+мы на документ повесим обработчик события, который называеться contextmenu
+
+это нужно для того, что отключить стандартное браузерное меню и реалезовать своё.
+На неокторых онлайн сервисах реализованно своё контекст меню со своими
+дивами, классами и ссылками
+
+    document.addEventListener('contextmenu', function(){
+    event.preventDefault();
+
+    console.log('click');
+
+
+    });
+
+Всплытие - Перехват 
+
+*/
 
 
 
@@ -949,7 +1300,7 @@ let mission  = 100000;
 console.log('Цель: ', mission, '$');
 let periоd = mission / budgetMonth; 
 console.log('За сколько месяцев будет достигнута цель:', periоd);
-console.log('Количесвтво месяцев округляя в большую сторону:', Math.ceil(periоd));
+console.log('Количесвтво месяцев округ��яя в большую сторону:', Math.ceil(periоd));
 let budgetDay = budgetMonth / 30;
 console.log('Дневной бюджет:', budgetDay);
 console.log('Дневной бюджет округлив в меньшую сторону:', Math.floor(budgetDay));
