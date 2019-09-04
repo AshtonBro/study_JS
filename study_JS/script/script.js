@@ -1,6 +1,5 @@
 'use strict';
 
-
 let money,
     start = function() {
     do {
