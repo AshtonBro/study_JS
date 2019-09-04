@@ -1,3 +1,4 @@
+'use strict';
 
 let start = document.getElementById('start');
 let cancel = document.getElementById('cancel');
@@ -24,6 +25,7 @@ let incomeItems = document.querySelectorAll('.income-items');
 let incomeTitle = document.querySelector('.income-title');
 let periodAmount = document.querySelector('.period-amount');
 let imputs = document.querySelectorAll('input');
+console.log('imputs: ', imputs);
 
 
 let appData = {
@@ -40,27 +42,31 @@ let appData = {
   budgetMonth: 0,
   expensesMonth: 0,
 
-  start: function() {
+start: function() {
     
-    if(salaryAmount.value === ''){
-      alert('Поле "Месячный доход" должны быть заполнено!');
-      return;
-    }
+  if(salaryAmount.value === ''){
+    alert('Поле "Месячный доход" должны быть заполнено!');
+    return;
+  }
+      
+      // while(isNaN(salaryAmount) || salaryAmount === 0 || salaryAmount === null);
+  
+  
 
-    this.budget = +salaryAmount.value;
+  this.budget = +salaryAmount.value;
 
-    this.getExpenses();
-    this.getIncome();
-    this.getExpensesMonth();
-    this.getAddExpenses();
-    this.getAddIncome();
-    this.getBudget();
+  this.getExpenses();
+  this.getIncome();
+  this.getExpensesMonth();
+  this.getAddExpenses();
+  this.getAddIncome();
+  this.getBudget();
 
-    this.showResult();
-    
-    this.blocked();
+  this.showResult();
+  
+  this.blocked();
 
-  },
+},
 
 showResult: function(){
   budgetDayValue.value = Math.ceil(this.budgetDay);
@@ -73,13 +79,14 @@ showResult: function(){
 },
 
 addIncomeBlock: function(){
-
   let cloneIncomeItems = incomeItems[0].cloneNode(true);
   cloneIncomeItems.querySelectorAll('input').forEach(function(item){
     item.value = '';
 });
   incomeItems[0].parentNode.insertBefore(cloneIncomeItems, incomePlus);
   incomeItems = document.querySelectorAll('.income-items');
+  console.log('incomeItems: ', incomeItems);
+  
 
  
   if(incomeItems.length === 3){
@@ -95,15 +102,14 @@ addExpensesBlock: function(){
 });
   expensesItems[0].parentNode.insertBefore(cloneExpensesItems, expensesPlus);
   expensesItems = document.querySelectorAll('.expenses-items');
-
-    if(expensesItems.length === 3){
+    
+  if(expensesItems.length === 3){
     expensesPlus.style.display = 'none';
-    }
+  }
 
 },
 
 getExpenses: function(){
-//appData(this)
  expensesItems.forEach(function(item){
   let itemExpenses = item.querySelector('.expenses-title').value;
   let cashExpenses = +item.querySelector('.expenses-amount').value;
@@ -114,7 +120,6 @@ getExpenses: function(){
 },
 
 getIncome: function(){
-//appData(this)
   incomeItems.forEach(function(item){
   let itemIncome = item.querySelector('.income-title').value;
   let cashIncome = +item.querySelector('.income-amount').value;
@@ -126,7 +131,6 @@ getIncome: function(){
 },
 
 getAddExpenses: function(){
-//appData(this)
  let addExpenses = additionalExpensesItem.value.split(',');
   addExpenses.forEach(function(item){
   item = item.trim();
@@ -137,7 +141,6 @@ getAddExpenses: function(){
 },
 
 getAddIncome: function(){
-//appData(this)
   additionIncomeItem.forEach(function(item){
     let itemValue = item.value.trim();
     if (itemValue !== '') {
@@ -147,8 +150,6 @@ getAddIncome: function(){
 }, 
 
 getPeriodSelect: function(event){
-  //this input class = period-select
- console.log(this);
   periodSelect.addEventListener('change', function(){
     incomePeriodValue.value = appData.calcSavedMoney();
     periodAmount.textContent = event.target.value;
@@ -156,20 +157,26 @@ getPeriodSelect: function(event){
 },
 
 blocked: function(){
-  //appData(this)
+  if(salaryAmount.value === ''){
+    return;
+  }
   start.style.display = 'none';
   cancel.style.display = 'block';
-  imputs[0].disabled = true;
-  imputs[1].disabled = true;
-  imputs[3].disabled = true;
-  imputs[5].disabled = true;
-  imputs[7].disabled = true;
-  imputs[7].disabled = true;
+
+  for (let i = 0; i <= 9; i++){
+    imputs[i].disabled = true;
+  }
   
+
 },
 
 reset: function(){
-  location.reload();
+  document.querySelectorAll('input').forEach(function(item){
+    item.value = '';
+  });
+  for (let i = 0; i <= 9; i++){
+    imputs[i].disabled = false;
+  }
 },
 
 // GetExpensesMonth
