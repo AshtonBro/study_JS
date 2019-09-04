@@ -41,45 +41,43 @@ let appData = {
   expensesMonth: 0,
 
   start: function() {
-   //this start
-   console.log(this);
+    
     if(salaryAmount.value === ''){
       alert('Поле "Месячный доход" должны быть заполнено!');
       return;
     }
 
-    appData.budget = +salaryAmount.value;
+    this.budget = +salaryAmount.value;
 
-    appData.getExpenses();
-    appData.getIncome();
-    appData.getExpensesMonth();
-    appData.getAddExpenses();
-    appData.getAddIncome();
-    appData.getBudget();
+    this.getExpenses();
+    this.getIncome();
+    this.getExpensesMonth();
+    this.getAddExpenses();
+    this.getAddIncome();
+    this.getBudget();
 
-    appData.showResult();
+    this.showResult();
     
-    appData.blocked();
+    this.blocked();
 
   },
 
 showResult: function(){
-  //appData(this)
-  budgetDayValue.value = Math.ceil(appData.budgetDay);
-  budgetMonthValue.value = appData.budgetMonth;
-  expensesMonthValue.value = appData.expensesMonth;
-  additionalExpensesValue.value = appData.addExpenses.join(', ');
-  additionalIncomeValue.value = appData.addIncome.join(', ');
-  targetMonthValue.value = Math.ceil(appData.getTargetMonth());
-  incomePeriodValue.value = appData.calcSavedMoney();
-
+  budgetDayValue.value = Math.ceil(this.budgetDay);
+  budgetMonthValue.value = this.budgetMonth;
+  expensesMonthValue.value = this.expensesMonth;
+  additionalExpensesValue.value = this.addExpenses.join(', ');
+  additionalIncomeValue.value = this.addIncome.join(', ');
+  targetMonthValue.value = Math.ceil(this.getTargetMonth());
+  incomePeriodValue.value = this.calcSavedMoney();
 },
 
 addIncomeBlock: function(){
-  //this btn_plus income_add
-  console.log(this);
+
   let cloneIncomeItems = incomeItems[0].cloneNode(true);
-  console.log(event.target.value);
+  cloneIncomeItems.querySelectorAll('input').forEach(function(item){
+    item.value = '';
+});
   incomeItems[0].parentNode.insertBefore(cloneIncomeItems, incomePlus);
   incomeItems = document.querySelectorAll('.income-items');
 
@@ -91,11 +89,10 @@ addIncomeBlock: function(){
 },
 
 addExpensesBlock: function(){
-  //this btn_plus expenses_add
-  console.log(this);
-  console.log(this);
   let cloneExpensesItems = expensesItems[0].cloneNode(true);
-
+  cloneExpensesItems.querySelectorAll('input').forEach(function(item){
+    item.value = '';
+});
   expensesItems[0].parentNode.insertBefore(cloneExpensesItems, expensesPlus);
   expensesItems = document.querySelectorAll('.expenses-items');
 
