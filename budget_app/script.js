@@ -39,8 +39,10 @@ let appData = {
   budgetDay: 0,
   budgetMonth: 0,
   expensesMonth: 0,
-    start: function() {
-    
+
+
+start: function() {
+   
     if(salaryAmount.value === ''){
       alert('Поле "Месячный доход" должны быть заполнено!');
       return;
@@ -56,6 +58,8 @@ let appData = {
     appData.getBudget();
 
     appData.showResult();
+    
+    appData.blocked();
 },
 
 showResult: function(){
@@ -66,6 +70,8 @@ showResult: function(){
   additionalIncomeValue.value = appData.addIncome.join(', ');
   targetMonthValue.value = Math.ceil(appData.getTargetMonth());
   incomePeriodValue.value = appData.calcSavedMoney();
+  
+  console.log(this);
 },
 
 addIncomeBlock: function(){
@@ -78,6 +84,7 @@ addIncomeBlock: function(){
   if(incomeItems.length === 3){
     incomePlus.style.display = 'none';
     }
+  
 },
 
 addExpensesBlock: function(){
@@ -89,6 +96,7 @@ addExpensesBlock: function(){
     if(expensesItems.length === 3){
     expensesPlus.style.display = 'none';
     }
+
 },
 
 getExpenses: function(){
@@ -135,11 +143,7 @@ getPeriodSelect: function(event){
   periodAmount.textContent = event.target.value;
 },
 
-stopCalculation: function(){
-  if(salaryAmount.value === ''){
-    alert('Не за будь заполнить поля!');
-    return;
-  }
+blocked: function(){
   start.style.display = 'none';
   cancel.style.display = 'block';
   imputs[0].disabled = true;
@@ -148,7 +152,7 @@ stopCalculation: function(){
   imputs[5].disabled = true;
   imputs[7].disabled = true;
   imputs[7].disabled = true;
- 
+  
 },
 
 // GetExpensesMonth
@@ -223,6 +227,9 @@ AddToUpperCaseForFirstChar: function() {
   
 };
 
+
+console.log('this: ', this.appData);
+
 start.addEventListener('click', appData.start);
 start.addEventListener('click', appData.stopCalculation);
 expensesPlus.addEventListener('click', appData.addExpensesBlock);
@@ -237,13 +244,336 @@ periodSelect.addEventListener('change', appData.getPeriodSelect);
 
 
 
+// КОНТЕКСТ ВЫЗОВА THIS //
+
+/* Вообще this это ссылка на какой-то обьект, если ввести его в консоль
+console.log(this);  то получим глобальные обьект 
+Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, parent: Window, …} 
+
+на запомнть что this всегда ссылкается на какой-то обьект, а вот на какой обьект мы сейчас разбереёмся
+
+Во время вызова функции создаётся запись актевации которая содержит информацию откуда вызвана функция, 
+как вызвана функция, какие параметры и тд и отдно из свойств является ссылка this 
+чтобы понять this нужно понять 4 правила(поведение) это - 
+callstack - стек вызова функций и callsite (это место вызова функции)
+
+Что такое CallSite.
 
 
+function one(){
+  console.log('one');
+  two();
+}
+function two(){
+  console.log('two');
+  three();
+}
+function three(){
+  console.log('three');
+}
+
+one(); // это место где была вызвана функция!. если бы она вызывалась в другом месте или ещё где. Для каждого
+вызвова был бы определён свой this, т.е он бы прощитался по новой для каждогов вызова.
 
 
+callStack - работает так 
+
+function one(){
+  console.log('one');
+  two();
+}
+function two(){
+  console.log('two');
+  three();
+}
+function three(){
+  console.log('three');
+}
+У нас есть три функции 
+one two three
+
+во время выполнении функции one стек вызова будет выглядить из одной фукнкции one, но она вызвает функцию two,
+а two стек выполнения функции two будет состоять из функции one и two, следуом two вызывает функцию three. 
+стек функции three будет состоять из функции one, two, three, затем three первая завершает работу, после
+завершает работу two и наконе one
+
+              three
+               |
+        two   two   two
+        |
+  one   one   one   one   one
+   |
+ global
 
 
+Теперь поговорим о 4х правилах
 
+ПРАВИЛО 1 - ПРИВЯЗКА ПО УМОЛЧАНИЮ 
+это когда мы пишем имя функции и ставим скобочки
+
+function test(){
+   console.log('hello');
+}
+
+test() в консоле получим hello.   this всегда существует внутри функции и определяеться внутри функции и зависит
+от того, где и как функция вызывается. Функция test обладает контекстом вызова функции test и он описываеться в this
+любая функция вызывается всегда внутри какого-то контекста и контекст может быть исклбчительно только обьектом.
+выведем в консоль this 
+
+В данном случает this смотрит на глобальный обьект window 
+var a = 10;
+console.log('hello', this); - hello
+
+если зададим глобальную переменную то можем обратить через this к этой переменной 
+var a = 10;
+console.log('hello', this.a); - hello 10
+
+var это глобальная перменная и рекомендуется использовать let и const 
+в таком случае мы получим 
+let a = 10;
+console.log('hello', this.a); - hello undefined
+
+когда мы создаём элемент через var она записываеттся в глобальный обьект window
+
+Как понять что this ссылается на глобальный обьект, если функция вызывается без точки, т.е. ни как метод, то this
+будем window, даже если внутри функции мы задали функцию, и во второй функции вызвали this, то this всё равно
+ссылается на глобальный обьект window  (Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, parent: Window, …})
+т.е this ни как не связан с областями видимости.
+
+Всегда когда функцию вызывают без точки, без привязка к обьекту то this это window (если ему не изменили контекст)
+var a = 10;
+function test(){
+  console.log('hello', this.a);
+  function test2(){
+    console.log(this);
+  }
+  test2();
+}
+test();
+
+используя use strict у нас выйдет ошибка с this 
+но так как все функции записаны уже в глобальный обьект через обьект window мы можем запустить функцию
+
+var a = 10;
+function test(){
+  console.log('hello', this.a);
+  function test2(){
+    console.log(this);
+  }
+  test2();
+}
+window.test();
+
+ПРАВИЛО 2 - НЕЯВНАЯ ПРИВЯЗКА 
+
+это когда мы указываем обьект и его метод 
+window.test();
+
+let obj = {
+  x:10,
+  y:15,
+  test: function(){
+    console.log('this: ', this);
+  }
+};
+// нам надо обратиться к обьекту и через точку к методу test 
+// и мы видем что this в функции test ссылается на обьект obj в котором она и описана 
+obj.test();
+// не важно где она описана и как, главное где она вызывается, важен сам момент вызова 
+
+создалим новую функцию - внешнюю и её передадим в обьект, то при вызове метода тест this будет именно этот 
+обьект obj  'this {x: 10, y: 15, test: ƒ}'
+
+let obj = {
+  x:10,
+  y:15,
+  test: newTest
+};
+// мы видем что при вызове метода newTest то this и будет э
+function newTest(){
+  console.log('this', this)
+}
+obj.test();
+
+window.newTest();
+но если мы вызовим функцию отдельно то this это будет глобальный обьект
+this {x: 10, y: 15, test: ƒ}
+script.js:391 this Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, parent: Window, …}
+
+
+// У нас теперь есть второй obj2 в котором есть свойство х и у и есть ссылка на обьект testObj: obj - 
+testObj присваиваем обьект obj. 
+И теперь через obj2 обратимся к его свойству testobj а это ссылка на первый обьект obj и обратимся к свойству 
+test: который имеет метод newTest
+obj2.testObj.test(); и вызываем его - в консоле видим что this = 10
+в таком случае контект берёться из последенего обьекта 
+
+let obj = {
+  x:10,
+  y:15,
+  test: newTest
+};
+
+let obj2 = {
+x: 20,
+y: 25,
+testObj: obj
+};
+
+function newTest(){
+  console.log('this', this.x);
+}
+
+obj.test();
+obj2.testObj.test();
+
+Ну мы можем также потерять привязку к this 
+зададим переменную foo и присвоим obj.test(); в эту переменную
+
+Получается что наша функция newTest была в обьекте obj мы её от туда вытащили и присвоили в перменную foo 
+и получули this  (window)
+
+
+let obj = {
+  x:10,
+  y:15,
+  test: newTest
+};
+
+let foo = obj.test();
+
+function newTest(){
+  console.log('this: ', this);
+}
+
+foo();
+// на не важно что тут произошло, что там произошло, а важно как функция вызвалась и где, а вызывается она 
+// по имени со скобкой имя(), а это наше первое правило - привязка по умолчанию
+
+Если захотим привязать нашу функцию как функцию callback то тоже произойдёт привязка по умолчанию
+
+
+let obj = {
+  x:10,
+  y:15,
+  test: newTest
+};
+
+function foo (callBack){
+  callBack();
+}
+
+function newTest(){
+  console.log('this: ', this);
+}
+
+// такая же привязка по умолчанию
+foo(obj.test);  //this:  Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, parent: Window, …}
+
+И также это будет работать на встроенных функциях напрмиер setTimeout
+
+let obj = {
+  x:10,
+  y:15,
+  test: newTest
+};
+function foo (callBack){
+  callBack();
+}
+function newTest(){
+  console.log('this: ', this);
+}
+// Берём setTimeout, первым параметрам обьект вызова, вторым милисекунды через которые обьект будет вызван
+// чтож это было 2е правило неявная привязка.
+setTimeout(obj.test, 1000);
+Резюмируем.
+
+1. Привязка по умолчанию foo();     this ссылаеться на глобальный обьект window
+2. Не явлная привязка obj.foo();      this будет ссылаться на обьект obj
+3. Явная привязка apply, call, bind
+4. Привязка new
+
+
+ПРАВИЛО 3 - ЯВНАЯ ПРИВЯЗКА APPLY, CALL, BIND
+
+сейчас obj и функция newTest ни как не связанны но в JS существует явная привязка, она существует для того, 
+чтобы использовать конкретный обьект при вызове функции 
+для это существуют методы функции apply и call
+
+aplly принимает 2 параметра
+1. параметр это конкретный обьект который мы хотим привязать к контексту вызова к this 
+2. параметр это массив аргументов которые будут разобраны и переданы в функцию которую мы вызываем
+
+call принимает 2 параметра
+1. параметр это конкретный обьект который мы хотим привязать к контексту вызова к this 
+2. параметр принимает сколько угодно парметров через запятую
+
+Оба эти метода принимает первым параментом обьект на который будет ссылаться this при вызове функциии newTest
+
+let obj = {
+  x:10,
+  y:15,
+};
+
+function newTest(){
+  console.log('this: ', this);
+}
+
+Есть ещё такой трюк жесткая привязка - это когда создаём функцию и внутри применяем call или aplly  
+
+
+let obj = {
+  x:10,
+  y:15,
+};
+
+function newTest(){
+  console.log('this: ', this);
+}
+
+// внутри этой функции привяжем функцию newTest с помощью call к обьекту obj
+// теперь когда я буду вызывать функцию hardBind() то на самом деле будет вызываться функция newTest с 
+// с привязанным обьектом
+function hardBind(){
+  newTest.call(obj);
+}
+
+hardBind(); // - this:  {x: 10, y: 15}   в таком случае обьект уже привязан
+
+и также в качестве параметра можем передавать какойто обьект и даже использовать setTimeout
+
+let obj = {
+  x:10,
+  y:15,
+};
+function newTest(){
+  console.log('this: ', this);
+}
+function hardBind(hard){
+  newTest.call(hard);
+}
+hardBind(obj);
+setTimeout(hardBind, 1000, obj);
+
+
+в ES5 появилась новый метод bind который также привязывает контекст к обьекту, но единственное он его не вызывает
+мы можем создать функцию foo и привязать нашу функцию newTest с помощью bind и указать обьект obj
+let foo = newTest.bind(obj);
+при вызове функции foo мы будем получать наш обьект   this:  {x: 10, y: 15}
+
+let obj = {
+  x:10,
+  y:15,
+};
+function newTest(){
+  console.log('this: ', this);
+}
+
+let foo = newTest.bind(obj);
+
+foo();
+
+*/ 
 
 
 
