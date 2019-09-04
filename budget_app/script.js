@@ -242,8 +242,6 @@ periodSelect.addEventListener('change', appData.getPeriodSelect);
 // appData.calcSavedMoney();
 // appData.AddToUpperCaseForFirstChar();
 
-
-
 // КОНТЕКСТ ВЫЗОВА THIS //
 
 /* Вообще this это ссылка на какой-то обьект, если ввести его в консоль
