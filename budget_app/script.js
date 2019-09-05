@@ -25,7 +25,6 @@ let incomeItems = document.querySelectorAll('.income-items');
 let incomeTitle = document.querySelector('.income-title');
 let periodAmount = document.querySelector('.period-amount');
 let imputs = document.querySelectorAll('input');
-console.log('imputs: ', imputs);
 
 
 let appData = {
@@ -66,7 +65,6 @@ start: function() {
   this.showResult();
   
   this.blocked();
-   
 },
 
 showResult: function(){
@@ -93,15 +91,11 @@ addIncomeBlock: function(){
   incomeItems[0].parentNode.insertBefore(cloneIncomeItems, incomePlus);
   incomeItems = document.querySelectorAll('.income-items');
 
-  
   if(incomeItems.length === 3){
     incomePlus.style.display = 'none';
   } 
-    
-  
+ 
 },
-
-
 
 addExpensesBlock: function(){
   let cloneExpensesItems = expensesItems[0].cloneNode(true);
@@ -114,7 +108,6 @@ addExpensesBlock: function(){
   if(expensesItems.length === 3){
     expensesPlus.style.display = 'none';
   }
-
 },
 
 getExpenses: function(){
@@ -128,17 +121,25 @@ getExpenses: function(){
 
  });
 },
-
+/////////////////////
 getIncome: function(){
   let freshIncomeItems = document.querySelectorAll('.income-items');
   console.log('freshIncomeItems: ', freshIncomeItems);
   freshIncomeItems.forEach(function(item){
   let itemIncome = item.querySelector('.income-title').value;
   let cashIncome = +item.querySelector('.income-amount').value;
-  if (itemIncome !== '' && cashIncome !== '') {
-    appData.income[itemIncome] = cashIncome;
-    appData.incomeMonth += cashIncome;
-  }
+    if(isNaN(cashIncome) || cashIncome === 0 || cashIncome.includes(' ') || cashIncome === NaN) {
+      alert('Поле: Дополнительный доход \n В сумму вводим только цифры');
+      cashIncome = '';
+      return;
+    } 
+    
+    if(itemIncome !== '' && cashIncome !== '') {
+      appData.income[itemIncome] = cashIncome;
+      appData.incomeMonth += cashIncome;
+    }
+
+    
  });
 },
 
@@ -176,7 +177,7 @@ blocked: function(){
   cancel.style.display = 'block';
   let newInputs = document.querySelectorAll('input');
   console.log('newInputs: ', newInputs);
-  for (let i = 0; i <= periodSelect; i++){
+  for (let i = 0; i <= newInputs.length - 1; i++){
     newInputs[i].disabled = true;
   }
 
