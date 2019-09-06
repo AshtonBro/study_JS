@@ -128,7 +128,9 @@ getIncome: function(){
   //   } while(isNaN(cashIncome.value) || cashIncome.value === 0 || cashIncome.value.includes(' '));
   // // }
 
-  /* Поменяй красску у импутов и использовать evetLisstener или сделать див */ 
+  /* Поменяй красску у импутов и использовать evetLisstener или сделать див 
+  
+  событие change! много составное событие можно попробовать сделать валидацию*/ 
 
   freshIncomeItems.forEach(function(item){
     let itemIncome = document.querySelector('.income-title').value;
@@ -139,7 +141,7 @@ getIncome: function(){
       appData.incomeMonth += cashIncome;
     }
 
-    
+
  });
 },
 
@@ -290,7 +292,7 @@ AddToUpperCaseForFirstChar: function() {
     }
   
 }
-  
+
 };
 
 const startApp = appData.start.bind(appData);

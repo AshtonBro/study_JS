@@ -5,9 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <link href="/ForPractice/stylecs.css" rel="stylesheet">
+<style>
+body {
+ position: relative;
+}
+
+#context{
+    display: none;
+    position: absolute;
+    z-index: 100;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#context li{
+    cursor: pointer;
+    background: indigo;
+    color: aliceblue;
+}
+#context.active {
+    display: block
+}
+
+#context li:hover{
+    cursor: pointer;
+    background: aliceblue;
+    color: indigo;
+}
+
+</style>
 </head>
 <body>
-   
+    <ul id='context'>
+        <li>menu 1</li>
+        <li>menu 2</li>
+        <li>menu 3</li>
+        <li>menu 4</li>
+    </ul>
+
 </main>
 <script src="/ForPractice/practiceSurTask.js" async defer></script>
 
