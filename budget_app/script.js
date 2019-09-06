@@ -128,6 +128,8 @@ getIncome: function(){
   //   } while(isNaN(cashIncome.value) || cashIncome.value === 0 || cashIncome.value.includes(' '));
   // // }
 
+  /* Поменяй красску у импутов и использовать evetLisstener или сделать див */ 
+
   freshIncomeItems.forEach(function(item){
     let itemIncome = document.querySelector('.income-title').value;
     let cashIncome = +document.querySelector('.income-amount').value;
@@ -302,6 +304,7 @@ incomePlus.addEventListener('click', addIncPlus);
 
 const periodRange = appData.getPeriodSelect.bind(appData);
 periodSelect.addEventListener('change', periodRange);
+
 
 const resetApp = appData.reset.bind(appData);
 cancel.addEventListener('click', resetApp);
@@ -1545,6 +1548,7 @@ console.log(collect[1].textContent); - возваращет только тек�
 collect[1].textContent = 'Новый текст'; - ретурн ввиде текста без стилей
 collect[1].innerHTML = '<b>Новый текст</b>'; - может меня и стиль например жирный (но
   такой способ затирает всю предыдущую разметку)
+
 Но у нас есть возможность добавлять элементы с помощью API DOM 
 для этого у обьекта DOM есть метод createElement это метод принимает в параметрах 
 1. - это название тега который мы хотим создать 
