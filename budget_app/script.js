@@ -295,6 +295,14 @@ AddToUpperCaseForFirstChar: function() {
 
 };
 
+
+
+
+
+
+
+
+
 const startApp = appData.start.bind(appData);
 start.addEventListener('click', startApp);
 
@@ -310,6 +318,9 @@ periodSelect.addEventListener('change', periodRange);
 
 const resetApp = appData.reset.bind(appData);
 cancel.addEventListener('click', resetApp);
+
+
+
 
 
 
