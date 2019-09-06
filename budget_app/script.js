@@ -27,6 +27,8 @@ let periodAmount = document.querySelector('.period-amount');
 let imputs = document.querySelectorAll('input');
 
 
+
+
 let appData = {
   budget: 0,
   income: {},
@@ -50,6 +52,7 @@ start: function() {
    if(isNaN(salaryAmount.value) || salaryAmount.value === 0 || salaryAmount.value === null) {
      alert('Поле: Месячный доход! \n Только цифры!');
     salaryAmount.value = '';
+    return;
    }
   
 
@@ -75,12 +78,6 @@ showResult: function(){
   additionalIncomeValue.value = this.addIncome.join(', ');
   targetMonthValue.value = Math.ceil(this.getTargetMonth());
   incomePeriodValue.value = this.calcSavedMoney();
-},
-
-validationFunc: function() {
-
-  
-
 },
 
 addIncomeBlock: function(){
@@ -112,7 +109,7 @@ addExpensesBlock: function(){
 
 getExpenses: function(){
  expensesItems.forEach(function(item){
-  let itemExpenses = item.querySelector('.expenses-title');
+  let itemExpenses = item.querySelector('.expenses-title').value;
   let cashExpenses = +item.querySelector('.expenses-amount').value;
   
   if (itemExpenses !== '' && cashExpenses !== '') {
@@ -121,19 +118,21 @@ getExpenses: function(){
 
  });
 },
-/////////////////////
+
 getIncome: function(){
   let freshIncomeItems = document.querySelectorAll('.income-items');
-  console.log('freshIncomeItems: ', freshIncomeItems);
+  
+  // if(isNaN(cashIncome.value) || cashIncome.value === 0 || cashIncome.value.includes(' ')) {
+  //   do {
+  //       confirm('введите цифру');
+  //       cashIncome.value = '';
+  //   } while(isNaN(cashIncome.value) || cashIncome.value === 0 || cashIncome.value.includes(' '));
+  // // }
+
   freshIncomeItems.forEach(function(item){
-  let itemIncome = item.querySelector('.income-title').value;
-  let cashIncome = +item.querySelector('.income-amount').value;
-    if(isNaN(cashIncome) || cashIncome === 0 || cashIncome.includes(' ') || cashIncome === NaN) {
-      alert('Поле: Дополнительный доход \n В сумму вводим только цифры');
-      cashIncome = '';
-      return;
-    } 
-    
+    let itemIncome = document.querySelector('.income-title').value;
+    let cashIncome = +document.querySelector('.income-amount').value;
+  
     if(itemIncome !== '' && cashIncome !== '') {
       appData.income[itemIncome] = cashIncome;
       appData.incomeMonth += cashIncome;
@@ -170,16 +169,24 @@ getPeriodSelect: function(event){
 },
 
 blocked: function(){
-  if(salaryAmount.value === ''){
-    return;
-  }
+  
   start.style.display = 'none';
   cancel.style.display = 'block';
-  let newInputs = document.querySelectorAll('input');
-  console.log('newInputs: ', newInputs);
-  for (let i = 0; i <= newInputs.length - 1; i++){
-    newInputs[i].disabled = true;
-  }
+  additionalExpensesItem.disabled = true;
+
+  let freshAdditionIncomeItem = document.querySelectorAll('.additional_income-item');
+  freshAdditionIncomeItem.forEach(function(item){
+    item.disabled = true;
+  });
+  let freshIncomeTitle = document.querySelectorAll('.income-title');
+  console.log('freshIncomeTitle: ', freshIncomeTitle);
+  freshIncomeTitle.forEach(function(item){
+    item.disabled = true;
+  });
+  let freshExpensesTitle = document.querySelectorAll('.expenses-title');
+  freshExpensesTitle.forEach(function(item){
+    item.disabled = true;
+  });
 
 },
 
@@ -287,7 +294,6 @@ AddToUpperCaseForFirstChar: function() {
 
 const startApp = appData.start.bind(appData);
 start.addEventListener('click', startApp);
-start.addEventListener('click', appData.blocked);
 
 const addExpPlus = appData.addExpensesBlock.bind(appData);
 expensesPlus.addEventListener('click', addExpPlus);
