@@ -28,7 +28,6 @@ let imputs = document.querySelectorAll('input');
 
 
 
-
 let appData = {
   budget: 0,
   income: {},
@@ -323,8 +322,414 @@ cancel.addEventListener('click', resetApp);
 // appData.AddToUpperCaseForFirstChar();
 
 
+// OOП //
+// Обьектно-орентированное-программирование //
+/* Принцып ооп обязывает программиста структурировать свой код, обьединение сущностей и методов в единное целое
+javaScript является прототипно орентированным языком программирования.
+в javaScript есть понятие прототип - скрытыя ссылка обьекта . Прототип это обьект, из которого текущий обьект
+черпает недостоющие методы и свойства.
+Если в текущем обьекте отсутствует какой-то свойство то JS по прототипу поднимается выше и будет искать
+там это свойство.
+
+                      Обьект car prototype              если мы обратимся к свойству
+                        door; 4,                        model то получим prius.
+                        turbocharting; false,           toyota.model; //'prius'
+                        ....                            toyota.door; //4
+Обьект toyota            /|\                             toyota.color; //undefined
+будет у нас               |
+наследоваться             |                             когда мы обращаемся к toyota.model 
+от обьекта                |                             получаем prius 
+car prototype             |                             когда обращаемся toyota.door
+                      Обьект toyota                     то скрипт ищет его в обьекте (Обьект toyota)
+                        model; prius,                   ненаходит и поднимается выше по прототипу
+                        year; 2018,                     и находит его там и мы получаем 4.
+                        turbocharting; true,            если мы ввели обьект color он обращается 
+                                                        к обьекту (Обьект toyota) ненаходит, идёт выше
+                                                        к Обьекту car prototype ненаходит и поднимается дальше
+                                                        потому что у car prototype если прототип - ненаходит и там
+                                                        и выдаёт нам undefined.
+если мы вызовим свойсвтво toyota.turbocharting то первым делом будет искать в Обьекте toyota
+найдёт его и там выдаст true. Так как он нашел это свойство в обьект toyota то выше он не пойдёт.
+так мы находим встроенные методы toString, join, toUpperCase, length. но эти свойства 
+и методы хранятся не в самом обьекте, а в цепочке прототипов между нашим обьектом и встроеным 
+обьектом javaScript - это такое корневой обьект который трогать не стоит. Лучше создавать
+собственный и встравить их в цепочку с помощью констркутора.
+
+
+let arr = [1,2,3,4,5];
+console.log('arr: ', arr); // в консоле видим что у arr есть ссылка на прототип,
+свойство __proto__: Array(0)
+разворачиваем его 
+concat: ƒ concat()
+constructor: ƒ Array()
+copyWithin: ƒ copyWithin()
+entries: ƒ entries()
+every: ƒ every()
+fill: ƒ fill()
+filter: ƒ filter()
+find: ƒ find()
+findIndex: ƒ findIndex()
+flat: ƒ flat()
+flatMap: ƒ flatMap()
+forEach: ƒ forEach()
+includes: ƒ includes()
+indexOf: ƒ indexOf()
+join: ƒ join()
+keys: ƒ keys()
+и видим много занкомых совйств и методов, всё это написали разрабочики javaScript'a.
+console.log(arr.__proto__);
+console.log(Array.prototype); - это функция конструктор. Это зарезервированная функция 
+на основе которой создаются массивы, она при себе обьект прототип, функции конструктор Array
+с помощьью обьекта prototype описывает наш массив, наделяет его методыми, функциями.
+Если сравнить console.log(arr.__proto__ === Array.prototype); то мы получим true.
+потому что протип у них один
+
+
+let car = {
+  doors: 4,
+  turbochargint: false,
+  ride: function(){
+    console.log('Car is raiding');
+  }
+};
+
+let newCar = Object.create(car); // мы создали новый обьект newCar на основе нашего обьекта car
+если раскроем скобки то там пусть, но откреом __proto__ то увидим там свойства нашего car 
+newCar:  {}
+        __proto__: 
+        doors: 4
+        ride: ƒ ()
+        arguments: 
+        nullcaller: 
+        nulllength: 0
+        name: "ride"
+
+добавляем новое свойство
+newCar.model = 'toyota prius';
+
+попробуем получить совйство doors и у нас это получилось, получили мы его от прототипа.
+таким оброазом можно строиться целые цепочки прототипов, если мы на основе обьекта newCar
+создадим новый обьект, то у этого нового обьета будет прототип newCar, а прототипа newCar 
+будет прототип car - это и называется наследование.
+и один момент, что прототип car не может использовать другие прототипы, потому что он не знает
+сколько обьектов были созданы на его основе
+console.log(newCar.doors); // 4
+
+изучим методы 
+
+метод hasOwnProperty возвращает булевое занчение и будет означат есть ли такой свойство 
+
+у нашего обьекта, т.е принадлежит ли оно ему, сдесь и сейчас
+console.log(newCar.hasOwnProperty('model')); // true 
+
+этот метод не видит наследуемые свойства
+console.log(newCar.hasOwnProperty('doors')); // false
+
+но можно применить hasOwnProperty таким обрзаом чтобы применить свойства у нашего протипа
+
+console.log(newCar.__proto__.hasOwnProperty('model')); // false
+console.log(newCar.__proto__.hasOwnProperty('doors')); // true
+
+
+ещё полезный метод isPrototypeOf и этот метод принимает один параметр - обьект 
+в нашем случае вернуло true - этот метод показывает явялется ли обьект car прототипом 
+для newCar.  Когда у нас длинная цепочка из множество обьектов, то нужно понимать, является 
+ли обьект прототипом кокого-то обьекта 
+
+console.log(car.isPrototypeOf(newCar));
+
+// ФУНКЦИЯ - КОНСТРУКТОР //
+
+ЭТО обычная функция которая имеет локальную переменную и параметры и тд, но создана она
+для определённой цели, она используется как описания какой-то сущности, как инструкция у пазла.
+Это функция вызывается когда мы начинаем собирать пазл, смотреть в инструкцию и собирать его,
+конечный результат - это пазл ктороый создали это и будет порождением этой функции конструктора
+
+Технически любая функция может быть использованна как конструктор, т.е. любую функцию можно
+выделить при помощи оператора new и чтобы выделить, конструктор их называют с большой буквы.
+Что делает оператор new - он порождает новый пустой обьект, после вызывает функцию Car,
+протоип функции конструктора становиться прототипом нового обьекта, этот новосозданный обьект 
+становится this для вызова конструктора, т.е. перенаправляе this на новосозданный обьект дальше
+возвращает новый обьект и мы его присваиваем в переменную car1, т.е this будет указывать на car1
+
+Привязка new. Если обьект создан через оператора new то this будет укаызывать на этот обьект.
+this это ссылка на новосозданный обьект и обращаемся к его ключу model и если этого ключа нет в 
+новом обьекте то мы его создаём и присваиваем занчение 'Mazda' дальше создаём переменную и 
+присваиваем этот обьект к перменной car1 
+
+
+function Car(){
+  this.model = 'Mazda';
+}
+
+let car1 = new Car();
+console.log('car1: ', car1);
+
+let carTest = {
+  model: 'Mazda'
+};
+
+console.log('carTest: ', carTest);
+
+car1:  Car {model: "Mazda"}
+
+carTest:  {model: "Mazda"}  нет метки Car 
+
+если раскрыть их и их протипы 
+
+car1:  
+Car {model: "Mazda"}
+model: "Mazda"
+__proto__:         -------------
+constructor: ƒ Car()           | -- у обьекта который мы создали с помощью конструктора имеется
+__proto__: Object  -------------    дополнительный прототип так сказать прослойка, между 
+                                    прототипом object и нашим обьектом. 
+раскрыв object мы там увидим всё то что есть в обьектс carTest. А простолойка нужна для того, что
+бы мы когли добавлять туда наши методы
+
+
+                                  мы видем что прототимы отлечаются 
+carTest:  
+{model: "Mazda"}
+model: "Mazda"
+__proto__:
+constructor: ƒ Object()
+hasOwnProperty: ƒ hasOwnProperty()
+isPrototypeOf: ƒ isPrototypeOf()
+propertyIsEnumerable: ƒ propertyIsEnumerable()
+toLocaleString: ƒ toLocaleString()
+toString: ƒ toString()
+valueOf: ƒ valueOf()
+__defineGetter__: ƒ __defineGetter__()
+__defineSetter__: ƒ __defineSetter__()
+__lookupGetter__: ƒ __lookupGetter__()
+__lookupSetter__: ƒ __lookupSetter__()
+get __proto__: ƒ __proto__()
+set __proto__: ƒ __proto__()
+
+
+Функцию car выведим в консоль как обьект припомощи console.dir
+
+ƒ Car()
+    arguments: null
+    caller: null
+    length: 0
+    name: "Car"
+    prototype: {constructor: ƒ}   <-- и видем что функция имеет прототип и его можно заполнить своими методами
+    __proto__: ƒ ()
+
+обращемся к нашей функции Car к её prototype и добавим новый метод это функция ride
+
+Car.prototype.ride = function(){
+  console.log('Ехать');
+}
+
+смотрим в консоль console.dir(Car);
+ƒ Car()
+    arguments: null
+    caller: null
+    length: 0
+    name: "Car"
+    prototype: {ride: ƒ, constructor: ƒ}  <-- и в прототипе появилась функция ride 
+    __proto__: ƒ ()
+
+
+let car1 = new Car(); - у обьекта пораждённой этой функции, так в прототипе появился ride 
+console.log('car1: ', car1);
+car1: Car {model: "Mazda"}
+      model: "Mazda"
+      __proto__:
+      ride: ƒ ()   <--- появился ride 
+      constructor: ƒ Car()
+      __proto__: Object
+
+и теперь я могу вызвать этот метод
+car1.ride();  - Ехать
+
+
+function Car(model, color) {
+  this.model = model;
+  this.color = color;
+}
+
+let car1 = new Car('Mazda', 'Red'); 
+
+console.log('car1: ', car1);
+и мы получили наш обьект 
+car1:  
+    Car {model: "Mazda", color: "Red"}
+    color: "Red"
+    model: "Mazda"
+
+
+function Car(model, color) {
+  this.model = model;
+  this.color = color;
+}
+
+let car1 = new Car('Mazda', 'Red'); 
+let car2 = new Car('Vaz', 'black');
+console.log(car1.ride === car2.ride); - true 
+
+Car.prototype.ride = function(){
+  console.log('Ехать');
+};
+console.dir(Car);
+
+car1.ride();
+
+Вернёмся к классам в JS и понятию ООП - это подход к решению задачи манипулирую обьектами
+т.е. задача разбирается на обьект и при помощи них решается, а класс это важная еденица ООП
+Разберёмся с понятие класса.
+Class - это обстрактная еденица описывающая обьект.
+Например автомобиль, если обстрагированться от машин которые мы знаем, типо bmv mercedes и тд,
+возьмём понятие атомобиль, мы значем, что у него 4 колеса, мотор, руль педали и это и будет наш
+обстрактный класс и на основе его мы можем создать любою модель,но это уже будет настоящее 
+существующее еденица, обьект.
+Обьект - это второе важное понятие в ООП. Любой атвомобиль созданный на основе класс, это и будет
+объетк. В ООП также любой объект должен быть создан на основе класса, должен существовать класс, 
+который его диклариурет, который описывает его структуру, свойство, поведение, но он не 
+создаёт объект, а объект это структура которое имеет свойство и методы, который были описаны 
+в классе, на основе которых был и создан обьект.
+
+javaScript использует ООП как архитектуру, не все задач решаются на с помощью ООП
+
+В эта функция конструктор по сути своей является классом, потому что его не существуте как обьект
+какой-то автомобиль, какой-то фирмы, какая-то модель. просто описанно обстрактно
+
+function Car(brand, model){
+  this.brand = brand;
+  this.model = model;
+}
+
+Но в бущем мы определяем экземпляр класса
+
+let car1 = new Car('toyota', 'prius');
+let car2 = new Car('BMW', 'm5');       и это уже будут обьекты и они созданы с помощью конструктра 
+на основе класса Car 
+
+Добави в конструктор options
+
+function Car(brand, model, options){
+  this.brand = brand;
+  this.model = model;
+  options = options || {};
+  this.color = options.color;
+  this.transmission = options.transmission;
+
+}
+
+let car1 = new Car('toyota', 'prius', {color: 'Red'});
+let car2 = new Car('BMW', 'm5', {ABS: true});
+console.log('car1: ', car1);
+console.log('car2: ', car2);
+
+car1:  
+    Car {brand: "toyota", model: "prius", color: "Red", transmission: undefined}
+    brand: "toyota"
+    color: "Red"
+    model: "prius"
+    transmission: undefined
+    __proto__: Object
+
+car2:  
+    Car {brand: "BMW", model: "m5", color: undefined, transmission: undefined}
+    brand: "BMW"
+    color: undefined
+    model: "m5"
+    transmission: undefined
+    __proto__: Object
+
+    мы видем что, свойства колор у car 1 есть у car 2 нет и transmissio не определена, но и 
+    мы его не обозначили как и цвет у car2, а вот свойства ABS нет потому что она не была
+    задиклорированна в конструкторе класса.
+
+    Ещё мы можем декларировать поведение наших автомобилей
+
+    Car.prototype.ride = function(){
+  console.log(this.brand + ' ' + this.model + ' ' + 'поехала!');
+
+car1.ride();
+car2.ride();
+
+также это функция была добавлена в прототип car и её можно вызвать
+car1:  Car {brand: "toyota", model: "prius", color: "Red", transmission: undefined}
+car2:  Car {brand: "BMW", model: "m5", color: undefined, transmission: undefined}
+toyota prius поехала!
+BMW m5 поехала!
+
+Все обьекты созданные на основе класса уже будут иметь уникальные описание свойств брейн и модель,
+а поведение которое описсано в прототипе для них общее.
+
+И получаеться у нас система наследования - наш класс декларирует методы которые будут у всех
+экземпляров этого класса, мы можем проверить является ли прототип car прототипом обьекта car1
+
+вызываем метод isPrototypeOf
+береём нашу функцию Car обращаемя к её prototype и измользуем метод isPrototypeOf а в параметрах
+наш обьект car1
+console.log(Car.prototype.isPrototypeOf(car1)); получаем true 
+
+так же мы можем использовать оператор instanceof от делает тоже самое что и isPrototypeOf
+console.log(car2 instanceof Car); получаем true 
+
+
+
+На основе класса Car мы можем наследовать новые классы.
+Насследование - это отношение между классами, при котором класс использует структуру и поведение 
+другого класса или многих других
+
+
+function Car(countryBuild, options){
+  this.countryBuild = countryBuild;
+  options = options || {};
+  this.color = options.color;
+  this.transmission = options.transmission;
+}
+
+Car.prototype.ride = function(){
+  console.log(this.brand + ' ' + this.model + ' ' + 'поехала!');
+};
+
+function Audi(countryBuild, options, model, type){
+  this.brand = 'Audi';
+  Car.apply(this, arguments);
+  this.model = model;
+  this.type = type;
+}
+
+Audi.prototype = Object.create(Car.prototype);
+Audi.prototype.constructor = Audi;
+
+let carA = new Audi('germany', {color: 'black', transmission: 'am'}, 'q7', 'crossover' );
+console.log('car: ', carA); // теперь проверим от каких классов наследуется наш автомобиль
+
+console.log(carA instanceof Audi);
+console.log(carA instanceof Car);
+
+carA.ride();
+
+//Так работаю встроенные объекты в javaScript
+// Класс Object стоит на вершине всех классов
+console.log(new Object());
+console.log(carA instanceof Object);
+
+*/
+
+
+
+
+
+
+
 
 // КОНТЕКСТ ВЫЗОВА THIS //
+/*
+4 - ОСНОВНЫХ ПРАВИЛА THIS 
+1. Привязка по умолчанию foo();     this ссылаеться на глобальный обьект window
+2. Не явлная привязка obj.foo();      this будет ссылаться на обьект obj
+3. Явная привязка apply, call, bind
+4. Привязка new. Если обьект создан через оператора new то this будет укаызывать на этот обьект */
+
 
 /* Вообще this это ссылка на какой-то обьект, если ввести его в консоль
 console.log(this);  то получим глобальные обьект 
@@ -571,7 +976,7 @@ setTimeout(obj.test, 1000);
 1. Привязка по умолчанию foo();     this ссылаеться на глобальный обьект window
 2. Не явлная привязка obj.foo();      this будет ссылаться на обьект obj
 3. Явная привязка apply, call, bind
-4. Привязка new
+4. Привязка new. Если обьект создан через оператора new то this будет укаызывать на этот обьект
 
 
 ПРАВИЛО 3 - ЯВНАЯ ПРИВЯЗКА APPLY, CALL, BIND
