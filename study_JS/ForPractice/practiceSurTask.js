@@ -1,45 +1,61 @@
 'use strict';
 
+const DomElement = function(selector, height, width, bg, fontSize, options){
+this.selector = selector;
+this.height = height;
+this.width = width;
+this.bg = bg;
+this.fontSize = fontSize;
+options = options || {};
+this.position = options.position;
+this.testDiv = null;
+};
 
-function DomElement(selector, height, width, bg, fontSize){
-    this.selector = selector;
-    this.height = height;
-    this.width = width;
-    this.bg = bg;
-    this.fontSize = fontSize;
-
-    this.addElement = function(text){
-        if (selector === '.') {
-            let newElem = document.createElement('div');
-            document.querySelector('body').appendChild(newElem);
-            newElem.textContent = text;
-            newElem.style.height = height;
-            newElem.style.width = width;
-            newElem.style.background = bg;
-            newElem.style.fontSize = fontSize;
-        } else if (selector === '#') {
-            let newElem = document.createElement('p');
-            document.querySelector('body').appendChild(newElem);
-            newElem.textContent = text;
-            newElem.style.height = height;
-            newElem.style.width = width;
-            newElem.style.background = bg;
-            newElem.style.fontSize = fontSize;
-        }
-    };
-}
+DomElement.prototype.addElement = function(text){
+    if (this.selector === '.') {
+        let newElem = document.createElement('div');
+        document.querySelector('body').appendChild(newElem);
+        newElem.textContent = text;
+        newElem.style.height = this.height;
+        newElem.style.width = this.width;
+        newElem.style.background = this.bg;
+        newElem.style.fontSize = this.fontSize;
+        newElem.style.position = this.position;
+        this.testDiv = newElem;
+    } else if (this.selector === '#') {
+        let newElem = document.createElement('p');
+        document.querySelector('body').appendChild(newElem);
+        newElem.textContent = text;
+        newElem.style.height = this.height;
+        newElem.style.width = this.width;
+        newElem.style.background = this.bg;
+        newElem.style.fontSize = this.fontSize;
+        newElem.style.position = this.position;
+        this.testDiv = newElem;
+    }
+};
 
 
 let elem1 = new DomElement('.', '30px', '150px', 'lightGreen', '18px');
 let elem2 = new DomElement('.', '40px', '180px', 'Red', '25px');
-
-
 elem1.addElement('Hello Glo Academy');
-elem2.addElement('Hello test');
+elem2.addElement('Hello student');
+
+let dom2 = Object.create(new DomElement('.', '100px', '100px', 'black', '18px', {position: 'absolute'}));
+document.addEventListener('DOMContentLoaded', dom2.addElement('I,m a black'));
+
+let testDom = Object.create(new DomElement('.', '50px', '50px', 'blue', '18px'));
+console.log('testDom: ', testDom);
+testDom.addElement('test');
+testDom.testDiv.style.position = 'absolute';
 
 
 
+function moveElemts() {
 
+
+
+}
 
 
 
