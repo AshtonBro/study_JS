@@ -1,35 +1,34 @@
 'use strict';
 
-let newTitle = document.querySelector('title');
-newTitle.textContent = 'Сurrent time';
+const myLesson = [
+   {lesson: 1, status: true},
+   {lesson: 2, status: true},
+   {lesson: 3, status: false},
+   {lesson: 4, status: true},
+   {lesson: 5, status: false},
+   {lesson: 6, status: true},
+   {lesson: 7, status: true},
+   {lesson: 8, status: true},
+   {lesson: 9, status: true},
+   {lesson: 10, status: false}
+];
 
-let myClock = document.getElementsByClassName('Clock');
-
-
-function CurrentDate() {
-   let DateNow = new Date();
-   let hours = DateNow.getHours();
-   let minutes = DateNow.getMinutes();
-   let secunds = DateNow.getSeconds();
-   
-   let day = DateNow.getDay();
-   let month = DateNow.getMonth();
-   let year = DateNow.getFullYear();
-   
-   (function() { 
-      if (hours < 10 || day < 10 || month < 10) {
-         hours = '0'+hours;
-         day = '0'+day;
-        month = '0'+month;
+const falseLesson = function(){
+   for (let i = 0; i < myLesson.length; i++){
+      let tasks = myLesson[i];
+      for (let key in tasks) {
+         if (tasks[key] == false){
+            console.log(myLesson[i]);
+         }
       }
-     })();
+   }
+};
 
-   let allTime = hours + ':' + minutes + ':' + secunds + ' ' + day + '.'+ month + '.' + year;
-      console.log('time: ', allTime );
 
-     
-   myClock[0].innerHTML = allTime;
-   setTimeout('CurrentDate()', 1000);
+console.log(falseLesson());
 
-}
+/*
+Доп Задание:
+Необходимо вывести в консоль массив с заданиями у которых статус false
+*/
 

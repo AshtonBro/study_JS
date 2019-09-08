@@ -1697,10 +1697,10 @@ collect[1].appendChild(newElem);
 // }
 // Мы получили
 // Ключ: model  Занчение: Toyota
-// script.js:234 Ключ: year  Занчение: 2017
-// script.js:234 Ключ: turbochargint  Занчение: true
-// script.js:234 Ключ: specification  Занчение: 
-// script.js:234 Ключ: style  Занчение: [object Object]
+//Ключ: year  Занчение: 2017
+//Ключ: turbochargint  Занчение: true
+//Ключ: specification  Занчение: 
+//Ключ: style  Занчение: [object Object]
 
 // иногда нам необходимо узнать сколько всего свойство у обьекта
 // если вывесто с помошью length то мы получим ошибку undefined - свойство length у объекта не существует
