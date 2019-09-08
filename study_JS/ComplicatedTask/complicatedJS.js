@@ -24,7 +24,6 @@ const falseLesson = function(){
    }
 };
 
-
 console.log(falseLesson());
 
 /*
