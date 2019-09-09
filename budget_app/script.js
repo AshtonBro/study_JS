@@ -29,7 +29,6 @@ const start = document.getElementById('start'),
       expensesItems = document.querySelectorAll('.expenses-items'),
       incomeItems = document.querySelectorAll('.income-items');
 
-
 const AppData = function(){
   this.budget = 0;
   this.income = {};
@@ -300,11 +299,6 @@ AppData.prototype.eventListeners = function() {
 
 const appData = new AppData();
 appData.eventListeners();
-
-console.log(appData);
-
-console.log('addIncome: ', appData.addIncome);
-console.log('addExpenses: ', appData.addExpenses);
 
 
 
