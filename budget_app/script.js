@@ -1,30 +1,34 @@
 'use strict';
 
-let start = document.getElementById('start');
-let cancel = document.getElementById('cancel');
-let buttonsPlus = document.getElementsByTagName('button');
-let incomePlus = buttonsPlus[0];
-let expensesPlus = buttonsPlus[1]; 
-let additionIncomeItem = document.querySelectorAll('.additional_income-item');
-let depositCheck = document.querySelector('#deposit-check');
-let allRightCollumn = document.getElementsByClassName('result-total');
-let budgetDayValue = allRightCollumn[1];
-let budgetMonthValue = allRightCollumn[0];
-let expensesMonthValue = allRightCollumn[2];
-let additionalIncomeValue = allRightCollumn[3];
-let additionalExpensesValue = allRightCollumn[4]; 
-let incomePeriodValue = allRightCollumn[5];
-let targetMonthValue = allRightCollumn[6];
-let salaryAmount = document.querySelector('.salary-amount');
-let expensesTitle = document.querySelector('.expenses-title');
-let expensesItems = document.querySelectorAll('.expenses-items');
-let additionalExpensesItem = document.querySelector('.additional_expenses-item');
-let periodSelect = document.querySelector('.period-select');
-let targetAmount = document.querySelector('.target-amount');
-let incomeItems = document.querySelectorAll('.income-items');
-let incomeTitle = document.querySelector('.income-title');
-let periodAmount = document.querySelector('.period-amount');
-let imputs = document.querySelectorAll('input');
+const start = document.getElementById('start'),
+      cancel = document.getElementById('cancel'),
+      buttonsPlus = document.getElementsByTagName('button'),
+      incomePlus = buttonsPlus[0],
+      expensesPlus = buttonsPlus[1],
+      additionIncomeItem = document.querySelectorAll('.additional_income-item'),
+      depositCheck = document.querySelector('#deposit-check'),
+      allRightCollumn = document.getElementsByClassName('result-total'),
+      budgetDayValue = allRightCollumn[1],
+      budgetMonthValue = allRightCollumn[0],
+      expensesMonthValue = allRightCollumn[2],
+      additionalIncomeValue = allRightCollumn[3],
+      additionalExpensesValue = allRightCollumn[4],
+      incomePeriodValue = allRightCollumn[5],
+      targetMonthValue = allRightCollumn[6],
+      salaryAmount = document.querySelector('.salary-amount'),
+      expensesTitle = document.querySelector('.expenses-title'),
+      additionalExpensesItem = document.querySelector('.additional_expenses-item'),
+      periodSelect = document.querySelector('.period-select'),
+      targetAmount = document.querySelector('.target-amount'),
+      incomeTitle = document.querySelector('.income-title'),
+      periodAmount = document.querySelector('.period-amount'),
+      imputs = document.querySelectorAll('input'),
+      depositBank = document.querySelector('.deposit-bank'),
+      depositAmount = document.querySelector('.deposit-amount'),
+      depositPercent = document.querySelector('.deposit-percent'),
+      expensesItems = document.querySelectorAll('.expenses-items'),
+      incomeItems = document.querySelectorAll('.income-items');
+
 
 const AppData = function(){
   this.budget = 0;
@@ -34,7 +38,7 @@ const AppData = function(){
   this.expenses = [];
   this.addExpenses = [];
   this.deposit = false;
-  this.percentDeposit = 0;
+  this.depositPercent = 0;
   this.moneyDeposit = 0;
   this.budgetDay = 0;
   this.budgetMonth = 0;
@@ -51,19 +55,16 @@ AppData.prototype.start =  function() {
     salaryAmount.value = '';
     return;
    }
-  
-
+   
   this.budget = +salaryAmount.value;
   
   this.getExpenses();
   this.getIncome();
   this.getExpensesMonth();
-  this.getAddExpenses();
-  this.getAddIncome();
+  this.getInfoDeposit();
   this.getBudget();
-
+  this.getAddExpInc();
   this.showResult();
-  
   this.blocked();
 };
 
@@ -78,50 +79,34 @@ AppData.prototype.showResult = function(){
   incomePeriodValue.value = _this.calcSavedMoney();
 };
 
-AppData.prototype.addIncomeBlock = function(){
-  let cloneIncomeItems = incomeItems[0].cloneNode(true);
+AppData.prototype.onAddbuttonClick = function(e){
+  let parent = e.target.parentNode;
+  const cloneIncomeItems = parent.children[1].cloneNode(true);
+  parent.insertBefore(cloneIncomeItems,e.target);
   cloneIncomeItems.querySelectorAll('input').forEach(function(item){
     item.value = '';
   });
-  incomeItems[0].parentNode.insertBefore(cloneIncomeItems, incomePlus);
-  incomeItems = document.querySelectorAll('.income-items');
-
-  if(incomeItems.length === 3){
-    incomePlus.style.display = 'none';
+  if(parent.children.length === 5){
+    e.target.style.display = 'none';
   } 
 };
 
-AppData.prototype.addExpensesBlock = function(){
-  let cloneExpensesItems = expensesItems[0].cloneNode(true);
-  cloneExpensesItems.querySelectorAll('input').forEach(function(item){
-    item.value = '';
-});
-  expensesItems[0].parentNode.insertBefore(cloneExpensesItems, expensesPlus);
-  expensesItems = document.querySelectorAll('.expenses-items');
-    
-  if(expensesItems.length === 3){
-    expensesPlus.style.display = 'none';
-  }
-};
-
 AppData.prototype.getExpenses = function(){
-  const _this = this;
- expensesItems.forEach(function(item){
-  let itemExpenses = item.querySelector('.expenses-title').value;
-  let cashExpenses = +item.querySelector('.expenses-amount').value;
+ expensesItems.forEach((item) => {
+  const itemExpenses = item.querySelector('.expenses-title').value;
+  const cashExpenses = +item.querySelector('.expenses-amount').value;
   
   if (itemExpenses !== '' && cashExpenses !== '') {
-    _this.expenses[itemExpenses] = cashExpenses;
+    this.expenses[itemExpenses] = cashExpenses;
   }
  });
 };
 
 AppData.prototype.getIncome = function(){
   const _this = this;
-  let freshIncomeItems = document.querySelectorAll('.income-items');
-  freshIncomeItems.forEach(function(item){
-    let itemIncome = document.querySelector('.income-title').value;
-    let cashIncome = +document.querySelector('.income-amount').value;
+  document.querySelectorAll('.income-items').forEach(function(item){
+    const itemIncome = document.querySelector('.income-title').value;
+    const cashIncome = +document.querySelector('.income-amount').value;
     if(itemIncome !== '' && cashIncome !== '') {
       _this.income[itemIncome] = cashIncome;
       _this.incomeMonth += cashIncome;
@@ -129,18 +114,19 @@ AppData.prototype.getIncome = function(){
  });
 };
 
-AppData.prototype.getAddExpenses = function(){
- let addExpenses = additionalExpensesItem.value.split(',');
- const _this = this;
-  addExpenses.forEach(function(item){
-  item = item.trim();
- if (item !== '') {
-  _this.addExpenses.push(item);
+AppData.prototype.getAddExpInc = function(){
+  if (additionalExpensesItem.value !== '') {
+  let addExpenses = additionalExpensesItem.value.split(',');
+  const _this = this;
+   addExpenses.forEach(function(item){
+   item = item.trim();
+  if (item !== '') {
+   _this.addExpenses.push(item);
+  }
+ });
  }
-});
-};
-
-AppData.prototype.getAddIncome = function(){
+ 
+ if (additionIncomeItem !== '') {
   const _this = this;
   additionIncomeItem.forEach(function(item){
     let itemValue = item.value.trim();
@@ -148,7 +134,23 @@ AppData.prototype.getAddIncome = function(){
       _this.addIncome.push(itemValue);
     }
   });
+ }
+
 };
+
+// AppData.prototype.getAddExpenses = function(){
+  
+//   const parts = additionalExpensesItem.value.split(',');
+//   this.addExpenses.push(...parts.filter(f => f.trim.length > 0));
+
+// };
+
+// AppData.prototype.getAddIncome = function(){
+
+//   const parts = additionIncomeItem.select(f => f.value);
+//   this.addIncome.push(...parts.filter(f => f.trim.length > 0));
+
+// };
 
 AppData.prototype.getPeriodSelect = function(event){
   const _this = this;
@@ -163,55 +165,46 @@ AppData.prototype.blocked = function(){
   cancel.style.display = 'block';
   additionalExpensesItem.disabled = true;
 
-  let freshAdditionIncomeItem = document.querySelectorAll('.data input[type = text]');
-  freshAdditionIncomeItem.forEach(function(item){
-    item.disabled = true;
-  });
-  let freshIncomeTitle = document.querySelectorAll('.income-title');
-  freshIncomeTitle.forEach(function(item){
-    item.disabled = true;
-  });
-  let freshExpensesTitle = document.querySelectorAll('.expenses-title');
-  freshExpensesTitle.forEach(function(item){
+  document.querySelectorAll('.data input[type = text]').forEach(function(item) {
     item.disabled = true;
   });
 };
 
 AppData.prototype.reset = function(){
-  let dataInput = document.querySelectorAll('.data input[type = text]');
-  let resultInput = document.querySelectorAll('.result input[type = text]');
-  dataInput.forEach(function(item){
-    item.value = '';
-    item.removeAttribute('disabled');
-    periodSelect.value = '0';
-    periodAmount.innerHTML = periodSelect.value;
-  });
-  resultInput.forEach(function(item){
-    item.value = '';
-  });
-  
-  let incomTems = document.querySelectorAll('.income-items');
-  for (let i = 1; i <= incomTems.length - 1; i++){
-    incomTems[i].remove();
-  }
-  
-  let expensesTems = document.querySelectorAll('.expenses-items');
-  for (let i = 1; i <= expensesTems.length - 1; i++){
-    expensesTems[i].remove();
-  }
-  
   this.budget = 0;
   this.income = {};
   this.incomeMonth = 0;
   this.addIncome = [];
   this.expenses = [];
   this.addExpenses = [];
-  this.deposit = false;
   this.percentDeposit = 0;
   this.moneyDeposit = 0;
   this.budgetDay = 0;
   this.budgetMonth = 0;
   this.expensesMonth = 0;
+  
+  document.querySelectorAll('.data input[type = text]').forEach(function(item){
+    item.disabled = false;
+    periodSelect.value = '0';
+    periodAmount.innerHTML = periodSelect.value;
+  });
+  document.querySelectorAll('input[type = text]').forEach(function(item){
+    item.value = '';
+  });
+
+  document.querySelectorAll('.result input[type = text]').forEach(function(item){
+    item.value = '';
+  });
+  
+  const incomTems = document.querySelectorAll('.income-items');
+  for (let i = 1; i <= incomTems.length - 1; i++){
+    incomTems[i].remove();
+  }
+  
+  const expensesTems = document.querySelectorAll('.expenses-items');
+  for (let i = 1; i <= expensesTems.length - 1; i++){
+    expensesTems[i].remove();
+  }
   
   start.style.display = 'block';
   cancel.style.display = 'none';
@@ -226,7 +219,7 @@ AppData.prototype.getExpensesMonth = function () {
 };
 
 AppData.prototype.getBudget = function() {
-  this.budgetMonth = this.budget + this.incomeMonth - this.expensesMonth;
+  this.budgetMonth = Math.ceil(this.budget + this.incomeMonth - this.expensesMonth + (this.moneyDeposit * this.percentDeposit) / 12);
   this.budgetDay = this.budgetMonth / 30;
 };
 
@@ -250,20 +243,13 @@ AppData.prototype.getStatusIncome = function() {
 
 AppData.prototype.getInfoDeposit = function() {
   if(this.deposit) {
-   do {
-    this.percentDeposit = +prompt('Какой годовой процент ?', 10);
-   }
-   while(isNaN(this.percentDeposit) || this.percentDeposit === 0 || this.percentDeposit === null);
-   do {
-    this.moneyDeposit = +prompt('Какая сумма задожена ?', 10000);
-   }
-   while(isNaN(this.moneyDeposit) || this.moneyDeposit === 0 || this.moneyDeposit === null);
+    this.percentDeposit = depositPercent.value;
+    this.moneyDeposit = depositAmount.value;
   }
 };
 
 AppData.prototype.calcSavedMoney = function() {
   return this.budgetMonth * periodSelect.value;
-  
 };
 
 AppData.prototype.AddToUpperCaseForFirstChar = function() {
@@ -279,17 +265,46 @@ AppData.prototype.AddToUpperCaseForFirstChar = function() {
 
 AppData.prototype.eventListeners = function() {
   start.addEventListener('click', this.start.bind(this));
-  expensesPlus.addEventListener('click', this.addExpensesBlock.bind(this));
-  incomePlus.addEventListener('click', this.addIncomeBlock.bind(this));
+
+  expensesPlus.addEventListener('click', this.onAddbuttonClick.bind(this));
+  incomePlus.addEventListener('click', this.onAddbuttonClick.bind(this));
   periodSelect.addEventListener('change', this.getPeriodSelect.bind(this));
   cancel.addEventListener('click', this.reset.bind(this));
-};
 
+  depositCheck.addEventListener('change', function(){
+    if(depositCheck.checked) {
+      depositBank.style.display = 'inline-block';
+      depositAmount.style.display = 'inline-block';
+      depositPercent.removeAttribute('disabled');
+      console.log('depositPercent: ', depositPercent);
+      appData.deposit = 'true';
+      depositBank.addEventListener('change', function(){
+        let selectIndex = this.options[this.selectedIndex].value;
+          if (selectIndex === 'other'){
+            depositPercent.style.display = 'inline-block';
+
+            depositPercent.value = '';
+          } else {
+            depositPercent.style.display = 'none';
+            depositPercent.value = selectIndex;
+          }
+      });
+    } else {
+      depositBank.style.display = 'none';
+      depositAmount.style.display = 'none';
+      depositAmount.value = '';
+      appData.deposit = 'false';
+    }
+  });
+};
 
 const appData = new AppData();
 appData.eventListeners();
 
-console.log( appData);
+console.log(appData);
+
+console.log('addIncome: ', appData.addIncome);
+console.log('addExpenses: ', appData.addExpenses);
 
 
 
@@ -300,14 +315,704 @@ console.log( appData);
 
 
 
+/* Обьявление переменных var, let, const.
+
+VAR - когда мы обьявляем переменную через var она всплывает в самый верх, можно предствить что мы её
+обьявили на какой-то нулевой строке но не присвоили значение, это будет аналогично если мы обьявим
+переменную в первой строчке, но значение прислвою в четвёртой
+
+var n;
+console.log(n); - undefined
+
+n = 5;
+console.loh(n); - 5
+
+ват так примерно и работате var,
+следующая проблема var, что можно перменную переобпределиьть до её обьявления
+
+console.log(n); 
+
+n = 10
+
+console.log(n); 
+
+var n = 5;
+
+console.loh(n); - 5
+
+А ещё мы можем обьявить переменную много много раз и var обьявляется во всей облости видимости
+
+for(var i = 0; i < 5; i++){
+  setTimeout(function(){
+    console.log(i);
+  }, 1000*i);
+}
+
+мы увидим 5, 5, 5, 5, 5.
+Потому значение i после прохожденире 1 цикла будет 5 и после этого все сет таймоауты у нас только
+отработают. Всё потому что var будет храниться в одной ячейке памяти и когда setTimeout будет 
+обращаться в память за i она уже будет равняться = 5, даже не 4м а 5ти. А когда мы задаём
+переменнуб через let то каждое значение i будет храниться отдельно в своей ячейке памяти.
+Какждый раз i будет новая i.
+
+for(let i = 0; i < 5; i++){
+  setTimeout(function(){
+    console.log(i);
+  }, 1000*i);
+}
+
+мы увидим 0, 1, 2, 3, 4.
+
+let имеет облость видимости блок кода, то в каждой итерации цикла создаётся своя переменная в своём
+блоке кода, в каждой итераци можно считать это новый блок кода и поэтому всё корректно работает, т.е все 
+проблемы которые имеет var, испраляет обьявление переменной с помощью let или const - работают эти
+перменные точно также как и var, но исправляют все выше указзанные проблемы.
+
+если мы выведем в констоль перменную let но оьявим её позже, то получим в консоле ошибку
+
+console.log(n);
+
+let n = 5;
+
+error
+
+и нельзя обьявлять переменную несколько раз,
+
+let n = 5;
+let n = 10; - получим ошибку - всё тоже самое и с const 
+
+Пременные обьявленный с помощью let их область видимости является блок кода ограниченный скобками и 
+поэтому если ограничить фигурным скобками n, то в другой части кода мы её не надём.
+
+Если мы обьявляем переменную через const - то это константа, постоянное значение, его мы поменять не можем
+
+const name = 'Alex';
+name = 'Wick'; то получим ошибку и так будет со всем простыми типами данных (числа, строки, булевые типы, null
+undefined, символ) мы их поменяться не можем, но при работе с массивами, мы можем понять значение внутри 
+массива, добавлять или удалять элемент
+
+const names = ['Alex', 'John', 'Peter'];
+names.push('Max');
+
+но если мы захоти изменить массив или записать новый массив 
+names = ['Kate', 'Mary'];
+то получим ошибку, присвоить новый массив мы не сможем 
+
+С обьектами принцип такойже, мы не можем присловить новый обьект но можем извенять совйства объекта
+
+cosnt agents = {
+  firstName: 'John',
+  lastName: 'Wick',
+  age: 46
+};
+
+Можем добавть свойство
+agents.artist = 'Keanu Reebes';
+и свойство мы добавли и также можем меня те свойства которые у нас уже есть
+agents.firstName = 'Johny';
+
+но обьект добавить мы не можем.
+
+В практике нужно использовать const, но если значение переменной будет меняться, то использовать let
+При получение элемента со стрaницы, функции, обьекты и массивы можно использовать const
+
+
+// ШАБЛОННЫЙ СТРОКИ //
+
+const str = "Двойные кавычки"
+const str2 = 'Одинарные кавычки'
+const str3 = `Обратные кавычки`
+
+
+Раньше для переносов необходимо было сипользовать экранированную \n
+const str = "Двойные \n кавычки"
+
+а что видеть переносы приходилось
+const str = "Двойные \n" +
+            "кавычки"
+
+const str3 = `Обратные кавычки`
+
+const str = "<h1>Hello</h1> \n" +
+            "<div>World</div>"
+
+            для переноса в обратных страничка достаточно нажать энтер никаких + и экрарированных \n
+const str3 = `<h1>Hello</h1>
+<div>World</div>` и нет необходимости в конкантенации строк, просто переносим и всё.
+
+Допусти у нас есть переменная Alex и захотис вставить её в верстку
+
+
+const name = 'Alex';
+
+const str3 = `<h1>Hello</h1>
+<div>World</div>`;
+
+Шаблонные строки позволяют использовать интерполяцию для этого используется ${...}
+const name = 'Alex';
+
+const str3 = `<h1>Hello</h1>
+<div>${name}</div>`;
+
+так же мы можем добавть и возрость, если мы захоти прибавит к возросту 1, прибавляем через + 1.
+Шаблонные строки будут обходить метод конкантенации и мы не получим 311.
+
+const name = 'Alex';
+const age = 31;
+const str3 = `<h1>Hello</h1>
+<div>${name}</div>
+<div>${age + 1}</div>`;
+
+console.log('str3: ', str3);
+
+В интерполяции плюсов масса, с помощью интерполяции всё намного проще.
+ИНТЕРПОЛЯЦИЯ позволяет использовать любые вычесление, т.е. любое выражение которое возвращает значение, 
+вы можете использовать вызов функции, которая что-то возвращает, можно использовать тернарный оператор, 
+который будет возвращать значения, и также будет удобно использовать короткие стрелочные функции.
+
+Фишка ES6 - это указания параметров по умолчанию
+
+например в функции в принимаемых параметрах можно через равно указать параметры по умолчания
+в нашем случае укажем в переменнюу window, так жу необходимо значеть, что все переменные которым
+указываешь параметры по умолчания нужно поставить в конец всех переменных, т.е. в крайне правую чатсь
+
+const careatHome = function(wall, doors, window = 1){
+  console.log (`Дом имеет:
+  стен: ${wall},
+  двери: ${doors},
+  окна: ${window}`);
+};
+
+careatHome(4,2);
+Дом имеет:
+  стен: 4,
+  двери: 2,
+  окна: 1
+
+// СТРЕЛОЧНАЯ ФУНКЦИЯ //
+
+обьявляем переменную чеерез ровно создаём переменные, дальше стрелка открывает фигурные скобки и это
+и есть наше тело функции
+
+const sum = (a, b) => {
+  return a + b;
+};
+
+Одна из возможностей стрелочной функции, это если функция сразу возвращает значение без дополнительный вычеслений
+то нам не обязательно использовать тело функции и ключевое слово return 
+const sum = (a, b) => a + b;
+console.log(sum(2, 3));
+
+и даже если у нас параметр один, то мы можем и убрать круглые скобки и получим тот же результат
+const sum = a => a + 3;
+console.log(sum(2));
+
+если функция возвращает обьект и чтобы всё корекно работало, нужно нашу скобки тело функции закрыть 
+в другие скобкии ({тело 
+  функции})
+  и тогда мы получим наш обьект 
+  const sum = (a, b) => ({
+  a: a,
+  b: b,
+  sum: a + b
+});
+console.log(sum(2, 3));
+  {a: 2, b: 3, sum: 5}
+
+Стролочные функции удобно использоват в обработчике событий
+к примеру у нас в вёрстке есть картинка 
+мы её находим
+
+const img = document.querySelector('img');
+img.addEventListener('click', () => {
+  console.log('hi');
+});
+получаем клик 
+const img = document.querySelector('img');
+img.addEventListener('click', () => {
+  console.log(e.target);
+});
+получаем нашу картинку
+
+А если у нас много картинок тогда собираем их все
+const img = document.querySelectorAll('img');
+и перебераем и используем стрелочную функцию
+img.foreach((e)=>{
+  console.log(e);
+})
+
+Второя интересная особенность стрелочной функции, что у них не контекста вызова 
+так как ключевого слово this у стрелочной фукнции нет, она будет использовать this который у нас в
+функции выше, в которой он обьявлен.
+т.е. This будет использован в той функции в которой эта стрелочная функция была обьявлена
+
+Нельзя создать конструктор с помощью стрелочной функции потому что у стрелочной функции нет 
+контекста вызова и свойство prototype 
+
+
+Фишки es6 и тд
+
+rest параметр
+иногда нам приходиться работать с функциями которые принимают неизвестное, множество параметров и для 
+обработки прихрдилось использовать псевдо массив arguments
+и приходилось его конвертировать в обычный массив
+const arg = Array.prototype.slice.call(arguments); 
+после этого мы получали массив в котором есть все методы который нам не обходимы 
+function test(){
+
+  const arg = Array.prototype.slice.call(arguments); 
+  console.log(arguments);
+
+
+}
+
+test('red', 5, 12, 'black', [], true, 9);
+
+в es6 добавили вишку, теперь мы можем принимать аргументы с помощью rest параметра
+для этого ставиться 3 точки ... и имя параметра ...arr
+
+function test(...arr){
+
+  console.log(arr);
+}
+
+test('red', 5, 12, 'black', [], true, 9);
+
+и получили обычый масиив из того, что передали
+
+Если мы не указали что передаваь, то мы получим пустой массив
+function test(...arr){
+
+  console.log(arr);
+}
+
+test();
+
+
+т,е. первые 3 параметра записали в переменные а всё остальное в массив с помощью рест(...) параметра 
+function test(a, b, c, ...arr){
+
+  console.log(a, b, c);
+  console.log(arr);
+}
+
+test('red', 5, 12, 'black', [], true, 9);
+мы получили red 5 12
+            (4) ["black", Array(0), true, 9]
+
+Имя у rest параметра может быть любое ...любоеИмя
+и rest параметр всегда идёт последним.
+
+
+следующее нововвидение это спред оператор
+Мы имем массив arr и что передать перменные в функцию приходиться делать так
+
+const arr = ['red', 5, 12];
+function test(a, b, c){
+
+  console.log(a, b, c);
+}
+
+test(arr[0], arr[1], arr[2]) - наша функция применила каждый элемент массива к принимающим параметрам 
+а стала 'red',
+b стала 15, 
+с стала 12
+
+если мы передадим наш массив таким образом 
+
+test(arr) - то мы получи, что в 'a' у нас записался наш масиив, а в 'b' и 'c' у нас undefined.
+но с помощью rest параметра мы можем передать наши элементы по ОДНОМУ а не массивом
+
+const arr = ['red', 5, 12];
+
+function test(a, b, c){
+
+  console.log(a, b, c);
+}
+ставим ... и передаём наш массив
+test(...arr);  - red 5 12
+
+Таким образом мы можем передать несколько массивом или комбенировать с другими значениями
+const arr = ['red', 5, 12];
+const arr2 = ['black', true];
+
+function test(a, b, c, d, e){
+
+  console.log(a, b, c);
+  console.log(d, e);
+}
+через запятую с помощтю рест парамера передаём ещё один массив
+test(...arr, ...arr2);
+
+const arr = ['red', 5, 12];
+const arr2 = ['black', true];
+
+function test(a, b, c, d, e, f){
+
+  console.log(a, b, c);
+  console.log(d, e, f);
+}
+
+test(...arr, 50, ...arr2);
+
+И даже из нескольких массивов собирать один
+const arr = ['red', 5, 12];
+const arr2 = ['black', true];
+const arr3 = [...arr, ...arr2];
+console.log('arr3: ', arr3);
+
+также можно компинировать дабавляя свои элементы
+const arr = ['red', 5, 12];
+const arr2 = ['black', true];
+const arr3 = [1, ...arr, 55, ...arr2, 'hi']; и получим уже 8 элементов
+
+Также можем преобразовать из коллекции в массив, разница в том что у nodeList ограниченное количество 
+свойство нежели чем у массива.
+
+const allImg = document.querySelectorAll('img');
+console.log(allImg);
+const newImg =[...allImg];
+console.log(newImg);
 
 
 
 
+Ещё крутое нововведение это деструктурорезация обьектов 
+
+const car = {
+  brand: 'toyota',
+  model: 'prius',
+  color: 'grey'
+};
+
+const {brand, model, color} = car;   -   это называется деструктурорезация обьекта, мы в фигурных скобках
+указываем свойства которые хотим взять у нашего обьекта после знака ровно
+
+console.log(brand, model, color);
+
+
+Так же мы можем взять и ВЛОЖЕННОСТЬ совойства внутри обьекта 
+
+const car = {
+  brand: 'toyota',
+  model: 'prius',
+  options: {
+    color: 'grey',
+    abs: true,
+  }
+  
+};
+
+const {options:{color, abs}} = car;  
+
+console.log(color, abs);
+
+Если мы хотим изменить имя переменной если вас не устраивают то имя свойства из обьекта 
+указать новую переменную мы можем так
+
+const car = {
+  brand: 'toyota',
+  model: 'prius',
+  options: {
+    color: 'grey',
+    abs: true,
+  }
+  
+};
+
+const {options:{color: carColor, abs: carAbs}} = car;  
+
+console.log(carColor, carAbs);
+
+Бывают случае если мы не знаем свойства в обьекте или нет в таком случае мы можем указать
+значение по умолчанию
+const car = {
+  brand: 'toyota',
+  model: 'prius',
+  options: {
+    color: 'grey',
+    abs: true,
+  }
+  
+};
+
+const {brand, model = 6} = car;  выставляем занчение по умолчанию, и если этого свойства нет в обьекте 
+model будет равно 6 (по умолчанию), а если есть, то останется 'prius'
+
+console.log(brand, model);
+
+так же мы можем сделать с вложенным свойством
+const car = {
+  brand: 'toyota',
+  model: 'prius',
+};
+
+const {options: {color: 'red'}} = car;  
+
+console.log(color); Так будет ошибка, потому что он захожит в обьект и ищет oprions, а там его нет.
+тогда мы можем его создать с помощью значения по умолчанию
+
+const car = {
+  brand: 'toyota',
+  model: 'prius',
+};
+
+const {options: {color = 'grey'} = {}} = car;  мы в обьекте car попытались найти options, мы его не нашли,
+по умолчание сделали пустой обьект, в этом обьекте попытались найти свойство color - его не существует и 
+сделали его по умолчанию red. и получили его значение
+
+т.е при обращении где это свойство есть - мы получис его, а где его нет мы создадим его по умолчанию
+
+console.log(color);
+
+Где это применить
+
+создаём функцию которая принимает обьект
+
+const createCar = (car) => {
+  console.log(`
+  запущенно производство автомобиля ${car.brand} ${car.model} 
+  цвет кузова: ${car.color} 
+  цвет салон: ${car.colorInt} `);
+};
+
+createCar({
+  brand: 'toyota',
+  model: 'prius',
+  color: 'grey',
+  colorInt: 'black',
+});
+все работает, но если мы не дадим model, то получим undefined
+
+тогда деструктурезируем наш обьект присваем функции принимающие параметры и устанавливаем значение по умолчанию
+в случае если у обьекты не будет свойства, оно присвоиться по умолчаю.
+так мы можем присвоить значени по умолчанию когда вообще не заведены данные 
+
+const createCar = ({
+  brand = 'bmw', 
+  model = 6, 
+  color = 'black', 
+  colorInt = 'white'
+} = {}) => {
+  console.log(`
+  запущенно производство автомобиля ${brand} ${model} 
+  цвет кузова: ${color} 
+  цвет салон: ${colorInt} `);
+};
+
+createCar();
+
+
+const car = {
+  brand: 'toyota',
+  model: 'prius',
+  options: {
+    color: 'grey',
+    abs: true,
+  }
+};
+
+const {brand, ...options} = car;
+console.log(options);
+
+получаем
+
+    {model: "prius", options: {…}}
+    model: "prius"
+    options:
+    abs: true
+    color: "grey"
+    __proto__: Object
+    __proto__: Object
+
+Также можно деструктуризировать массивы с помощью квадратных скобок
+
+const cars = ['toyota', 'mazda', 'audi','bmw', 'mers', 'Zil'];
+
+const [a, b, c] = cars;
+
+console.log(a);
+console.log(b);
+console.log(c); - получили первые 3 автомобиля из массива
+
+чтобы пропустить элемент используем запятую
+const [a,, b, c] = cars;
+
+console.log(a);
+console.log(b);
+console.log(c);
+
+const cars = ['toyota', 'mazda', 'audi','bmw', 'mers', 'Zil'];
+
+const [,,a,, b, c] = cars;
+
+console.log(a);
+console.log(b);
+console.log(c);
+
+Если у нас многомерный массив
+
+const cars = [['toyota', 'mazda'], ['audi','bmw', 'mers'], 'Zil'];
+
+const [a, b, c] = cars;
+
+console.log(a); // первый массив
+console.log(b); // второй массив
+console.log(c); // 3й элемент
+
+так можно получить вложенные массивы повторяя их структура
+
+const cars = [['toyota', 'mazda'], ['audi','mers'], 'Zil'];
+
+const [[a, b], [c, d], e] = cars;
+
+console.log(a); 
+console.log(b); 
+console.log(c); 
+console.log(d); 
+console.log(e); 
+
+const cars = [['toyota', 'mazda'], ['audi','mers'], 'Zil'];
+
+const [[a, b], [...c]] = cars;
+
+console.log(a); 
+console.log(b); 
+console.log(c); 
+
+toyota
+ mazda
+(2) ["audi", "mers"]
+
+также мы можем одновременно приминять деструктуризировать обьектов и массивов
+const carsModel = {
+  brand: 'volvo',
+  models: {
+    sedan: ['s60', 's90'],
+    cross: ['v60', 'v90']
+  }
+};
+
+const {
+  models: {
+    sedan: [s1,s2], 
+    cross: [c1, c2]}
+  } = carsModel;
+
+console.log(s1,s2,c1, c2); - s60 s90 v60 v90
+
+новый синтаксис как из переменных сделать обьект и добавлять функцию
+
+const car = 'bentley';
+const cycle = 'bmx';
+const bike = 'honda';
+
+const transport = {
+  car,
+  cycle,
+  bike,
+  ride(){
+    console.log('go ride');
+  }
+};
+
+console.log('transport: ', transport);
+
+
+const car = 'bentley';
+const cycle = 'bmx';
+const bike = 'honda';
+
+const transport = {
+  car,
+  cycle,
+  bike,
+  ride: () => {           - стрелочная функция
+    console.log('go ride');
+  }
+};
+transport.ride();
+console.log('transport: ', transport);
+
+
+Нужно обновить одни данные в другой массив
+и с помощью функции assign я могу в обьект transport записать полее актуальные данные 
+функция assign принимает 2 параметра
+1 - обьект первым параметрам и перезаписывает его совйства которые береёт
+2 - вторым параметром из следующих обьектов 
+
+const transport = {
+  bike: "honda",
+  car: "bentley",
+  cycle: "bmx",
+};
+
+const newTrasport = {
+  bike: "suzuki",
+  quadBike: "polaris",
+};
+
+Object.assign(transport, newTrasport);
+
+console.log('transport: ', transport);
+
+так же сама функция возвращает все свойства которые мы можем записать в новый обьект 
+
+const currentTransport = Object.assign({}, transport, newTrasport);
+
+
+Новый метод делает всё тоже что и выше только удобнее
+object spread property оператор
+
+const transport = {
+  bike: "honda",
+  car: "bentley",
+  cycle: "bmx",
+};
+
+const newTrasport = {
+  bike: "suzuki",
+  quadBike: "polaris",
+};
+
+const curTrans = {...transport, ...newTrasport};
+
+console.log(curTrans);
+
+также мы можем задавать новые значения и методы 
+
+const ship = 'Photinia';
+
+const curTrans = {...transport, ...newTrasport, ship};
 
 
 
+const transport = {
+  bike: "honda",
+  car: "bentley",
+  cycle: "bmx",
+};
 
+const newTrasport = {
+  bike: "suzuki",
+  quadBike: "polaris",
+};
+
+const ship = 'Photinia';
+
+const curTrans = {
+  ...transport, 
+  ...newTrasport, 
+  ship,
+  ride(){
+    console.log('go friends');
+  }
+};
+
+console.log(curTrans);
+curTrans.ride();
+
+*/
 
 
 

@@ -1,14 +1,11 @@
 'use strict';
 
-const DomElement = function(selector, height, width, bg, fontSize, options){
+const DomElement = function(selector, height, width, bg, fontSize){
 this.selector = selector;
 this.height = height;
 this.width = width;
 this.bg = bg;
 this.fontSize = fontSize;
-options = options || {};
-this.position = options.position;
-this.testDiv = null;
 };
 
 DomElement.prototype.addElement = function(text){
@@ -20,8 +17,6 @@ DomElement.prototype.addElement = function(text){
         newElem.style.width = this.width;
         newElem.style.background = this.bg;
         newElem.style.fontSize = this.fontSize;
-        newElem.style.position = this.position;
-        this.testDiv = newElem;
     } else if (this.selector === '#') {
         let newElem = document.createElement('p');
         document.querySelector('body').appendChild(newElem);
@@ -30,8 +25,6 @@ DomElement.prototype.addElement = function(text){
         newElem.style.width = this.width;
         newElem.style.background = this.bg;
         newElem.style.fontSize = this.fontSize;
-        newElem.style.position = this.position;
-        this.testDiv = newElem;
     }
 };
 
@@ -41,18 +34,15 @@ let elem2 = new DomElement('.', '40px', '180px', 'Red', '25px');
 elem1.addElement('Hello Glo Academy');
 elem2.addElement('Hello student');
 
-let dom2 = Object.create(new DomElement('.', '100px', '100px', 'black', '18px', {position: 'absolute'}));
+let dom2 = new DomElement('.', '100px', '100px', 'black', '18px', {position: 'absolute'}));
 document.addEventListener('DOMContentLoaded', dom2.addElement('I,m a black'));
 
-let testDom = Object.create(new DomElement('.', '50px', '50px', 'blue', '18px'));
-console.log('testDom: ', testDom);
-testDom.addElement('test');
-testDom.testDiv.style.position = 'absolute';
 
 
-
-function moveElemts() {
-
+function moveElemts(selector) {
+    const elem = document.querySelector(selector);
+    elem.style.cssText = 'position: absolute; top: 0; left: 0';
+    // код перемещения
 
 
 }
