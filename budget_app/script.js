@@ -125,7 +125,7 @@ AppData.prototype.getAddExpInc = function(){
   }
  });
  }
- 
+
  if (additionIncomeItem !== '') {
   const _this = this;
   additionIncomeItem.forEach(function(item){
@@ -139,17 +139,13 @@ AppData.prototype.getAddExpInc = function(){
 };
 
 // AppData.prototype.getAddExpenses = function(){
-  
 //   const parts = additionalExpensesItem.value.split(',');
 //   this.addExpenses.push(...parts.filter(f => f.trim.length > 0));
-
 // };
 
 // AppData.prototype.getAddIncome = function(){
-
 //   const parts = additionIncomeItem.select(f => f.value);
 //   this.addIncome.push(...parts.filter(f => f.trim.length > 0));
-
 // };
 
 AppData.prototype.getPeriodSelect = function(event){
@@ -220,6 +216,7 @@ AppData.prototype.getExpensesMonth = function () {
 
 AppData.prototype.getBudget = function() {
   this.budgetMonth = Math.ceil(this.budget + this.incomeMonth - this.expensesMonth + (this.moneyDeposit * this.percentDeposit) / 12);
+
   this.budgetDay = this.budgetMonth / 30;
 };
 
@@ -301,14 +298,632 @@ AppData.prototype.eventListeners = function() {
 const appData = new AppData();
 appData.eventListeners();
 
-console.log(appData);
-
-console.log('addIncome: ', appData.addIncome);
-console.log('addExpenses: ', appData.addExpenses);
 
 
+/*
+//// defineProperty ////
+этот метод позваоляет обьявляеть свойство обьекта и настроить его поведенческие свойства
+
+const mazda = {
+  model: 3,
+  year: 2006
+};
+
+mazda['color'] = 'blue';
+mazda.color = 'blue';  эти методы делают тоже самое 
+теперь обратимся через defineProperty
+1 параметр - это обьект mazda
+2 параметр это значение свойства
+3 параметр указываем атрибуты этого свойства (это обьекты аргументов)
+
+Object.defineProperty (mazda,'color', {
+  value: 'blue',   - значение
+                  - если все эти своёства true то это анологично как мы задовали свойство выше
+  writable: true,   - нужен чтобы разрешать присваивать или изменять свойства 
+  configurable: true, - нужен чтобы заперщать удаление свойства
+  enumerable: true, - разрешает видеть или не видеть это свойство во время перебора цикла, напр for in
+});
+console.log(mazda);
 
 
+const mazda = {
+  model: 3,
+  year: 2006
+};
+
+// захотелось запретить замену значений writable: false, то получим ошибку
+Object.defineProperty (mazda,'color', {
+  value: 'red',
+  writable: false,
+  configurable: true,
+  enumerable: true,
+});
+
+mazda.color = 'blue';
+
+console.log(mazda);
+
+
+/////////// defineProperty ПОЗВОЛЯЕТ НАМ ДОБАЛЯТЬ ГЕТТЕРЫ И СЕТТЕРЫ /////////
+функция Getter отдаёт значение 
+функция Setter задаёт значение
+давайте добавим новый гетер
+
+
+const car = {
+  brand: 'mazde',
+  model: 3,
+  year: 2006
+};
+
+car.color = 'blue';
+// добави метод готорые будет выводит бренд авто и модель
+Object.defineProperty (car,'fullTitle', {         // мы это свойство не вызывали, оно самовызывающие
+  get: function(){                                // это getter, его позволяет задать метод define Property
+    return this.brand + ' ' + this.model;
+  },
+  set: function(item){                           // set задаёт значение, наш setter должен принимать значние
+    this.brand = item;
+  }
+});
+
+// car.fullTitle = '123';   поменять значение  у fullTitile мы не можем мы получим ошибку, потому что это
+// явялется getterom, fullTitle дадже не метод это свойство, свойство является getterom, a getter является 
+// функцией. Getter отдаёт значение 
+
+car.fullTitle = 'BMW';  Заметим что записываем в car.fullTitle занчение BMW  потом распечатываем его
+а получаю BMW 3.
+
+т.е. у нас перезаписался бренд, но выводиться через fullTitile то что находится в gettere!
+
+console.log(car.fullTitle); - получили  BMW 3
+
+
+Но теперь в ES6 можно прописывать getter и setter внутри объекта 
+
+const car = {
+  brand: 'mazda',
+  model: 3,
+  year: 2006,
+
+  get: fullTitle() {
+    return this.brand + ' ' + this.model;
+  },
+
+  set: fullTitle(value) {
+    this.brand = value
+  }
+};
+
+car.color = 'blue';
+
+car.fullTitle = 'BMW'
+console.log(car.fullTitle);
+
+///////////// Классы ES6 ///////////
+ключевое слове class создаёт class, т.е. функцию конструктор.
+Class это функция которая создаёт обьект функцию конструктор
+classi это шаблон по которому создаётся объект
+
+можем обьявить конструктор - это момед создаётся в момент создания класса и подготваливает объект
+для дальнейшего использования и мы можем указывать свойство обьетка
+
+
+class Car {             совйство можно задать и так
+  constructor(){
+    this.brand = 'Toyota';
+  }
+}
+
+const car1 = new Car();
+
+console.log(car1);
+
+class Car {             можно как переменная в конструкторе 
+  constructor(brand){
+    this.brand = brand;
+  }
+}
+
+const car1 = new Car('Toyota');
+
+console.log(car1);
+
+
+Мы в classe часто пишем this это потому что нам необходимо указать, что свойства будут привязаны
+к обьекту, это вообще очень важный пункт в ООП, с this нужно разобратся
+
+class CarWashing {
+  constructor(brand, model){
+    this.brand = brand;
+    this.model = model;
+    this.washed = false;
+  }
+
+ washReady() {
+   this.washed = true;
+   this.reportSMS();
+ }
+
+ reportSMS(){
+   console.log( this.brand, this.model, this.washed);
+ }
+}
+
+const car1 = new CarWashing('Toyota', 'Prius');
+car1.washReady();
+
+////// также необходимо знать про статические методы и свойства  ///////
+мы можем внутри класс их создавать, т.е. эти методы и свойства будут принадлежать самому
+классу а не обьекту.
+
+CarWashing.counter = 0;
+
+ static noCarBaseModel() {
+    return 'none';
+  }
+
+class CarWashing {
+  constructor(brand, model = CarWashing.noCarBaseModel()){
+    this.brand = brand;
+    this.model = model;
+    this.washed = false;
+  }
+
+  static noCarBaseModel() {  // статический метод, его обязательно надо будет вызывать в параметрах
+    return 'none';           // статичексие методы нельзя вызвать из объекта нельзя написать car1.noCarBaseModel()
+  }                          // будет ошибка - что не ялвялется функцией, также не могу вызвать и counter
+
+ washReady() {
+   this.washed = true;
+   CarWashing.counter++;
+   this.reportSMS();
+ }
+
+ reportSMS(){
+   console.log( this.brand, this.model, this.washed);
+ }
+}
+
+CarWashing.counter = 0;
+
+const car1 = new CarWashing('Toyota', 'Prius');
+const car2 = new CarWashing('Toyota', 'Prado');
+const car3 = new CarWashing('Toyota', 'Wish');
+const car4 = new CarWashing('Zaz');
+
+car1.washReady();
+car2.washReady();
+car3.washReady();
+car4.washReady();  // - Zaz none true
+
+console.log(CarWashing);
+
+
+Так-же в классы мы можем добавять getters and setters
+
+class CarWashing {
+  constructor(brand, model = CarWashing.noCarBaseModel(), services = []){
+    this.brand = brand;
+    this.model = model;
+    this.washed = false;
+    this._services = services;  // Это необходимо чтобы мы неимели доступ к этой перменной из вне
+  }                             // и называется это Инкапсуляцией.
+  // Разработчкику положено эти миханихм скрыть, чтобы пользователь не поломал систему. но что бы пользователь
+  // имел возвожмость влиять на эти глобальные переменные созданны getters и setters
+  static noCarBaseModel() {  // статический метод, его обязательно надо будет вызывать в параметрах
+    return 'none';           // статичексие методы нельзя вызвать из объекта нельзя написать car1.noCarBaseModel()
+  }                          // будет ошибка - что не ялвялется функцией, также не могу вызвать и counter
+
+ washReady() {
+   this.washed = true;
+   CarWashing.counter++;
+   this.reportSMS();
+ }
+
+ reportSMS(){
+   console.log( this.brand, this.model, this.washed);
+ }
+
+ get services(){
+  console.log(this._services);
+  return this._services.length > 0 ? 'Есть доп услуги' : 'Нет доп услуг';
+ }
+
+ set services(addServices){
+   return this._services.push(addServices);
+ }
+}
+
+CarWashing.counter = 0;
+
+const car1 = new CarWashing('Toyota', 'Prius', ['black tires', 'wax']);
+const car2 = new CarWashing('Toyota', 'Prado');
+const car3 = new CarWashing('Toyota', 'Wish');
+const car4 = new CarWashing('Zaz');
+
+car1.services = 'Протирка стёкол';
+car2.services = 'Протирка стёкол';
+
+console.log(car1.services);
+console.log(car2.services);
+
+// если бы мы добавляли свойство на прямую в servises то перееписали бы уже имеющияся ['black tires', 'wax'])
+// А использовав инкапсюляцию мы легко добавли новые свойства для автомобилей не затирая уже имеюищйся свойстава
+
+
+
+///// НАСЛЕДОВАНИЕ ///// новый синтаксис
+
+допустим мы захотим открыть вторую автомойку
+
+class CarWashing {
+  constructor(brand, model = CarWashing.noCarBaseModel(), services = []){
+    this.brand = brand;
+    this.model = model;
+    this.washed = false;
+    this._services = services;
+  } 
+  static noCarBaseModel() {
+    return 'none';
+  }
+
+ washReady() {
+   this.washed = true;
+   CarWashing.counter++;
+   this.reportSMS();
+ }
+
+ reportSMS(){
+   console.log( this.brand, this.model, this.washed);
+ }
+
+ get services(){
+  console.log(this._services);
+  return this._services.length > 0 ? 'Есть доп услуги' : 'Нет доп услуг';
+ }
+
+ set services(addServices){
+   return this._services.push(addServices);
+ }
+}
+
+class PassCar extends CarWashing{
+
+
+}
+
+// С помощью методе extends мы наследуем свойства и методы класс CarWashing к нашему класс PassCar
+// и не нужно указывать прототипы и конструкторы, как мы указывали на предыдущих уроках
+// Наследуемый класс, если не имеет конструктора то испоьзует контсруктор родителя, т.е. когда мы
+// не указали конструктор, то мы использем полностью конструктор родителя
+// constructor(brand, model = CarWashing.noCarBaseModel(), services = []){
+//   this.brand = brand;
+//   this.model = model;
+//   this.washed = false;
+//   this._services = services;
+// } 
+
+// CarWashing {brand: "Toyota", model: "Prius", washed: false, _services: Array(3)}brand: "Toyota"model: "Prius"washed: false_services: (3) ["black tires", "wax", "Протирка стёкол"]services: (...)__proto__: constructor: class CarWashingreportSMS: ƒ reportSMS()services: (...)washReady: ƒ washReady()get services: ƒ services()set services: ƒ services(addServices)__proto__: Object
+// PassCar {brand: "Toyota", model: "Prado", washed: false, _services: Array(1)}
+
+CarWashing.counter = 0;
+
+const car1 = new CarWashing('Toyota', 'Prius', ['black tires', 'wax']);
+const car2 = new PassCar('Toyota', 'Prado');
+
+const car3 = new CarWashing('Toyota', 'Wish');
+const car4 = new CarWashing('Zaz');
+
+car1.services = 'Протирка стёкол';
+car2.services = 'Протирка стёкол';
+car1.washReady();
+car2.washReady();
+
+console.log(car1);
+console.log(car2);
+
+
+Для созданре конструктора у наследуемого класса. Используется ключевое слово super
+
+class CarWashing {
+  constructor(brand, model = CarWashing.noCarBaseModel(), services = []){
+    this.brand = brand;
+    this.model = model;
+    this.washed = false;
+    this._services = services;
+  } 
+  static noCarBaseModel() {
+    return 'none';
+  }
+ washReady() {
+   this.washed = true;
+   CarWashing.counter++;
+   this.reportSMS();
+ }
+ reportSMS(){
+   console.log( this.brand, this.model, this.washed);
+ }
+ get services(){
+  console.log(this._services);
+  return this._services.length > 0 ? 'Есть доп услуги' : 'Нет доп услуг';
+ }
+ set services(addServices){
+   return this._services.push(addServices);
+ }
+}
+
+// создание конструктора
+// так мы наследуем конструктор у родителя и можем даже его расширять
+class PassCar extends CarWashing{
+ constructor(brand, model, services, passAmount = 5){
+   super(brand, model, services);
+   this.passAmount = passAmount;
+ }
+
+ // чтобы не повторять весь метод как у родителя, пишем super
+//  washReady() {
+//   this.washed = true;
+//   CarWashing.counter++;
+//   this.reportOffice();
+// }
+washReady() { // использовава super и указали метод, мы унаследовали все функции указаынне выше
+  super.washReady(); // наследуем темод родителя
+  this.reportOffice(); // здесь добавили свой метод
+}
+
+reportOffice(){
+  console.log('Атомойка PassCar помыла машину');
+}
+}
+
+CarWashing.counter = 0;
+
+const car1 = new CarWashing('Toyota', 'Prius', ['black tires', 'wax']);
+const car2 = new PassCar('Toyota', 'Prado', ['Мойка двигателя'], 7);
+
+const car3 = new CarWashing('Toyota', 'Wish');
+const car4 = new CarWashing('Zaz');
+
+car1.services = 'Протирка стёкол';
+car2.services = 'Протирка стёкол';
+car1.washReady();
+car2.washReady();
+
+console.log(car1);
+console.log(car2);
+
+////////////// Коллекции Map и Set /////////////
+Раньше мы могли хранить данные только в массивах и обьектах, но в ES6 появилась возможность хранить 
+данные в коллекции set и map.
+
+Так какие есть минусы у массивов и обьектов и у всех типов данных.
+во первых они наследуют методы родителей, даже если они нам не нужны, они всё равно имеються - мы можем
+расскрыть прототип и увидим все методы.
+
+Второй минус обьекты могут содержать ключи только в виде строки! 
+const myGarage = {
+  whils: 4,     ---- могут содержать ключи только в виде строки! 
+  fishStick: 5, ---- могут содержать ключи только в виде строки! 
+};
+синтаксис нам позволяет их записать без ковыечек, а так это стрроки 
+const myGarage = {
+  'whils': 4,
+  'fishStick': 5,
+};
+т.е. ключь в объекте всегда имеет тип данных строку, он не может быть функциее массивом, обьектом и тд
+
+Третий недостоток, что при переборе, порядок перебра будет не такой как мы его записали, он может отлечаться 
+У обьекта нет свойства length, для мы обращаемся console.log(Object.keys(myGarage).length); и только так мы получим 2
+такой себе способ и не очень удобный
+////// MAP /////////
+и как раз коллекция Map решает эти проблемы которые есть у нашго обьекта.
+Map создаёться с помощью конструктора new Map, коллекция Map хранит пары ключь : занчение, но в отличии от
+Map от объекта, ключем может быть любое произвольное занчение.
+с помощью метода set мы можем добавлять в коллекцию данные
+
+const map = new Map();
+map.set('Shop', {apple: 'iPhone', model: 'X'});
+map.set(163, 'Самарский регион');
+map.set(null, 'Даже так');
+map.set(NaN, 'WOW');
+map.set(undefined, 'Не может быть');
+const obj = {
+  name: 'Evgen',
+  age: 28
+};
+const func = () => {
+  console.log('Hello');
+};
+map.set(obj, 123);
+map.set(func, 'ухх');
+console.log(map);
+
+и как видите ключем может всё.
+
+
+Получать данные с коллекции мы можем с помощью метода get 
+
+console.log(map.get(func)); - мы получим ухх
+console.log(map.get(undefined)); - мы получим Не может быть
+
+метод has проверяет наличие ключа
+console.log(map.has(undefined));  нам вернёт true 
+console.log(map.has('Не может быть')); нам вернёт false
+
+У коллекции есть метод size 
+если указать console.log(map.size); то получим 7 - это количесвто наших элементов 
+
+ещё мы можем передавать значение при создании коллекции прямо при вызове конструктора в виде массива
+который будет содержать массив данных, первым будет идти ключ а вторым значение
+
+
+const map = new Map([
+  [2049, 'summer'],
+  ['colt', 1845]
+]);
+
+map.set('Shop', {apple: 'iPhone', model: 'X'});
+map.set(163, 'Самарский регион');
+map.set(null, 'Даже так');
+map.set(NaN, 'WOW');
+map.set(undefined, 'Не может быть');
+const obj = {
+  name: 'Evgen',
+  age: 28
+};
+const func = () => {
+  console.log('Hello');
+};
+map.set(obj, 123);
+map.set(func, 'ухх');
+
+console.log(map.size);
+console.log(map);
+
+const collectMap = new Map([
+  ['Toyota', 'Prado'],
+  ['House', '156m2']
+]);
+
+/// метод delete удаляет элемент с коллекции
+collectMap.delete('House');
+
+// метод clear удаляет все элементы Map(0) {}
+collectMap.clear();
+console.log(collectMap);
+
+
+Map является этрируемой структурой данных это значит что мы можем использоваться к нему спред операторы,
+деструктурезацию, Array from
+кстати Array from если использовать к нашему map
+
+const arr = Array.from(map); 
+console.log('arr: ', arr);   и мы получим большой большой массив который содержит множество массивов)
+
+arr:  (9) [Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2)]
+
+0: (2) [2049, "summer"]
+1: (2) ["colt", 1845]
+2: (2) ["Shop", {…}]
+3: (2) [163, "Самарский регион"]
+4: (2) [null, "Даже так"]
+5: (2) [NaN, "WOW"]
+6: (2) [undefined, "Не может быть"]
+7: (2) [{…}, 123]
+8: (2) [ƒ, "ухх"]
+length: 9
+
+В коллекцию map сохраняется именно тот порядок элементов в котором они добавлялись
+а обьект это не гарантирует
+
+const map = new Map([
+  [2049, 'summer'],
+  ['colt', 1845]
+]);
+
+map.set('Shop', {apple: 'iPhone', model: 'X'});
+map.set(163, 'Самарский регион');
+map.set(null, 'Даже так');
+map.set(NaN, 'WOW');
+map.set(undefined, 'Не может быть');
+const obj = {
+  name: 'Evgen',
+  age: 28
+};
+const func = () => {
+  console.log('Hello');
+};
+map.set(obj, 123);
+map.set(func, 'ухх');
+
+console.log(map.size);
+console.log(map);
+
+const collectMap = new Map([
+  ['Toyota', 'Prado'],
+  ['House', '156m2']
+]);
+
+const arr = Array.from(map);
+console.log('arr: ', arr);
+
+map.forEach((value, key) => {
+  console.log(`ключ: ${key} занчение: ${value}`);
+});
+
+for(let [key, value] of map){
+  console.log(`ключ: ${key} занчение: ${value}`);
+}
+
+Когда вообще стоит использовать Map 
+- когда у нас ключи разных типов 
+- если ключи генерируются на этам выполнения кода (ключи динамические)
+- если мы много работает с парамаи ключ: значение - удаление и добавление элементов
+- если нам необходимо переберать ключ: значение 
+
+////// SET /////////
+Это коллекция нужна для хранения уникальных значений
+также используем для вызова конструктор
+
+const myLife = new Set();
+myLife.add('ownHouse');
+myLife.add('ToyotaPrado');
+myLife.add('iPhoneX');
+
+console.log(myLife); // мы получаем коллекцию из 3х элеметов
+
+если мы добавим ещё 2 похожих элемента 
+
+const myLife = new Set();
+myLife.add('ownHouse');
+myLife.add('ToyotaPrado');
+myLife.add('iPhoneX');
+myLife.add('iPhoneX');
+myLife.add('iPhoneX');
+
+console.log(myLife); // мы получили всё также 3 элемента! Дублированные элементы не добавляются!
+// т.е. коллекция содрежит только уникальыне значения;
+
+console.log(myLife.size); получим 3
+
+Коллекция Set может хранить любые типы данных
+
+удалять желементы мы можем с помощью метода delete 
+mylife.delete('iPhoneX');
+
+Очистить коллекцию от элементом можнео с помощью clear 
+myLife.clear();
+
+А ещё с помощью спред оператора мы можем превратить нашу коллекцию в массив
+console.log([...myLife]); 
+
+0: "ToyotaPrado"
+1: "ownHouse"
+2: "iPhoneX"
+length: 3
+__proto__: Array(0)
+
+const cars = new Set(['Toyota', 'BMW', 'Mers']);
+const cars2 = new Set(['Opel', 'NIVA', 'BMW']);
+
+const allcars = new Set([...cars, ...cars2]);
+console.log(allcars);
+
+Коллекция содержит 6 элементов, а мы получили только 5 потому что коллекция содержит только уникальные 
+значения. используя спред оператор переделываем в массив и получаем наши машиниы 
+
+0: "Toyota"
+1: "BMW"
+2: "Mers"
+3: "Opel"
+4: "NIVA"
+length: 5
+
+Разработчики ecmo рекомендуют использовать set если вам необходимо
+- часто проверять значение имеються ли эти элементы или нет это менее ресурсо затратно, нежели использовать
+массив, потому что для перебора массива вам необходимо использовать циклы а они кушают память
+*/
 
 
 
