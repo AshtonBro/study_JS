@@ -66,6 +66,7 @@ start() {
  this.getAddExpInc();
  this.showResult();
  this.blocked();
+ this.setLocalStorage();
 }
 
 showResult() {
@@ -77,6 +78,20 @@ showResult() {
  additionalIncomeValue.value = this.addIncome.join(', ');
  targetMonthValue.value = Math.ceil(this.getTargetMonth());
  incomePeriodValue.value = _this.calcSavedMoney();
+}
+
+setLocalStorage() {
+  const map = new Map();
+  const _this = this;
+  localStorage.setItem('Доход за месяц', this.budgetMonth);
+  localStorage.setItem('Дневной бюджет', this.budgetDay);
+  localStorage.setItem('Расход за месяц', this.expensesMonth);
+  localStorage.setItem('Возможные доходы', this.addIncome);
+  localStorage.setItem('Возможные расходы', this.addExpenses);
+  localStorage.setItem('Срок достижения цели в месяцах', Math.ceil(this.getTargetMonth()));
+  localStorage.setItem('Накопления за период', _this.calcSavedMoney());
+  
+
 }
 
 onAddbuttonClick(e) {
@@ -158,6 +173,7 @@ blocked() {
  document.querySelectorAll('.data input[type = text]').forEach((item) => {
   item.disabled = true;
  });
+ console.log('document.cookie: ', document.cookie);
 }
 
 reset() {
@@ -287,13 +303,13 @@ eventListeners() {
  });
 }
 
+
+
+
 }
 
 const appData = new AppData();
 appData.eventListeners();
-
-
-
 
 
 
@@ -609,7 +625,11 @@ class PassCar extends CarWashing{
 //   this._services = services;
 // } 
 
-// CarWashing {brand: "Toyota", model: "Prius", washed: false, _services: Array(3)}brand: "Toyota"model: "Prius"washed: false_services: (3) ["black tires", "wax", "Протирка стёкол"]services: (...)__proto__: constructor: class CarWashingreportSMS: ƒ reportSMS()services: (...)washReady: ƒ washReady()get services: ƒ services()set services: ƒ services(addServices)__proto__: Object
+// CarWashing {brand: "Toyota", model: "Prius", washed: false, _services: Array(3)}brand: 
+"Toyota"model: "Prius"washed: false_services: (3) ["black tires", "wax", "Протирка стёкол"]services: (...)__proto__: 
+constructor: class 
+CarWashingreportSMS: ƒ reportSMS()services: (...)washReady: ƒ washReady()get
+ services: ƒ services()set services: ƒ services(addServices)__proto__: Object
 // PassCar {brand: "Toyota", model: "Prado", washed: false, _services: Array(1)}
 
 CarWashing.counter = 0;
