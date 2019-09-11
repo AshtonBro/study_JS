@@ -1,4 +1,246 @@
 
+                        /*       CКРИПТЫ И ВРЕМЯ ВЫПОЛНЕНИЯ
+                        setTimeout, setInterval и requestAnimationFrame
+                                    Объект Date 
+
+setTimeout() - принимает 2 параметра,
+1. - callback функцию которая будет вызываться через определённое время
+2. - это количество миллисекунд через соклько мы хотим вызвать эту функцию
+
+setTimeout(function(){
+    console.log('Message for console');
+}, 3000);
+
+
+setInterval() - это функция будет вызывать функцию через какой-то интервал
+параметры эта функция принимает очень схожие.
+1. - callback функция
+2. - это время в миллисекундах через которое будет запускаться эта функция
+Это что каждые 2 секунды будет запускаться функция коллбек 
+3. параметром setInterval принимет аргументы которые будут переданны в нашу функцию
+
+const idInterval = setInterval(() => {
+    console.log('Each 2sec start the function');
+}, 2000);
+
+clearInterval(idInterval); - метод очищает и останавливает функцию setInterval
+
+таким образом мы запускали setInterval каждые 2 секунда, а в setTimeout заданили метод cleatInterval
+который очищает setInterval и стопит его через 5 сек
+
+let count = 0;
+const idInterval = setInterval(() => {
+    count++;
+    console.log('Each 2sec start the function '+ count);
+}, 2000);
+
+setTimeout(function(){
+    console.log('setInterbal stopped');
+    clearInterval(idInterval);
+}, 5000);
+
+let getMessage = function(name) {
+    console.log('Privet ' + name + '!');
+}
+
+let count = 0;
+const idInterval = setInterval(getMessage, 2000, 'John');
+
+setTimeout(getMessage, 5000, 'Sarah');
+
+Для чего нужны clearInterval и cleatTimeout
+что застопить функции , а то они и могут работать бесконечно.
+
+Сделаем анимацию нашим картинками 
+
+let skydiver = document.querySelector('.skydiver'), 
+    falcon = document.querySelector('.falcon'),
+    // счётчик начало анимации
+    count = 0;
+
+    // такой вызов setTimeout называется рекурсивный вызов setTimeout
+const skydiverGoDown = function(){
+    count++;
+    falcon.style.left = count * 2 + 'px';
+    skydiver.style.top = count + 'px';
+    if (count < 300) {
+        setTimeout(skydiverGoDown, 10);
+    }
+};
+
+setTimeout(skydiverGoDown, 150);
+
+рекурсивным способо мы решили задачку, 
+
+так же это сделать можно с помощью setInterval;
+
+let skydiver = document.querySelector('.skydiver'), 
+    falcon = document.querySelector('.falcon'),
+    // счётчик начало анимации
+    count = 0;
+
+    // такой вызов setTimeout называется рекурсивный вызов setTimeout
+const skydiverGoDown = function(){
+    count++;
+    if (count < 300) {
+     falcon.style.left = count * 2 + 'px';
+     skydiver.style.top = count + 'px';
+    } else if (count < 500){
+        falcon.style.left = count * 2 + 'px';
+    } else{
+        clearInterval(idInterval);
+    }
+    console.log('count: ', count);
+};
+
+let idInterval = setInterval(skydiverGoDown, 10);
+
+
+///////// requestAnimationFrame /////////
+
+Но к сожалению эти способы не принимают во внимание что происходит браузере в данный момент
+страница может быть в неактивной вкладке браузера и анимация так и будет продолжатся , правда соверменные
+браузера учли это, но к сожалению не все, и это остаёться минусом setIntervala и setTimeout
+также анимация в js не синхронно работает с обновленрием экрана и при анимации большого количества одновременно
+на нашей станице в нашем браузере необходимо использовать большие мощности компьютера для что мы синхронезирировать
+анимацию в обновлением экрана. для того чтобы это всё испраитьь была создана функиция requestAnimationFrame
+которая позволяет запускать анимации любых типов, будь DOM элементов Canvas, web jl.
+также даёт возможность оптимизировать анимации и делать их более пдавным, также есть возможность связывать
+несколько анимации в одно целое.
+requestAnimationFrame похоже на setInterval и другое - также возвращает setId для то чтобы в будущем эту
+анимацию остановить.
+
+requestAnimationFrame если вы хотите углубиться в анимации то requestAnimationFrame стоит изучить более
+подробно, особееноо полезно работая с canvasom или другими графическими анимациями.
+
+Такой вид анимации браузер запустит в тот момент когда подсчитает это возможным выполнить эту анимацию
+
+let skydiver = document.querySelector('.skydiver'), 
+    falcon = document.querySelector('.falcon'),
+    count = 0,
+    flyInterval;
+const flyAnimate = function(){
+    flyInterval = requestAnimationFrame(flyAnimate);
+    count++;
+    if (count < 300) {
+     falcon.style.left = count * 2 + 'px';
+     skydiver.style.top = count + 'px';
+    } else if (count < 500){
+        falcon.style.left = count * 2 + 'px';
+    } else{
+        cancelAnimationFrame(flyInterval);
+    }
+    console.log('count: ', count);
+};
+let animate = false;
+document.addEventListener('click', function(){
+    if (animate){
+        flyInterval = requestAnimationFrame(flyAnimate);
+        animate = false;
+    }else{
+        animate = true;
+        cancelAnimationFrame(flyInterval);
+    }
+    
+});
+
+
+В requestAnimationFrame нам часто необходимо знать, время анимации, время выполнение анимации и тд.
+ив этом нам помощет обеькт date, мы можем вычислять текущее время, после этого будет происходить выполнение
+функции или анимации и снова получать текущее время 
+Для работы с датой и временем исползуют class date new Date()
+
+Мы можем получить любой компонент даты с помощью следующих методов
+
+console.log('yaer ' + date.getFullYear());
+console.log('month ' + (date.getMonth() + 1));
+console.log('day ' + date.getDate());
+console.log('day of week ' + date.getDay());
+console.log('hours ' + date.getHours());
+console.log('minutes ' + date.getMinutes());
+console.log('sec ' + date.getSeconds());
+console.log('miliSec ' + date.getMilliseconds());
+
+все эти методы возвращаеют значение текущей даты! 
+Если мы хотим дату по гринвичу то указывает UTS  
+console.log('yaer ' + date.getUTCFullYear());
+console.log('month ' + (date.getUTCMonth() + 1));
+console.log('day ' + date.getUTCDate());
+console.log('day of week ' + date.getUTCDay());
+console.log('hours ' + date.getUTCHours());
+console.log('minutes ' + date.getUTCMinutes());
+console.log('sec ' + date.getUTCSeconds());
+console.log('miliSec ' + date.getUTCMilliseconds());
+
+Помимо этого мы можем задавать компоненты даты, вместо get пишем set
+date.setFullYear(2008, 2, 10); можем передать год, месяц, число
+date.setHours(10, 30, 30, 300); - часы, минусы, секунды, милисекунды
+date.getMinutes(30, 30, 300) - минуты, секунды, милисекунды
+и так далее.
+также все эти методы имеют UTC методе, нужно после set написать UTC
+date.setUTCHours(10, 30, 30, 300);
+
+Классная функция у date которая высчитывает корректную дату.
+если указать больше число чем есть в месяце или в дате, то он их добавляет и коректирует,
+т.е. указал 15 в графе месяца, он подсчитает 12 и добавит + 3 и выведет 3й месяц
+Также мы можем расчитать какой число будет через 100 дней
+
+let date = new Date();
+date.setDate(date.getDate() + 100);
+
+в js дата и время храниться в миллисекунда с начало 1 января 1970года , и это называеться timestepm
+чтобы его получиться необходимо воспользоваться методом getTime()
+на сегодняшний день с первого января прошло 1568210082518 миллисекунд
+
+Если в параметрах Date ввести число, он воспринимает их как миллисекунды, и введя число getTime
+покажет нам какая дата это была
+
+let date = new Date(678994374654); - Mon Jul 08 1991 22:32:54 GMT+0500
+если это число будет отрицательным до мы получим число - миннус указанное количество миллисекунд от 
+1 января 1970года.
+let date = new Date(-678994374654); - Sat Jun 26 1948 11:27:05 GMT+0500 
+
+получить время в виде строки 
+console.log(date.toTimeString()); 11:27:05 GMT+0500
+console.log(date.toDateString()); Sat Jun 26 1948
+
+Еслть методы которые будут отображать время и дату с учётом локализации 
+console.log(date.toLocaleTimeString());       19:02:22
+console.log(date.toLocaleDateString());       11.09.2019
+
+Также мы можем указать первым параметром имеено локализацию которую хотим увидить
+console.log(date.toLocaleTimeString('ru'));     19:04:30
+console.log(date.toLocaleDateString('ru'));     11.09.2019
+
+console.log(date.toLocaleTimeString('en'));     7:04:53 PM
+console.log(date.toLocaleDateString('en'));     9/11/2019
+
+console.log(date.toISOString());        2019-09-11T14:06:07.388Z
+
+Можно применить метод substr и вывести только первые 10 символов 
+console.log(date.toISOString().substr(0, 10));  2019-09-11
+
+Метод now
+console.log(Date.now()); покажет количество миллесекунд от 1970г до момента вызова функции
+console.log(Date.now());           1568210920489
+
+метод parse 
+console.log(Date.parse('23 july 1991'));  console.log(Date.parse('10 march 1988'));
+
+
+let date = new Date();
+
+console.log(Date.parse('23-07-1991'));
+*/
+
+// console.log('yaer ' + date.getFullYear());
+// console.log('month ' + (date.getMonth() + 1));
+// console.log('day ' + date.getDate());
+// console.log('day of week ' + date.getDay());
+// console.log('hours ' + date.getHours());
+// console.log('minutes ' + date.getMinutes());
+// console.log('sec ' + date.getSeconds());
+// console.log('miliSec ' + date.getMilliseconds());
 
 
 

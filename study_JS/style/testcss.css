@@ -1,13 +1,10 @@
 body{
-    font-size: 30px;
-    text-align: center;
-    margin-top: 50px;
-    color: rgb(162, 179, 138);
-    font-family: 'Courier New', Courier, monospace;
-    
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; 
 }
-.text{
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 15px;
-    color: rgb(206, 22, 206);
-}
+
+.skydiver, .falcon{
+    position: relative;
+};
