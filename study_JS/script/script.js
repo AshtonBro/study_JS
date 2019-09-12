@@ -110,7 +110,7 @@ getStatusIncome: function() {
       return('Некорректный ввод');
     }
   },
-    
+  
 // GetInfoDeposit
 getInfoDeposit: function() {
   if(appData.deposit) {
