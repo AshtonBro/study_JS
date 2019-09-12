@@ -48,56 +48,8 @@ function countTimer(deadline){
         }
     }, 1000);
 
-
 }
-
 
 // наша функция будет принимать дедлайн, то время до которого наш таймер будет отсчитывать
 countTimer('13 september 2019');
 
-
-
-
-
-
-
-
-
-// const idInterval = setInterval(() => {
-//     console.log('Each 2sec start the function');
-// }, 2000);
-// setInterval() - это функция будет вызывать функцию через какой-то интервал
-// параметры эта функция принимает очень схожие.
-// 1. - callback функция
-// 2. - это время в миллисекундах через которое будет запускаться эта функция
-// Это что каждые 2 секунды будет запускаться функция коллбек 
-// 3. параметром setInterval принимет аргументы которые будут переданны в нашу функцию
-
-
-// function updateClock(){
-//     let timer = getTimeRemaining();
-    
-//         timerHours.textContent = timer.hours;
-//         timerMinutes.textContent = timer.minutes;
-//         timerSeconds.textContent = timer.seconds;
-
-
-//     let intervalId = setInterval(function(){
-//         if(timer.timeRemaining > 0) {
-//             count++;
-//             console.log('count++ ', count++);
-//             setInterval(updateClock, 3000);
-
-//         }else if(timer.seconds < -timer.seconds) {
-//             timerHours.textContent = 'Время вышло';
-//             timerMinutes.textContent = ' ';
-//             timerSeconds.textContent = ' ';
-//             boublePoint[1].textContent = ' ';
-//             boublePoint[3].textContent = ' ';
-//             console.log('stop');
-//             clearInterval(intervalId);
-//         }
-
-//     }, 1000);
-
-});
