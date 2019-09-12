@@ -91,7 +91,6 @@ setLocalStorage() {
   localStorage.setItem('Срок достижения цели в месяцах', Math.ceil(this.getTargetMonth()));
   localStorage.setItem('Накопления за период', _this.calcSavedMoney());
   
-
 }
 
 onAddbuttonClick(e) {
@@ -107,9 +106,9 @@ onAddbuttonClick(e) {
 }
 
 getExpenses() {
- expensesItems.forEach((item) => {
-  const itemExpenses = item.querySelector('.expenses-title').value;
-  const cashExpenses = +item.querySelector('.expenses-amount').value;
+ document.querySelectorAll('.expenses-items').forEach((item) => {
+  let itemExpenses = item.querySelector('.expenses-title').value;
+  let cashExpenses = +item.querySelector('.expenses-amount').value;
   if (itemExpenses !== '' && cashExpenses !== '') {
     this.expenses[itemExpenses] = cashExpenses;
   }
@@ -118,8 +117,8 @@ getExpenses() {
 
 getIncome() {
  document.querySelectorAll('.income-items').forEach(() => {
-  const itemIncome = document.querySelector('.income-title').value;
-  const cashIncome = +document.querySelector('.income-amount').value;
+  let itemIncome = document.querySelector('.income-title').value;
+  let cashIncome = +document.querySelector('.income-amount').value;
     if(itemIncome !== '' && cashIncome !== '') {
       this.income[itemIncome] = cashIncome;
       this.incomeMonth += cashIncome;
@@ -173,7 +172,7 @@ blocked() {
  document.querySelectorAll('.data input[type = text]').forEach((item) => {
   item.disabled = true;
  });
- console.log('document.cookie: ', document.cookie);
+ 
 }
 
 reset() {
@@ -225,8 +224,7 @@ getExpensesMonth() {
 }
 
 getBudget() {
- this.budgetMonth = Math.ceil(this.budget + this.incomeMonth - 
- this.expensesMonth + (this.moneyDeposit * this.percentDeposit) / 12);
+ this.budgetMonth = Math.ceil(this.budget + this.incomeMonth - this.expensesMonth + (this.moneyDeposit * this.percentDeposit) / 12);
  this.budgetDay = this.budgetMonth / 30;
 }
 
@@ -310,3 +308,4 @@ eventListeners() {
 
 const appData = new AppData();
 appData.eventListeners();
+console.log('appData: ', appData);

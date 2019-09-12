@@ -16,11 +16,13 @@ function Time(deadline){
     function getTimeRemaining(){
         let date = new Date();
         let day = date.getDay() - 1;
+        console.log('day: ', day);
         let localTime = date.toLocaleTimeString('ru');
         let dateStop = new Date(deadline).getTime();
         let dateNow = date.getTime();
         let timeRemaining = (dateStop - dateNow) / 1000;
         let stopDay = Math.floor(timeRemaining / 60 / 60 / 24);
+
         return {timeRemaining, day, localTime, stopDay};
     } 
 
