@@ -79,7 +79,6 @@ let skydiver = document.querySelector('.skydiver'),
     // счётчик начало анимации
     count = 0;
 
-    // такой вызов setTimeout называется рекурсивный вызов setTimeout
 const skydiverGoDown = function(){
     count++;
     if (count < 300) {
@@ -90,7 +89,6 @@ const skydiverGoDown = function(){
     } else{
         clearInterval(idInterval);
     }
-    console.log('count: ', count);
 };
 
 let idInterval = setInterval(skydiverGoDown, 10);
