@@ -1,20 +1,55 @@
 
-const clocklDegreeCalculate = function(hours, minutes) {
- if (hours < 0 || hours > 24) {
-     console.log('Часы должны быть от 0 до 24');
-     return;
- }
- if (minutes < 0 || minutes > 60) {
-    console.log('Минуты должны быть от 0 до 60');
-    return;
-}
-if (hours > 12) {hours = hours - 12;}
-if (hours === 0){ hours = 12;}
-if (minutes === 0){ minutes = 60;}
-let gradusOfHours = (360 / 12) * hours;
-let gradusOfMinutes = (360 / 60) * minutes;
-let differentDegree = Math.abs(gradusOfHours - gradusOfMinutes);
-if (differentDegree > 180){differentDegree = 360 - differentDegree;}
-return console.log(' угол между часовой и минутной: ', differentDegree);
-
+let print1 = function() {
+    console.log('Крот');
 };
+let print2 = function() {
+    console.log('овце,');
+};
+let print3 = function() {
+    console.log('жирафу,');
+};
+let print4 = function() {
+    console.log('зайке');
+};
+let print5 = function() {
+    console.log('голубые');
+};
+let print6 = function() {
+    console.log('сшил');
+};
+let print7 = function() {
+    console.log('фуфайки');
+};
+
+let func1 = function() {
+    print3();
+};
+
+let func2 = function() {
+    func1();
+
+    setTimeout(function() {
+        print6();
+    }, 1000);
+};
+
+let func3 = function() {
+    setTimeout(function() {
+        func2();
+        print4();
+    }, 250);
+
+    print2();
+};
+
+setTimeout(function() {
+    print5();
+
+    setTimeout(function() {
+        print7();
+    }, 750);
+}, 500);
+
+print1();
+
+func3();
