@@ -16,13 +16,15 @@ function Time(deadline){
     function getTimeRemaining(){
         let date = new Date();
         let day = date.getDay() - 1;
-        let localTime = date.toLocaleTimeString('ru');
+        let localTime = date.toLocaleTimeString('en');
+        let localTimeRU = date.toLocaleTimeString('ru');
         let dateStop = new Date(deadline).getTime();
         let dateNow = date.getTime();
         let timeRemaining = (dateStop - dateNow) / 1000;
         let stopDay = Math.floor(timeRemaining / 60 / 60 / 24);
-
-        return {timeRemaining, day, localTime, stopDay};
+        
+        
+        return {timeRemaining, day, localTime, stopDay, localTimeRU};
     } 
 
     function CalculateDate() {
@@ -34,7 +36,7 @@ function Time(deadline){
                     toDaySpan.textContent = dayArr[i];
                 }
         }
-
+        
         // показывает текущую дату
         curTimeSpan.textContent = timer.localTime;
 
@@ -42,15 +44,16 @@ function Time(deadline){
         endYearSpan.textContent = timer.stopDay + ' ' + 'Дней';
 
         // время суток
-        if (timer.localTime > 4 || timer.localTime < 12) {
+        if (timer.localTimeRU > 4 || timer.localTimeRU < 12) {
             goodDatSpan.textContent = 'Утро';
-        } else if (timer.localTime > 12|| timer.localTime < 17) {
+        } else if (timer.localTimeRU > 12|| timer.localTimeRU < 17) {
             goodDatSpan.textContent = 'день';
-        } else if (timer.localTime > 17 + 'AM'|| timer.localTime < 24) {
+        } else if (timer.localTimeRU > 17 + 'AM'|| timer.localTimeRU < 23) {
             goodDatSpan.textContent = 'вечер';
-        } else if (timer.localTime > 24|| timer.localTime < 4) {
+        } else {
             goodDatSpan.textContent = 'ночь';
         }
+        
 
 
         if (timer.timeRemaining > 0) {
@@ -59,6 +62,9 @@ function Time(deadline){
 
     }
     CalculateDate();
+
+    
 }
 
 Time('1 january 2020');
+
