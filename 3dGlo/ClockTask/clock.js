@@ -59,9 +59,7 @@ function Time(deadline){
         }
 
     }
-
     CalculateDate();
-
 }
 
 Time('1 january 2020');
