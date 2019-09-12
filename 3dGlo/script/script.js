@@ -8,6 +8,7 @@ function countTimer(deadline){
         timerMinutes = document.querySelector('#timer-minutes'),
         timerSeconds = document.querySelector('#timer-seconds'),
         timerNumbers = document.querySelectorAll('.timer-numbers');
+        
     function getTimeRemaining(){
         let dateStop = new Date(deadline).getTime(),
         dateNow = new Date().getTime(),
