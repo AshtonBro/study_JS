@@ -16,7 +16,6 @@ function Time(deadline){
     function getTimeRemaining(){
         let date = new Date();
         let day = date.getDay() - 1;
-        console.log('day: ', day);
         let localTime = date.toLocaleTimeString('ru');
         let dateStop = new Date(deadline).getTime();
         let dateNow = date.getTime();
