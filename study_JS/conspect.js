@@ -1,4 +1,157 @@
 
+                            /* ПАРАМЕТРЫ ДОКУМЕНТА, ОКНА И РАБОТА С НИМИ
+                            
+                            Объект screen:
+                            console.log(window.screen);
+Screen {availWidth: 2560, availHeight: 1400, width: 2560, height: 1440, colorDepth: 24, …}
+availHeight: 1400
+availLeft: 0
+availTop: 0
+availWidth: 2560
+colorDepth: 24
+height: 1440
+orientation: ScreenOrientation {angle: 0, type: "landscape-primary", onchange: null}
+pixelDepth: 24
+width: 2560
+
+Содержит параметры монитора на котором был открыт обьект скрин, данный обьект нужен в основном для написания
+мобильных приложений.
+                            Объект documentElement:
+                            console.log(document);
+то увидим наш документ, т.е все параметры html странички.
+                            console.dir(document);
+Если раскрыть увидим много свойство и методов, но есть такое свойства documentElement
+раскрыв который увидм важные свойст, clientHight, clinetWidth, clientTop, clientLeft, offset, offsetWidth,
+offsetHight, offsetLeft, offsetTop, scrollHeight, scrollWidth, scrollTop, scrollLeft
+
+const hight = document.documentElement.clientHeight;
+console.log('hight: ', hight);
+const width = document.documentElement.clientWidth;
+console.log('width: ', width);
+Так мы можем посмотреть размеры видимого окна открытой страницы. но повлиять на эти значения мы не можем.
+
+Если открыть любой другой сайт и в консоле ввести document.documentElement.scrollTop
+мы получим 0, потому что находим на начеле страница, если проскролить вних и стнова ввести
+document.documentElement.scrollTop
+то получим 1300px от верха начало страницы
+ещё ниже 2200px. Мы можем повлиять на эти параметры
+и находясь на любой страничке открыть консоль document.documentElement.scrollTop = 0 окажемся в начале 
+страницы document.documentElement.scrollTop = 2000 опустимся на это растояние.
+                             Работа с элементами на странице:
+Поучаем наши разберы бокса 
+const hight = block.clientHeight;
+const width = block.clientWidth; 
+h: 205
+w: 385
+
+Если посмотреть стили в css , то у нас отличаеться размеры 
+h: 200
+w: 400
+
+Этот параметр block.clientHeight;  block.clientWidth; учитывает padding сверху и высоту видимого контента
+почемуэ эти цифры не совпадают, потому что скрол занимает примерно 15 px и так образом мы получаем
+точные данные отображаемого контента
+h: 205
+w: 385
+при работе с элементами на странице лучше использовать эти свойства так как на них не влиют никакие css 
+стили, кроме box-sizing - border-box.
+Елси мы впишем в стиль box-sizing - border-box. то получим
+h: 178
+w: 379 в эти параметры которые в css входят и бордеры и падденги и полоса прокрутки.
+Поэтому учитываем свойство бордербокс
+
+Если на нужны размеры вместе с полосой прокрутки и бордорами то нам нужно свойство offsetHeight и offsetWidth
+мы получаем размеры только видимой части. 
+h: 225  - теперь ти свойства совпадают с css стилями 
+w: 406
+если мы хотим получить размеры всего блока то надо указываеться scrollHeight и scrollWidth
+h: 364
+w: 947 - но полоса прокрутки также не учитывается.
+
+Раскроем на блок с помощью кнопки
+поулчаем кнопку и кидаем на неё обработчки события, которые будет в своей функции менять стили нашего block'a
+
+document.querySelector('.box_button').addEventListener('click', ()=>{
+block.style.height = `${block.scrollHeight}px`;
+block.style.Width = `${block.scrollWidth}px`;
+});
+
+Наш блок увеличивыется в размерах и мы видим весь наш текст, нету скролов ни влево ни вправо, скрол
+не прокручивается вниз 
+
+так же на кнопу можем повесить чтобы при каждом нажатии опускать или скролить на заданное кол-во px
+document.querySelector('.box_button').addEventListener('click', ()=>{
+block.style.height = 100
+block.style.Width = 100
+});
+
+document.querySelector('.box_button').addEventListener('click', ()=>{
+block.style.height += 10
+block.style.Width += 10
+});
+
+так у обьекта window есть метод scrollBy это метод поэтому не забываем скобочки и передать парметры
+block.scrollBy(10, 10); - это будет прокрутка документа на указанное количество пикселей
+1. - горизонтальный
+2. - вертикальный
+также можно указать 0 чтобы крутить в одну или другую сторону 
+
+document.querySelector('.box_button').addEventListener('click', ()=>{
+block.scrollBy(10, 10);
+});
+
+такЖЕ у обьекта window есть метод scrollTo этот метод указывает на сколько прокрутить scroll, но 
+единожды, т.е.  переместиться именно на эти координаты.
+block.scrollTo(10, 50);
+
+document.querySelector('.box_button').addEventListener('click', ()=>{
+block.scrollTo(10, 10);
+});
+
+В js все координаты вычисляются от верхнего левого угла.
+Если хотим найти координаты элемента не посредственно на странице, например наш block, 
+то, чтобы найти в нём мы можем использовать координаты от верхнего левого угла блока.
+но чтобы найти сам block, мы высчитываем координаты с верхенго левого угла страницы(монтора, браузера).
+И чтобы получать координаты элемента можно воспользовать методом getBoundingClientRect().
+                                    getBoundingClientRect()
+
+document.querySelector('.box_button').addEventListener('click', ()=>{
+  console.log(block.getBoundingClientRect());
+});
+ и мы получим координаты нашего блока
+ DOMRect {x: 8, y: 155.890625, width: 1887, height: 137, top: 155.890625, …}
+bottom: 292.890625     - от края закладок или адресной строки до нижней точки элемента
+height: 137            - от верхней точки элемента до нижней точки с учетом бордеров и скроллов
+left: 808              - от левого края браузер до левой точки блока
+right: 1895            - от левого края браузер до правой точки блока
+top: 155.890625        - от верхнего края браузера то верхней точки элемента
+width: 1087            - ширина самого элемента.
+x: 808                  координаты блока х соответствует left
+y: 155.890625           координаты блока y соответствует top
+
+Использование метрик происходит не часто, но это необходимо знать, как работать с метрикой.
+
+Мы можем обращаться к свойства на прямую
+ block.getBoundingClientRect().top
+ block.getBoundingClientRect().left и получать необходимы данные,
+ приятней будет привязать  block.getBoundingClientRect() к переменной и образаться к этой прееменной
+ let domRect =  block.getBoundingClientRect();
+ domRect.top
+ domRect.left
+ domRect.width
+
+*/
+
+
+
+
+
+
+
+
+
+
+
                         /*       CКРИПТЫ И ВРЕМЯ ВЫПОЛНЕНИЯ
                         setTimeout, setInterval и requestAnimationFrame
                                     Объект Date 
