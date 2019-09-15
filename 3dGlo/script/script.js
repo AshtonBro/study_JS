@@ -47,7 +47,7 @@ function countTimer(deadline){
             console.log('stop');
             clearInterval(updateClock);
         }
-    }, 1000);
+    }, 100);
 
 }
 
@@ -70,9 +70,14 @@ const toggleMenu = () => {
     btnMenu.addEventListener('click', handlerMenu);
     closeBtn.addEventListener('click', handlerMenu);
     menuItem.forEach((elem) => elem.addEventListener('click', handlerMenu));
+    
+//Menu из списка li плавная прокрутка к элементу на странице
+console.log('menu: ', menuItem);
+    const scrollSlowToElem = () => {
+        
+    };
 
 };
-
 toggleMenu();
 
 // popup окно
@@ -88,11 +93,10 @@ const togglePopup = () => {
             setTimeout(function(){
                 popup.style.transform = 'translateX(0%)';
                 popup.style.transition = '0.8s';
-            },1000);
+            },500);
         }else{
             popup.style.display = 'block';
         }
-        
     };
 
     popupBtn.forEach((elem) => elem.addEventListener('click', handlerPopUp));
@@ -109,8 +113,6 @@ const togglePopup = () => {
  
 };
 togglePopup();
-
-console.dir(document.documentElement.clientWidth);
 
 
 
