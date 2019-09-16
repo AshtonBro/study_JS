@@ -105,8 +105,6 @@ const togglePopup = () => {
 
     popupBtn.forEach((elem) => elem.addEventListener('click', handlerPopUp));
 
-    
-
     popup.addEventListener('click', (event) => {
         let target = event.target;
 
