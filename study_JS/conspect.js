@@ -74,7 +74,6 @@ const changeText = (event) => {
   //   elem.addEventListener('click', changeText);
   // });
    
-
 const getButton = () => {
   const newButton = buttons[0].cloneNode();
   let textButton = buttons.length + 1;
