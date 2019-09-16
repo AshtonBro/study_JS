@@ -52,7 +52,7 @@ function countTimer(deadline){
 }
 
 // наша функция будет принимать дедлайн, то время до которого наш таймер будет отсчитывать
-countTimer('14 september 2019');
+countTimer('17 september 2019');
 
 // Menu
 const toggleMenu = () => {
@@ -60,7 +60,8 @@ const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
           menu = document.querySelector('menu'),
           closeBtn = document.querySelector('.close-btn'),
-          menuItem = menu.querySelectorAll('ul>li');
+          menuItem = menu.querySelectorAll('ul>li'),
+          main = document.querySelector('body');
 // handler menu
     const handlerMenu = () => {
 // метод toggle убирает или прибавляет класс тот который мы ему пропишем как аргумент
@@ -72,10 +73,10 @@ const toggleMenu = () => {
     menuItem.forEach((elem) => elem.addEventListener('click', handlerMenu));
     
 //Menu из списка li плавная прокрутка к элементу на странице
-console.log('menu: ', menuItem);
-    const scrollSlowToElem = () => {
+    main.addEventListener('click', () => {
         
-    };
+        console.log(event.target);
+    });
 
 };
 toggleMenu();

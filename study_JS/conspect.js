@@ -1,3 +1,137 @@
+                                        /* ДЕЛЕГИРОВАНИЕ 
+       Если мы имеем много элементов на странице, нарпимер блок с коменнтариями, когда вы оставляете комментарий
+у вас есть несколько активных элементов, никнейм, сам комментарий, поставить лайк, и на каждый элемент нужно 
+вешать обработчик событий, а если таких коммнтариев тысячи и на каждый вешать это очень ресурсно затратно
+для этого придумана такая стратекия навешивания одного обработчика события на родителя называется делегированием
+это будет качаться, табов, кнопок на сайте, чекЛистов, акардионы меню и так далее, приминение этому можно найти
+массу.
+
+
+Пример: У нас есть блок из 6 кнопок и дисплей куда выводиться то значение которые было назначено каждой
+кнопке.
+Рассмотри работу без делегирования!
+
+Получим все кнопки
+
+let buttons = document.querySelectorAll('.button');
+const blockDisplay = document.querySelectorAll('.content'),
+      wrapButtons = document.querySelector('.wrapper-button'),
+      addButton = document.querySelector('.add-button');
+// напишем функцию которая будет заменять текст в нашем блоке
+
+const changeText = (event) => {
+  blockDisplay.textContent = event.target.textContent;
+};
+
+  buttons.forEach((elem) => {
+    elem.addEventListener('click', changeText);
+  });
+   
+
+// клонируем кнопку, задаем ей текст + 1 от последней кнопки 05, проверка на 0
+// далее 
+const getButton = () => {
+  const newButton = buttons[0].cloneNode();
+  let textButton = buttons.length + 1;
+  if(textButton < 10){
+    textButton = `0${textButton}`;
+  }
+  // заменяет текст на нужный
+  newButton.textContent = textButton;
+  newButton.addEventListener('click', changeText);
+  // ставим кнонируную кнопку в стак с другими кнопками
+  wrapButtons.appendChild(newButton);
+  buttons = document.querySelectorAll('.button');
+}
+// теперь по нажатию addButton запускаем функцию get баттон
+addButton.addEventListener('click', getButton);
+
+чем этот метод плох ? Тем что мы навешали 6 обработчиков событие через for, 2 кнопки добавли и ещё
+2 обработчика событий и таких кнопок может быть сотни и это не очень хорошо. 
+мы можем улучшить код. 
+в changeText мы можем получать не элемент, а event (событие);
+                             EVENT 
+когда мы нажимаем на кнопочку любую мы получаем Event, раскрыв Event в консоле мы можем найти у Eventa 
+target и это будет кнопка на которую мы нажали.
+мы можем получить event.target открыв в консоле event.target мы будем получать ту кнопку элемент на который
+кликнули. так как это кнопка и мы можем сразу от неё получить стайл или текст контент, который нам сейчас нужен
+event.target.textContent конечно мы улучшили наш код, но мы не избавили от множество обработчиков собитий в этом 
+нам поможет делегирование
+
+Не много поменяем код.
+Комментим forEach и убираем из getButton обработчик событий, мы буде просто добавлять кнопку 
+
+let buttons = document.querySelectorAll('.button');
+const blockDisplay = document.querySelectorAll('.content'),
+      wrapButtons = document.querySelector('.wrapper-button'),
+      addButton = document.querySelector('.add-button'); // обёртка кнопок
+
+const changeText = (event) => {
+  blockDisplay.textContent = event.target.textContent;
+};
+
+  // buttons.forEach((elem) => {
+  //   elem.addEventListener('click', changeText);
+  // });
+   
+
+const getButton = () => {
+  const newButton = buttons[0].cloneNode();
+  let textButton = buttons.length + 1;
+  if(textButton < 10){
+    textButton = `0${textButton}`;
+  }
+  newButton.textContent = textButton;
+  wrapButtons.appendChild(newButton);
+  buttons = document.querySelectorAll('.button');
+};
+
+вспоминаем всплытие когда мы кликаем на любую кнопку, то мы в тоже время кликаем и wrapperButton и 
+на контейнер и на body и на html.
+поэтому давайте посмотрим куда мы кликнули 
+console.log(event.target) при клике получаем именно тот элемент на который мы кликнули, так что мы 
+сможем с ним сделать?
+пропишем такие вот условия
+
+wrapButtons.addEventListener('click', () => {
+// Если тот элемент куда я кликнул имеет тэгНаме === кнопка, КНОПКА с большой буквы, тогда вызываем функцию
+  if(event.target.tagName === 'BUTTON'){
+    changeText(event);
+  }
+
+
+можно сделать наоборот - исключить
+if(event.target.tagName !== 'BUTTON'){
+  return;
+}
+changeText(event);
+
+также для того чтобы фильтровать, мы можем использовать методом conteins
+метод contains возвращает true если этот класс имеет слой элемента класса button который мы указали
+и возвращает false если его нет.
+в нашем случае есть и мы его конвертируем чтобы за return'ить
+if(!event.target.classList.contains('button')){
+  return;
+  }
+  changeText(event);
+});
+
+
+addButton.addEventListener('click', getButton);
+
+Ещё есть супер точный метод matches
+if(!event.target.matches('button')){ - и теперь всё то не баттон только это уже селектор, следовательно
+  баттон это будет кнопка.
+
+if(!event.target.matches('button')) return;
+  changeText(event);
+  })
+*/
+
+
+
+
+
 
                             /* ПАРАМЕТРЫ ДОКУМЕНТА, ОКНА И РАБОТА С НИМИ
                             
