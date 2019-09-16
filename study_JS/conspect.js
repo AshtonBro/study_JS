@@ -1,3 +1,93 @@
+                                        
+/* Метод Closest
+Старое tab menu
+const tabs = () => {
+// получаем элементы
+    const tabHeader = document.querySelector('.service-header'), // наш родитель 
+          tab = tabHeader.querySelectorAll('.service-header-tab'),
+          tabContent = document.querySelectorAll('.service-tab');
+// применяем делегирование 
+    const toggleTabContent = (index) => {
+        for(let i = 0; i < tabContent.length; i++){
+            if(index === i){
+                tab[i].classList.add('active');
+                tabContent[i].classList.remove('d-none');
+            }else{
+                tab[i].classList.remove('active');
+                tabContent[i].classList.add('d-none');
+            }
+        }
+    };
+
+    tabHeader.addEventListener('click', (event) => {
+        let target = event.target;
+        while(target !== tabHeader){
+            
+            console.log(target);
+
+            if(target.classList.contains('service-header-tab')){
+                tab.forEach((item, i) => {
+                    if(item === target){
+                        toggleTabContent(i);
+                    }
+                });
+                return;
+            }
+            target = target.parentNode;
+       }
+    });
+
+};
+tabs();
+
+tabMenu с методом closest
+
+// Табы 
+const tabs = () => {
+// получаем элементы
+    const tabHeader = document.querySelector('.service-header'), // наш родитель 
+          tab = tabHeader.querySelectorAll('.service-header-tab'),
+          tabContent = document.querySelectorAll('.service-tab');
+// применяем делегирование 
+    const toggleTabContent = (index) => {
+        for(let i = 0; i < tabContent.length; i++){
+            if(index === i){
+                tab[i].classList.add('active');
+                tabContent[i].classList.remove('d-none');
+            }else{
+                tab[i].classList.remove('active');
+                tabContent[i].classList.add('d-none');
+            }
+        }
+    };
+
+    tabHeader.addEventListener('click', (event) => {
+        let target = event.target;
+        target = target.closest('.service-header-tab');
+        if(target){
+            tab.forEach((item, i) => {
+            if(item === target){
+                toggleTabContent(i);
+            }
+            });
+        }
+    });
+};
+tabs();
+
+
+Используем метод closest
+этот метод проверяет у элемента селектор (.# и тд.) который мы написали, если он соответствует, т.е. 
+у элемента таргет конкретно этот селектор, то он возвращает обратно этот элемент в таргет, если у элемента
+на который мы кликнули нету этого класса, он поднимается выше к его родителяю и проверяет есть ли там этот
+класс, если его и там нет, то поднимается выше и так до бесконечности пока DOM-дерево не закончится и
+вернет нам тогда null. Запомнить - что он вернёт нам null если не найдёт соответсвующий селектор, но
+если он селектор нашел, он вернул имеено тот элемент у которого он нашел этот селектор, поднимается он
+именно верх, он не может видеть братьев и сестёр, только родителей, опэтому когда мы кликнем нам span
+он проверит у span есть ли этот селектор, его там не окажется, он поднимится выше к нашему диву у которого
+селектор этот есть и в таргет запишет этот див
+
+
                                         /* ДЕЛЕГИРОВАНИЕ 
        Если мы имеем много элементов на странице, нарпимер блок с коменнтариями, когда вы оставляете комментарий
 у вас есть несколько активных элементов, никнейм, сам комментарий, поставить лайк, и на каждый элемент нужно 

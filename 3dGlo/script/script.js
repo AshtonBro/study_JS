@@ -60,8 +60,8 @@ const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
           menu = document.querySelector('menu'),
           closeBtn = document.querySelector('.close-btn'),
-          menuItem = menu.querySelectorAll('ul>li'),
-          main = document.querySelector('body');
+          menuItem = menu.querySelectorAll('ul>li');
+        //   main = document.querySelector('body');
 // handler menu
     const handlerMenu = () => {
 // метод toggle убирает или прибавляет класс тот который мы ему пропишем как аргумент
@@ -72,11 +72,15 @@ const toggleMenu = () => {
     closeBtn.addEventListener('click', handlerMenu);
     menuItem.forEach((elem) => elem.addEventListener('click', handlerMenu));
     
+    console.log('menu: ', menu);
+    console.log('btnMenu: ', btnMenu);
+    console.log('closeBtn: ', closeBtn);
+    console.log('menuItem: ', menuItem);
 //Menu из списка li плавная прокрутка к элементу на странице
-    main.addEventListener('click', () => {
+    // main.addEventListener('click', () => {
         
-        console.log(event.target);
-    });
+    //     console.log(event.target);
+    // });
 
 };
 toggleMenu();
@@ -84,8 +88,7 @@ toggleMenu();
 // popup окно
 const togglePopup = () => {
     const popup = document.querySelector('.popup'),
-          popupBtn = document.querySelectorAll('.popup-btn'),
-          popupClose = document.querySelector('.popup-close');
+          popupBtn = document.querySelectorAll('.popup-btn');
 
     const handlerPopUp = () => {
         if (document.documentElement.clientWidth > 720){
@@ -102,18 +105,64 @@ const togglePopup = () => {
 
     popupBtn.forEach((elem) => elem.addEventListener('click', handlerPopUp));
 
-    popupClose.addEventListener('click', () => {
-        if (document.documentElement.clientWidth > 720){
+    
+
+    popup.addEventListener('click', (event) => {
+        let target = event.target;
+
+    if (document.documentElement.clientWidth > 720){
+        if(target.classList.contains('popup-close')){
             popup.style.transform = 'translateX(-100%)';
             popup.style.transition = '0.8s';
-        }else{
-            popup.style.display = 'none';
+        } else {
+            target = target.closest('.popup-content');
+            if(!target){
+                popup.style.transform = 'translateX(-100%)';
+                popup.style.transition = '0.8s';
+            }
         }
-    
+    } else {
+             popup.style.display = 'none';
+        }
+        
     });
  
 };
 togglePopup();
+
+// Табы 
+const tabs = () => {
+// получаем элементы
+    const tabHeader = document.querySelector('.service-header'), // наш родитель 
+          tab = tabHeader.querySelectorAll('.service-header-tab'),
+          tabContent = document.querySelectorAll('.service-tab');
+// применяем делегирование 
+    const toggleTabContent = (index) => {
+        for(let i = 0; i < tabContent.length; i++){
+            if(index === i){
+                tab[i].classList.add('active');
+                tabContent[i].classList.remove('d-none');
+            }else{
+                tab[i].classList.remove('active');
+                tabContent[i].classList.add('d-none');
+            }
+        }
+    };
+
+    tabHeader.addEventListener('click', (event) => {
+        let target = event.target;
+        target = target.closest('.service-header-tab');
+        if(target){
+            tab.forEach((item, i) => {
+            if(item === target){
+                toggleTabContent(i);
+            }
+            });
+        }
+    });
+};
+tabs();
+
 
 
 
