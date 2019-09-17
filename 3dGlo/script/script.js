@@ -52,36 +52,57 @@ function countTimer(deadline){
 }
 
 // наша функция будет принимать дедлайн, то время до которого наш таймер будет отсчитывать
-countTimer('17 september 2019');
+countTimer('19 september 2019');
 
 // Menu
 const toggleMenu = () => {
 // получим элементы со страницы
     const btnMenu = document.querySelector('.menu'),
           menu = document.querySelector('menu'),
-          closeBtn = document.querySelector('.close-btn'),
           menuItem = menu.querySelectorAll('ul>li');
-        //   main = document.querySelector('body');
-// handler menu
-    const handlerMenu = () => {
-// метод toggle убирает или прибавляет класс тот который мы ему пропишем как аргумент
-      menu.classList.toggle('active-menu');
-    };
-// вешаем обработчик событий на меню и на кнопку
-    btnMenu.addEventListener('click', handlerMenu);
-    closeBtn.addEventListener('click', handlerMenu);
-    menuItem.forEach((elem) => elem.addEventListener('click', handlerMenu));
+        
+    btnMenu.addEventListener('click', () => {menu.classList.toggle('active-menu');});
+
+    menu.addEventListener('click', (event) => {
+        let target = event.target;
+        console.log('target: ', target);
+        
+        let menuMain = target.closest('.menu');
+        if(menuMain) {
+            menu.classList.toggle('active-menu');
+        }else if(target !== menu || target.classList.contains('active-menu')){
+            menu.classList.toggle('active-menu'); 
+        }
+    });
     
-    console.log('menu: ', menu);
-    console.log('btnMenu: ', btnMenu);
-    console.log('closeBtn: ', closeBtn);
-    console.log('menuItem: ', menuItem);
+        //   main = document.querySelector('body');
+// // handler menu
+//     const handlerMenu = () => {
+// // метод toggle убирает или прибавляет класс тот который мы ему пропишем как аргумент
+//       menu.classList.toggle('active-menu');
+//     };
+// // вешаем обработчик событий на меню и на кнопку
+//     menuItem.forEach((elem) => elem.addEventListener('click', handlerMenu));
+    
+//     btnMenu.addEventListener('click', handlerMenu);
+//     closeBtn.addEventListener('click', handlerMenu);
+
+//     menu.addEventListener('click', (element) => {
+//         let target = element.target;
+//         console.log('target: ', target);
+//         if(target.classList.contains('.close-btn')){
+            
+//         }
+
+//     });
+
+
+ 
 //Menu из списка li плавная прокрутка к элементу на странице
     // main.addEventListener('click', () => {
         
     //     console.log(event.target);
     // });
-
 };
 toggleMenu();
 
@@ -122,7 +143,7 @@ const togglePopup = () => {
     } else {
              popup.style.display = 'none';
         }
-        
+    
     });
  
 };
