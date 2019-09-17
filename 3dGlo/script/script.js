@@ -62,11 +62,8 @@ const toggleMenu = () => {
           menuItem = menu.querySelectorAll('ul>li');
         
     btnMenu.addEventListener('click', () => {menu.classList.toggle('active-menu');});
-
     menu.addEventListener('click', (event) => {
         let target = event.target;
-        console.log('target: ', target);
-        
         let menuMain = target.closest('.menu');
         if(menuMain) {
             menu.classList.toggle('active-menu');
@@ -75,28 +72,6 @@ const toggleMenu = () => {
         }
     });
     
-        //   main = document.querySelector('body');
-// // handler menu
-//     const handlerMenu = () => {
-// // метод toggle убирает или прибавляет класс тот который мы ему пропишем как аргумент
-//       menu.classList.toggle('active-menu');
-//     };
-// // вешаем обработчик событий на меню и на кнопку
-//     menuItem.forEach((elem) => elem.addEventListener('click', handlerMenu));
-    
-//     btnMenu.addEventListener('click', handlerMenu);
-//     closeBtn.addEventListener('click', handlerMenu);
-
-//     menu.addEventListener('click', (element) => {
-//         let target = element.target;
-//         console.log('target: ', target);
-//         if(target.classList.contains('.close-btn')){
-            
-//         }
-
-//     });
-
-
  
 //Menu из списка li плавная прокрутка к элементу на странице
     // main.addEventListener('click', () => {
