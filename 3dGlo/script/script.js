@@ -287,13 +287,19 @@ const slider = () => {
         }
     });
 
-    
 
-    
+
+
+
+
+
+
     startSlide(2500);
 
 };
 slider();
+
+
 
 
 
