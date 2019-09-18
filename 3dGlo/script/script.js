@@ -52,7 +52,7 @@ function countTimer(deadline){
 }
 
 // наша функция будет принимать дедлайн, то время до которого наш таймер будет отсчитывать
-countTimer('19 september 2019');
+countTimer('20 september 2019');
 
 // Menu
 const toggleMenu = () => {
