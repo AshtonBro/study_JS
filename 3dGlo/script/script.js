@@ -268,6 +268,38 @@ const slider = () => {
 };
 slider();
 
+// Наша каманда, работа с img и dataset
+const changePicture = () => {
+    let command = document.querySelector('#command');
+    let imgAll = command.querySelectorAll('img');
+    let curSrc;
+    
+    imgAll.forEach((element) => {
+        element.addEventListener('mouseenter', (e) => {
+            curSrc = element.getAttribute('src');
+            event.target.src = event.target.dataset.img;
+        });
+        element.addEventListener('mouseleave', (e) => {
+            event.target.src = curSrc;
+        });
+    });
+};
+changePicture();
+
+// regex калькулятора валидация для цифр
+const validationNumber = () => {
+    const calcBlock = document.querySelector('.calc-block');
+    let inputCalc = calcBlock.querySelectorAll('input');
+
+    inputCalc.forEach((element) => {
+        element.addEventListener('input', () => {
+            element.value = element.value.replace(/\D/g, '');
+        });
+    });
+};
+validationNumber();
+
+
 });
 
 // Slider bar с клиентами
