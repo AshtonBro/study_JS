@@ -31,8 +31,10 @@
   font-display: swap; }
 
 html {
-  font-size: 10px; }
-
+  font-size: 10px; 
+  scroll-behavior: smooth;
+}
+ 
 .flex {
   display: -webkit-box;
   display: -ms-flexbox;

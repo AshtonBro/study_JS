@@ -37,6 +37,9 @@
 html {
     font-size: 10px
 }
+html {
+    scroll-behavior: smooth;
+}
 
 .flex {
     display: -webkit-box;

@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"name": "study_JS",
+			"path": "C:\\Users\\Evgenii Solovev\\Desktop\\Web-developer\\JavaScript\\study_JS"
+		},
+		{
+			"name": "budget_app",
+			"path": "C:\\Users\\Evgenii Solovev\\Desktop\\Web-developer\\JavaScript\\budget_app"
+		},
+		{
+			"name": "3dGlo",
+			"path": "C:\\Users\\Evgenii Solovev\\Desktop\\Web-developer\\JavaScript\\3dGlo"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "3dGlo"
+	}
+}

@@ -51,7 +51,7 @@ function countTimer(deadline){
 }
 
 // наша функция будет принимать дедлайн, то время до которого наш таймер будет отсчитывать
-countTimer('20 september 2019');
+countTimer('23 september 2019');
 
 // Menu
 const toggleMenu = () => {
@@ -330,6 +330,7 @@ const calculator = (prise = 100) => {
 
     calcBlock.addEventListener('change', (event) => {
         const target = event.target;
+        
         // if(target.matches('.calc-type') || target.matches('.calc-square') || 
         // target.matches('.calc-day') || target.matches('.calc-count')){
         // }
