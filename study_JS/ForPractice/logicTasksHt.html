@@ -7,9 +7,35 @@
 <link href="/ForPractice/stylecs.css" rel="stylesheet">
 </head>
 
+<style>
+input{
+    display: block;
+}
+</style>
+
 <body>
-    
-<script src="/ForPractice/logicTasks.js" async defer></script>
+    <section>
+
+        <form id="myForm">
+
+            <label for="phone">phone</label>
+            <input type="text" id="phone" name="phone" placeholder="phone">
+            <label for="email">email</label>
+            <input type="text" id="email" name="email" placeholder="email">
+            <br>
+            <input type="button" value="badButton">
+            <button type="submit">submin</button>
+            <button type="reset">reset</button>
+
+        </form>
+    </section>
 
 </body>
+
+<!-- галвнеое чтобы он был подключин до нашего основного скрипта -->
+<script src="/ForPractice/maskPhone.js"></script>
+
+<script src="/ForPractice/logicTasks.js" async defer></script>
+
+
 </html>

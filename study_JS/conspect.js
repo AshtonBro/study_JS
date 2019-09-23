@@ -1,3 +1,153 @@
+ 
+ /*                                 РАБОТА С ФОРМАМИ И ВАЛИДАЦИЯ
+ Поговорим о формах ввода
+ web форма состоит из любового чисто поле-ввода окружённым тегом form, поля ввода это input, text area,
+ select и button тоже считается элементом формы. В основном всё же исопльзуеться input также у него
+ есть атрибут type и он позволяет оперделить тип поля text - текстовое поле, password - тоже текстовое
+ поле но оно прячет ввод за звёздочками, checkbox - input становиться переключателем вкл/выкл, radio
+ часть поле с возможностью выбора из нескольких вариантов, когда мы делаем несколько imput с типом
+ radio, то можем отметить только один radio. 
+ Поля форму не обязательно должный находиться в теге form, но они будут вне формы и не будут к ней 
+ относиться и мы не сомжем отправить информацию с таких полей на сервер, т.е это возможно но для 
+ всей формы целеком, но когма мы делаем поля которые обрабатывает javaScript нам обычно и не нужно
+ передовать инфорацию полей через sumbit.
+
+ Чем отличаеться валидация от маски-вводов
+
+phone.addEventListener('keydown', showLog); - будет срабатывать пока не отпустишь клавишу
+phone.addEventListener('keyup', showLog); - срабатывает когда отпускаешь клавишу
+phone.addEventListener('keypress', showLog); - keypress срабатывает после keydown и перед keyup, но
+срабатывает оно в том случае если нажатие клавиши генерирует ввод символов, shift backspace и тд не выводит
+символ и тем самым сработают keydown и keyup.
+phone.addEventListener('input', showLog); - оно срабатывает, когда у поля ввода изменяеться значение value 
+
+Это надо знать, если мы хотим запретить ввод символом мы должны знать на какое событие нам лучше вешать
+валидацию, 
+
+Запрещаем ввод символов и смотрим как отреагирует каждый обработчик событий
+const showLog = function(){
+    this.value = this.value.replace(/\D/g, '');
+};
+ 
+phone.addEventListener('keydown', showLog);
+Когда происходит событие keydown символа ещё нет в inpute поэтому replace нечего удалять, потом
+уже появляеться символ, но функция уже отработала и закончила свой цикл. когда я ввожу следующий
+символ то срабатывает наша валедация, метод replace, символ удаляеться и после появляеться символ
+который мы нажали в данный момент, т.е. как будто таки заменяеться введённый символ
+
+phone.addEventListener('keyup', showLog);
+Валидация срабатывает когда мы отпускаем клавишу, т.е когда нажали мы можем увидить на секундочку
+то что мы вводим, это иногда нужно, что бы пользователь ввидел что он что-то вводит.
+
+phone.addEventListener('keypress', showLog);
+Событие работает точно также как и с keydown, симфол появляеться после срабатывания события
+
+phone.addEventListener('input', showLog);
+Данное событие запускает метод replace до того как мы увидм символ и в тоге в поле ввода мы
+видем пустую строку - input это лучшее для того, что запретить ввод в поле.
+
+
+Пример маски ввода телефона script maskPhone
+1 параметр мы вводим selector - это наш id input'a или дургое текстовое поле
+2 параметр это сама маска ввода, она установлена по умолчанию, но мы можем так же ввести свою.
+
+function maskPhone(selector, masked = '+7 (___) ___-__-__') {
+	const elem = document.querySelector(selector);
+
+	function mask(event) {
+		const keyCode = event.keyCode;
+		const template = masked,
+			def = template.replace(/\D/g, ""),
+			val = this.value.replace(/\D/g, "");
+		console.log(template);
+		let i = 0,
+			newValue = template.replace(/[_\d]/g, function (a) {
+				return i < val.length ? val.charAt(i++) || def.charAt(i) : a;
+			});
+		i = newValue.indexOf("_");
+		if (i != -1) {
+			newValue = newValue.slice(0, i);
+		}
+		let reg = template.substr(0, this.value.length).replace(/_+/g,
+			function (a) {
+				return "\\d{1," + a.length + "}";
+			}).replace(/[+()]/g, "\\$&");
+		reg = new RegExp("^" + reg + "$");
+		if (!reg.test(this.value) || this.value.length < 5 || keyCode > 47 && keyCode < 58) {
+			this.value = newValue;
+		}
+		if (event.type == "blur" && this.value.length < 5) {
+			this.value = "";
+		}
+
+	}
+
+	elem.addEventListener("input", mask);
+	elem.addEventListener("focus", mask);
+	elem.addEventListener("blur", mask);
+}
+
+
+Разберём принцип валедаций.
+
+Валидация - это проверка значений которые введёт пользователь и отображение найденныйх ошибок, т.е.
+изображение пользователю о том что поле не проходит валидацию.
+Валидация должна происходить как на клиенте в бразуре так и на строне сервера.
+Валидация нужна чтобы обезопасить себя, своё преложение, базу данных и так далее, а так в форму можно
+ввести вредноносный код.
+Валидацию на стороне клиента можно сделать с помощью javaScript, например если клиент хочет ввести
+в поле email не email то мы должны вывести ошибку  и не отправлять данные на сервер
+
+Чтобы валедировать поля перед отправкой нам нужно поймать события submin у формы (form), это событие 
+может быть только у формы, не у конопок и полей, только у формы.
+
+
+myForm.addEventListener('sumbit', valid);
+
+console.log(myForm.elements);  у любой формы есть свойства elements - это псевдомассив который 
+содержит все поля ввода и кнопки формы  
+0: input#phone
+1: input#email
+2: button
+3: button 
+
+
+const myForm = document.getElementById('myForm');
+
+
+myForm.addEventListener('submit', valid);
+
+const elementsForm = [];
+
+// достаём из формы нужные нам элементы и сохраняем их в массив
+for(const elem of myForm.elements){
+    if(elem.tagName.toLowerCase() !== 'button' && elem.type !== 'button'){
+        elementsForm.push(elem);
+    }
+}
+
+function valid(event){
+    const patternPhone = /^\d+$/;
+    elementsForm.forEach(elem => {
+        if(!elem.value){
+            elem.style.border = 'solid red';
+            event.preventDefault();
+        } else { 
+            elem.style.border = '';
+        }
+
+        if(elem.id === 'phone' && !patternPhone.test(elem.value)){
+            elem.style.border = 'solid red';
+            event.preventDefault();
+        }
+        
+    });
+}
+
+ */
+
+
+
 /*  
                                    РЕГУЛЯРНЫЕ ВЫРАЖЕНИЯ
 

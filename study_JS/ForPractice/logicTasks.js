@@ -1,55 +1,32 @@
+'use strict';
+const myForm = document.getElementById('myForm');
 
-let print1 = function() {
-    console.log('Крот');
-};
-let print2 = function() {
-    console.log('овце,');
-};
-let print3 = function() {
-    console.log('жирафу,');
-};
-let print4 = function() {
-    console.log('зайке');
-};
-let print5 = function() {
-    console.log('голубые');
-};
-let print6 = function() {
-    console.log('сшил');
-};
-let print7 = function() {
-    console.log('фуфайки');
-};
 
-let func1 = function() {
-    print3();
-};
+myForm.addEventListener('submit', valid);
 
-let func2 = function() {
-    func1();
+const elementsForm = [];
 
-    setTimeout(function() {
-        print6();
-    }, 1000);
-};
+// достаём из формы нужные нам элементы и сохраняем их в массив
+for(const elem of myForm.elements){
+    if(elem.tagName.toLowerCase() !== 'button' && elem.type !== 'button'){
+        elementsForm.push(elem);
+    }
+}
 
-let func3 = function() {
-    setTimeout(function() {
-        func2();
-        print4();
-    }, 250);
+function valid(event){
+    const patternPhone = /^\d+$/;
+    elementsForm.forEach(elem => {
+        if(!elem.value){
+            elem.style.border = 'solid red';
+            event.preventDefault();
+        } else { 
+            elem.style.border = '';
+        }
 
-    print2();
-};
-
-setTimeout(function() {
-    print5();
-
-    setTimeout(function() {
-        print7();
-    }, 750);
-}, 500);
-
-print1();
-
-func3();
+        if(elem.id === 'phone' && !patternPhone.test(elem.value)){
+            elem.style.border = 'solid red';
+            event.preventDefault();
+        }
+        
+    });
+}
