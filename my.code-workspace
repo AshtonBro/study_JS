@@ -11,9 +11,12 @@
 		{
 			"name": "3dGlo",
 			"path": "C:\\Users\\Evgenii Solovev\\Desktop\\Web-developer\\JavaScript\\3dGlo"
+		},
+		{
+			"path": "plugins"
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "study_JS"
+		"liveServer.settings.multiRootWorkspaceName": "plugins"
 	}
 }
