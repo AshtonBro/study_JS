@@ -27,6 +27,5 @@ function valid(event){
             elem.style.border = 'solid red';
             event.preventDefault();
         }
-        
     });
 }
