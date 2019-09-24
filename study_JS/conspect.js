@@ -1,4 +1,296 @@
  
+/*                                      Работа с JSON, AJAX
+                                Получение и отправка данных на сервер 
+
+AJAX - это тхнология обращения к серверу без перезагрузки страницы.
+JSON - Расшифоровывается как JavaScript Object Notation, это текстовый формат данных, это набор
+пар, ключи и занчение, чем-то напоминает обьект, в качестве значений могут быть, числа строки
+мыссивы, обьекты, булевые типы данных и даже null. 
+
+const smartPhone = {
+    brand: 'slmsung',
+    screer: '5.5',
+    rom: 128,
+    ram: 4,
+    gps: true,
+    sensor: ['Accelerometer', 'E-compass', 'Fingerprint Sebnser', 'Gyroscope'],
+    camera: {
+        back: [32, 5, 8],
+        front: 16
+    }
+};
+
+Мы имеев вот такой простой обьект и нам необходимо его отпраивть на сервер, чтобы его отправить на
+сервер на нужно преобразовать этот обьект в формат JSON, обычный обьект мы отправить не можем, в
+javaScript есть обьект с методами работы с JSON 
+
+Заводим JSON в консоль
+console.log(JSON); мы видем что у него есть 2 метода, по очереди восопльзуемся ими.
+parse: ƒ parse()
+stringify: ƒ stringify()
+
+Используем метод JSON.stringify() для нашего обьекта преобразуем наш его в одну длинную строку с нашим 
+обьектом, ещё обратите внимание что все ключи и значение заключеный в двойные ковыйчки - это формат JSON 
+
+console.log(JSON.stringify(smartPhone));
+{"brand":"slmsung","screer":"5.5","rom":128,"ram":4,"gps":true,
+"sensor":["Accelerometer","E-compass","Fingerprint Sebnser","Gyroscope"],
+"camera":{"back":[32,5,8],"front":16}}
+Сохраняем наш преобразованный обьект в переменную 
+const jsonSmartPhone = JSON.stringify(smartPhone);
+
+Следующий метод JSON.parse преобразует данные в JSON формате обратно в исходный, т.е применив на переменную
+данный метод мы получим наш обьект smatPhone обратно
+
+console.log(JSON.parse(jsonSmartPhone));
+
+{brand: "slmsung", screer: "5.5", rom: 128, ram: 4, gps: true, …}
+brand: "slmsung"
+camera: {back: Array(3), front: 16}
+gps: true
+ram: 4
+rom: 128
+screer: "5.5"
+sensor: (4) ["Accelerometer", "E-compass", "Fingerprint Sebnser", "Gyroscope"]
+
+Поэтому для отправки на сервер мы переводим в JSON - отпралвяем данные
+А есть какие-то данные получаем от сервера, то мы их парсим в обычный формат (обычный обьект)
+
+<------------------------AJAX----------------------> 
+Браузер при работе с сервером, отправля и принимая данные при стандартной работе перезагружает старницу
+и выглядит это некрасиво и не современно.
+
+У нас есть файл cars.json содержащие 2 модели автомобилей, у html есть select и output на основе этих данных
+поработаем.
+Для начало получим элементы
+const select = document.getElementById('cars'),
+    output = document.getElementById('output');
+
+Для запроса нам понадобиться обьект XMLHttpRequest - он даёт возможность делать http запросы без
+перезагрузки страницы.
+
+const request = new XMLHttpRequest();
+
+Первый метод который идёт сразу после создания обьекта, это open - он позволяет настроить наш AJAX запрос
+request.open();
+
+этот метод принимает аш 5 параметров и 2 из низ обязательных
+1. Это метод отправки сообщения GET POST PUT DELETE пишеться всё большими буквами.
+2. Это url - это url адрес куда будет отправляется запрос (может быть локальный файл, удалённый адресс, http, ftp)
+3. async и это boole-вое значение - оно не обязательно и по умолчанию стоит true (это занчит что будет отправен
+  запрос и javaScript продолжит выполнение скрипта, но если вы поставили false, то выполнение скрипта, остановться
+  и пока информация от сервера не придёт у нас ничего работать не будет и мы не сомжем взаимодействовать со страницей)
+  это похоже на то когда всплывает окно alert когда всё замороженно.
+4. login но они необходими только если требуются для запроса к какомонибуть серверу
+5. passwod но они необходими только если требуются для запроса к какомонибуть серверу
+
+request.open('GET', './cars.json');
+
+после этого нам необходимо установить заголовок.
+Мы осуществляем http запрос а он состоит из head и body. head это заголовок запроса и это слеюущее что мы должны
+прописать.
+для этого существуте метод setRequestHeader()
+он принимает два параметра
+1. Это имя заголовка.
+2. Это сам заголовок, т.е. его значения 
+и нам необходимо установить Content-type
+
+request.setRequestHeader('Content-type', 'application/json');
+
+Слудующий метод это send() - этот метод открывает соединение и отправляет запрос и параметром передаёт данные на сервер
+при GET запросе body не нужно, у нас сейчас get запрос и body мы передовать не будем. А при пост запросе, передаються
+данные на сервер но и возможно что-то получается обратно как минимум ответ что всё прошло успешно.
+Метод post мы будем ипользовать в нашем проекте.
+
+request.send();
+
+Мы сейчас отправили запрос и теперь нам необходимо отловить событие.
+вот какие события мы можем прослуживаеть у XMLHttpRequest
+
+loadstart
+request.addEventListener('loadstart', (event) => {console.log(event);}); - оно просто обозначает что запрос начат
+это событие необходимо отсуживать до того как мы передали заголовки и выпонили запрос. Его можно отследить, 
+только до метода send();
+
+progress
+request.addEventListener('progress', (event) => {console.log(event);}); - это событие можно отследить во время
+запроса на сервер оно срабатывает когда от сервера приходит пакет данных и уже сможем посомтреть.
+Бывает что ответ от сервера приходит не за один раз а за несколько шагов и в каждый из этих шагов отрпабатывает
+событие progress 
+
+abort
+request.addEventListener('abort', (event) => {console.log(event);}); - его можно уловитьт только тогда когда
+произошла остановка запроса с помощью метода abort.
+
+timeout
+если запрос слишком долго происходит и отменить его можно с помощью метода timeout
+request.timeout = 9000;
+После этого отлавливать событие tiomout тоже можно.
+
+load
+request.addEventListener('load', (event) => {console.log(event);}); - оно происходит тогда когда запрос
+успешно завершен, мы видем что он завершет и завершет без ошибок
+
+error
+request.addEventListener('error', (event) => {console.log(event);}); - это событие срабатывает когда запрос
+был завершет с ошибкой
+
+loadend
+request.addEventListener('loadend', (event) => {console.log(event);}); - оно означает, что запрос был завершон
+и отлавливает все три события, завершет был через load, через error или через abort какое из этих событие 
+произошло в этоже время происходит и loadend. т.е. когда произошло это событие в теле этой функции обработчики
+события будем от request получать все данные обрабатывать их и какие-то действия производить. Но это вариант
+не совсем кросс-браузерный.
+лучше пока использовать readystatechange 
+request.addEventListener('readystatechange', (event) => {console.log(event);}); - он чаще всего используеться на 
+практике и поддерживаеться всеми браузерами. 
+Это событие происходит несколько раз за запрос. 
+{console.log(request.readyState);});
+
+readyState это свойство у oбьекта XMLHttpRequest который имеет 5 состояний, и каждый раз когда это состояние 
+меняеться мы можем его отлавливать .
+0. - это начальное когда обьект был создан, но open ещё не вызван
+1. - это когда мы вызвали метод open 
+2. - это вызван метод send и уже получены заголовки
+3. - статус когда прогружается body 
+4. - Это когда всё завершино, приходят ответы от сервера, что всё 'ОК' мы все данные получили.
+ну и это событие всегда отлавливаеться после методе send, смысла слушать его раньше особо нет.
+
+
+   const select = document.getElementById('cars'),
+    output = document.getElementById('output');
+    
+    select.addEventListener('change', () => {
+        const request = new XMLHttpRequest();
+
+        request.open('GET', './cars.json');
+
+        request.setRequestHeader('Content-type', 'application/json');
+
+        request.send();
+
+        request.addEventListener('readystatechange', (event) => {console.log(request.readyState);});
+    });
+
+Теперь при нажатии select мы будет отправлять запрос в наш файл json и получать данные.
+По поводу readyState событие 4, пока не произошло состояние 4, нам особо ничего делать не нужно, нам нужно
+долждать request.readyState в консоле состояние 4, только после этого мы будем обрабатываеться ответ от сервера.
+поэтому мы напишем такое условие
+
+request.addEventListener('readystatechange', (event) => {
+            if(request.readyState === 4){
+                console.log(request.); ---- тогда будем выполнять какие-то действие, мы работаем пока с консолью
+            }
+        });
+    });
+
+Ещё есть такое свойство как status.
+request.status - содержит числовое значение от состояние http ответа сервера, такие как 404, 301 или когда запрос
+прошол успешно 200
+2е свойство это statusText
+request.statusText - содержит текстовое содержание состояние сервера в основном состоит из not found или ОК
+
+Можем делать такие проверки
+ if(request.readyState === 4 && request.status === 200){
+  console.log(request.status);
+}
+только в этому случае мы получали правильный ответ от сервера без ошибок и можем обрабатывать те данные которые
+он нам прислал.
+
+ещё два важных свойства это 
+console.log(request.response);
+              и 
+console.log(request.responseText);
+
+request.response - это тело ответа от сервера, оно может содержать данные в разном формате, сейчас мы получаем
+json строку. 
+
+request.response
+{
+    "cars": [
+        {
+            "brand": "bmw",
+            "model": "M5",
+            "price": 51000
+        },
+        {
+            "brand": "volvo",
+            "model": "V90",
+            "price": 61000
+        }
+    ]
+}
+
+responseText - работает также, но он выводит именно тот ответ кооторые мы и должны получать, в нужном формате и тд
+{
+    "cars": [
+        {
+            "brand": "bmw",
+            "model": "M5",
+            "price": 51000
+        },
+        {
+            "brand": "volvo",
+            "model": "V90",
+            "price": 61000
+        }
+    ]
+}
+
+Теперь мы можем сохранить в переменную json формат взятый с помощью select'a спарсить его с помощью метода parse()
+и далее сможем работать в js 
+
+const data = JSON.parse(request.responseText);
+
+{cars: Array(2)}
+cars: Array(2)
+0:
+brand: "bmw"
+model: "M5"
+price: 51000
+__proto__: Object
+1:
+brand: "volvo"
+model: "V90"
+price: 61000
+
+const select = document.getElementById('cars'),
+    output = document.getElementById('output');
+    
+    select.addEventListener('change', () => {
+        const request = new XMLHttpRequest();
+
+        request.open('GET', './cars.json');
+
+        request.setRequestHeader('Content-type', 'application/json');
+
+        request.send();
+
+        request.addEventListener('readystatechange', (event) => {
+            if(request.readyState === 4 && request.status === 200){
+                
+                const data = JSON.parse(request.responseText);
+                data.cars.forEach(item => {
+                    if(item.brand === select.value){
+                        const {brand, model, price} = item;
+                        output.innerHTML = `Тачка ${brand} ${model} <br>
+                        Цена: ${price} $`;
+                    }
+                });
+                
+            }
+        });
+    });
+
+
+Мы получаем данные с файла cars.json, парсим их, разбиваем их на обьект и уже работает с нашим обьектом 
+
+*/
+
+
+
+
+
  /*                                 РАБОТА С ФОРМАМИ И ВАЛИДАЦИЯ
  Поговорим о формах ввода
  web форма состоит из любового чисто поле-ввода окружённым тегом form, поля ввода это input, text area,
