@@ -285,6 +285,90 @@ const select = document.getElementById('cars'),
 
 Мы получаем данные с файла cars.json, парсим их, разбиваем их на обьект и уже работает с нашим обьектом 
 
+
+
+
+
+//////////////////////////////// функция из проекта для обрабатывания и отправки данных ///////////////
+
+const sendForm = () => {
+// Cделали предварительно сообщения которые будем показывать пользователю
+    const errorMessage = 'Что-то пошло не так',
+    loadMessage = 'Загрузка...',
+    successMessage = 'Спасибо! Мы скоро с Вами свяжемся';
+    // Получили нашу форму
+    const form = document.getElementById('form1');
+    // Создали элемент который будем добавлять на страницу и добавили div стили
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = 'font-size: 2rem;';
+    // Прописали обработчик событий submit
+    form.addEventListener('submit', (event) => {
+    // После этого мы отменили стандартное поведение для того чтобы у нас страница не перезагружалась 
+    // после нажатия кнопки submit
+        event.preventDefault();
+    // Сразу добавили элемен который создали div на страницу (пока пустой div без сообщения)
+        form.appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+        // После мы создали обьект formData который считывает все данные с нашей формы, со всех импутов, всё 
+        // что содержиться в форме и содержит обязательный аттребут name, считывает и сохраняет в обьект formData
+        const formData = new FormData(form);
+        let body = {};
+        // Создали обьект body чтобьы туда сохранить наши данные, одним из способов for of или forEach получаем 
+        // наши данные с обьекта formData и записываем в переменную body каждую этерацию цикла
+        // туда новый ключ и значение.
+
+        // for(let val of formData.entries()){
+        //     body[val[0]] = val[1];
+        // }
+
+        formData.forEach((val, key) => {
+            body[key] = val;
+        });
+
+        postData(body, 
+            () => {
+                statusMessage.textContent = successMessage;
+            },
+            (error) => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
+            }
+        );
+    });
+
+
+    const postData = (body, outputData, errorData) => {
+    // Создали обьект request XMLHttpRequest, повесили на него обработчик события readystatechange, 
+    // это событие возникает когда меняеться статус readyState
+        const request = new XMLHttpRequest();
+        request.addEventListener('readystatechange', () => {
+        // После того как один раз на любое событие, когда readyState был 0 и поменялся на 1 в этот момент
+        // сработало событие readystatechange и мы добавили на страницу сообщение
+                    
+        // После сообщения мы проверяем статус ровнаяеться 4м или нет, если он ещё не 4, то мы выходим их функции
+        // и ждём дальше, когда снова возникает событие readyState мы опять проверяем 4 стал или нет и как только
+        // он стал 4 мы идём дальше через return проверям статус , статус равен 200 если всё хорошо, то отправляем
+        // пользователю сообщение что всё отлично, если статут !== 200 то что-то пошло не так errorMessage
+            if(request.readyState !== 4){
+                return;
+            }
+            if(request.status === 200){
+                outputData();
+            } else {
+                errorData(request.status);
+            }
+        });
+        // Мы настроили сам запрос метод POST и к нашему файлу server.php
+        request.open('POST', './server.php');
+        // Следующее что мы сделали это добавили заголовки сейчас они у нас к json но могут быть к formData
+        request.setRequestHeader('Content-type', 'application/json');
+
+        // Потому перед отправкой переводим это всё json и отправляем, если нужно мы просто отправить нашу форму
+        // без перевода json
+        request.send(JSON.stringify(body));
+    };
+};
+sendForm();
 */
 
 

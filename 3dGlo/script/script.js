@@ -348,44 +348,59 @@ calculator();
 
 //send-ajax-form
 const sendForm = () => {
-// сделали предварительно сообщения которые будем показывать пользователю
+// Cделали предварительно сообщения которые будем показывать пользователю
     const errorMessage = 'Что-то пошло не так',
     loadMessage = 'Загрузка...',
     successMessage = 'Спасибо! Мы скоро с Вами свяжемся';
+    // Получили нашу форму
     const form = document.getElementById('form1');
+    // Создали элемент который будем добавлять на страницу и добавили div стили
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = 'font-size: 2rem;';
-
+    // Прописали обработчик событий submit
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         form.appendChild(statusMessage);
-        const request = new XMLHttpRequest();
-
-        request.addEventListener('readystatechange', () => {
             statusMessage.textContent = loadMessage;
+        const formData = new FormData(form);
+        let body = {};
+        
+        // for(let val of formData.entries()){
+        //     body[val[0]] = val[1];
+        // }
+
+        formData.forEach((val, key) => {
+            body[key] = val;
+        });
+
+        postData(body, 
+            () => {
+                statusMessage.textContent = successMessage;
+            },
+            (error) => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
+            }
+        );
+    });
+
+
+    const postData = (body, outputData, errorData) => {
+        const request = new XMLHttpRequest();
+        request.addEventListener('readystatechange', () => {
             if(request.readyState !== 4){
                 return;
             }
             if(request.status === 200){
-                statusMessage.textContent = successMessage;
+                outputData();
             } else {
-                statusMessage.textContent = errorMessage;
+                errorData(request.status);
             }
         });
-
         request.open('POST', './server.php');
         request.setRequestHeader('Content-type', 'application/json');
-        const formData = new FormData(form);
-        let body = {};
-        // for(let val of formData.entries()){
-        //     body[val[0]] = val[1];
-        // }
-        formData.forEach((val, key) => {
-            body[key] = val;
-        });
-        
         request.send(JSON.stringify(body));
-    });
+    };
 };
 sendForm();
 
