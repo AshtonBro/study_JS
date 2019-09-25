@@ -1,4 +1,517 @@
  
+
+
+/*                                                   УРОК №18
+                                                  Promise. Теория
+
+Promise - это  обещание 
+Иногда мы хотим сделать что-то послде того как произойдёт какой-то событие или не произойдёт, для этого
+мы используем callback функцию.
+
+как в примере с cars 
+мы отправляем запрос и ожидаем событие readystatechange и обрабатываем его в callback функции, после
+того как произойдёт событие запускаеться callback функция которая обрабатывает ответ, а если мы от этого
+ответа зависила как дальше бы должен работать нащ код, то здесь возможно ещё callback'u и ещё callback 
+если мы не сможем обойстись только условиями.
+
+Пример:
+
+const doUnoversity = (docs, resolve, reject) => {
+  if(docs){
+    console.log('In process...');
+    setTimeout(() => {
+      if(Math.random() > 0.3){
+        let result = 'Student accept';
+        resolve(result);
+      } else {
+        reject('Denied');
+      }
+    }, 3000);
+  } else {
+    reject('Denied, not enouth the documents');
+  }
+};
+
+const doArmy = (docs, resolve, reject) => {
+  if(docs){
+    console.log('Army-man thinking about it....');
+    setTimeout(() => {
+      if(docs === 'Student accept'){
+        resolve('Come back when you.ll finish University');
+      } else {
+        reject('The agenda! You a solder, son');
+      }
+    }, 2000);
+  } else {
+    reject('The agenda! You a solder, son');
+  }
+};
+
+const doWork = (docs, resolve, reject) => {
+  console.log('Director of Google thinking about it...');
+  setTimeout(() => {
+    if(Math.random() > 0.3){
+      let result = 'Invited for an interview at Monday';
+      resolve(result);
+    } else {
+      reject('Denied! go to the yandex');
+    }
+  }, 5000);
+
+};
+
+const documents = ['Passport', 'Attestat'];
+
+doUnoversity(documents, (result) => {
+  console.log(result);
+  doArmy(result, (militaryDocs) => {
+    console.log(militaryDocs);
+    doWork(militaryDocs, (data) => {
+      console.log(data);
+    }, (reason) => {
+      console.error(reason);
+    });
+  }, (reason) => {
+    console.error(reason);
+  });
+},(reason) => {
+  console.error(reason);
+});
+
+Насколько читабельынй у нас код? Если у нас тут будет ошибка, отследить будет её очень трудно.
+Это пирамедальный вид называеться callback hell или ад колбеков и нам эту проблему поможет решить
+promise.
+создаём promis с помощью функции конструктор, это функция в качестве параметров принимает тоже 
+функцию, её называют функция executor (Исполнитель) - это функция которая будет предпринимать 
+действия, чтобы вернуть результат.
+так же executor функция принимает 2 параметра - это (resolve, reject) - это функции сигнализоры
+выполнения обещания.
+const promise = new Promise();
+
+const doUnoversity = (docs) => {
+  const promise = new Promise((resolve, reject) => {
+     if(docs){
+       console.log('In process...');
+       setTimeout(() => {
+        if(Math.random() > 0.3){
+           let result = 'Student accept';
+           resolve(result);
+        } else {
+          reject('Denied');
+        }
+      }, 3000);
+     } else {
+      reject('Denied, not enouth the documents');
+     }
+  });
+  return promise;
+};
+
+Вызываем функцию doUnoversity и дальше чтобы принять promise, принял наши resolve и reject, нам 
+необходимо воспользоваться методами promis'a
+У promise есть такой метод then(); - этот метод обрабатывает последствия нашего обещания, т.е. что
+будет происходить если обещание выполниться или не выполниться, последствия это действия, а значит,
+что метод then принимает в качестве параметра 2 функции.
+1 функция - это если обещание выполнено успешно, отработает resolve
+2 функция - это если обещание не выполнеться, отработает reject 
+после then мы можем выполнять ещё действия, это называеься цепочка then.
+
+
+Также есть метод catch(); - этот метод работает с возражениями, если любая из функций вернёт нам 
+отрицательный promise, то отработает метод catch();
+.catch(reason => console.log(reason));
+если любой из promise нам вернёт отказ то у нас отработает метод catch(); будут пропущены все then.
+
+метод finally(); выболняет функцию в любом случае, хоть resolve хоть reject, finally выполнит свою
+функцию. Можно вывождить какой-нить сообщение в консоле
+
+С promise код стал более читабельным и мы избавились от огромного количества callback функций
+
+const doUnoversity = (docs) => {
+  const promise = new Promise((resolve, reject) => {
+     if(docs){
+       console.log('In process...');
+       setTimeout(() => {
+        if(Math.random() > 0.3){
+           let result = 'Student accept'; // .then (*, Х) (1я функция, но не 2я функция)
+           resolve(result);
+        } else {
+          reject('Denied'); // .then (Х, *) (2я функция, но не 1я функция)
+        }
+      }, 2000);
+     } else {
+      reject('Denied, not enouth the documents');
+     }
+  });
+  return promise;
+};
+
+const doArmy = (docs) => {
+  const promise = new Promise((resolve, reject) => {
+    if(docs){
+      console.log('Army-man thinking about it....');
+      setTimeout(() => {
+        if(docs === 'Student accept'){
+          resolve('Come back when you.ll finish University');
+          console.log('Come back when you.ll finish University');
+        } else {
+          reject('The agenda! You a solder, son!');
+        }
+      }, 2000);
+    } else {
+      reject('The agenda! You a solder, son!');
+    }
+  });
+  return promise;
+};
+
+const doWork = (docs) => {
+  const promise = new Promise((resolve, reject) => {
+    console.log('Director of Google thinking about it...');
+    setTimeout(() => {
+      if(Math.random() > 0.3){
+        let result = 'Invited for an interview at Monday';
+        console.log(result);
+        resolve(result);
+      } else {
+        reject('Denied! go to the yandex!');
+      }
+    }, 2000);
+  });
+  return promise;
+};
+
+const doParty = (docs) => {
+  console.log('Dance! Becouse army-man denied me.');
+  return Promise.resolve(docs);
+};
+
+const documents = ['Passport', 'Attestat'];
+
+doUnoversity(documents)
+.then((result) => {
+  console.log(result);
+  return result;
+})
+.then(doArmy)
+.then(doParty)
+.then(doWork)
+.catch(reason => console.error(reason))
+.finally(() => console.warn('Will be work anyway!'));
+
+
+Иногда нам нужно дождаться когда отработают все promis, у promise есть метод all()
+Promise.all() - этот promis будет дожидаться ответа от всех вызванных promis, и в качестве 
+параметра он принимает массив со всеми нашими promis
+
+const doWorking = (company) => {
+  return new Promise((resolve, reject) => {
+    const time = Math.ceil(Math.random() * 5000);
+    setTimeout(() => {
+      if(time % 11){
+        resolve(company);
+      } else {
+        reject(company);
+      }
+      
+    }, time);
+  });
+};
+
+const hh = doWorking('HH');
+const yandex = doWorking('Yandex');
+const ozone = doWorking('Ozone');
+const pikabu = doWorking('Pikabu');
+const politics = doWorking('Administrate Gavment');
+
+Promise.all([hh, yandex, ozone, pikabu, politics])
+.then(result => console.log(`'Invited for an interview in ${result} Company`))
+.catch(result => console.error(`Company ${result} denied!`));
+в этом случае мы ждём пока отработают все promis и получим результат
+
+
+Также есть метод race(); - этот метод ожидает выполнения первого promise, т.е. какой первый promise 
+выполниться тот и попадёт в then, а не все сразу при случае с all(); 
+
+
+const doUnoversity = (docs) => {
+  const promise = new Promise((resolve, reject) => {
+     if(docs){
+       console.log('In process...');
+       setTimeout(() => {
+        if(Math.random() > 0.3){
+           let result = 'Student accept'; // .then (*, Х) (1я функция, но не 2я функция)
+           resolve(result);
+        } else {
+          reject('Denied'); // .then (Х, *) (2я функция, но не 1я функция)
+        }
+      }, 2000);
+     } else {
+      reject('Denied, not enouth the documents');
+     }
+  });
+  return promise;
+};
+
+const doArmy = (docs) => {
+  const promise = new Promise((resolve, reject) => {
+    if(docs){
+      console.log('Army-man thinking about it....');
+      setTimeout(() => {
+        if(docs === 'Student accept'){
+          resolve('Come back when you.ll finish University');
+          console.log('Come back when you.ll finish University');
+        } else {
+          reject('The agenda! You a solder, son!');
+        }
+      }, 2000);
+    } else {
+      reject('The agenda! You a solder, son!');
+    }
+  });
+  return promise;
+};
+
+const doWork = (docs) => {
+  const promise = new Promise((resolve, reject) => {
+    console.log('Director of Google thinking about it...');
+    setTimeout(() => {
+      if(Math.random() > 0.3){
+        let result = 'Invited for an interview at Monday';
+        console.log(result);
+        resolve(result);
+      } else {
+        reject('Denied! go to the yandex!');
+      }
+    }, 2000);
+  });
+  return promise;
+};
+
+const doParty = (docs) => {
+  console.log('Dance! Becouse army-man denied me.');
+  return Promise.resolve(docs);
+};
+
+const documents = ['Passport', 'Attestat'];
+
+// doUnoversity(documents)
+// .then((result) => {
+//   console.log(result);
+//   return result;
+// })
+// .then(doArmy)
+// .then(doParty)
+// .then(doWork)
+// .catch(reason => console.error(reason))
+// .finally(() => console.warn('Will be work anyway!'));
+
+const doWorking = (company) => {
+  return new Promise((resolve, reject) => {
+    const time = Math.ceil(Math.random() * 5000);
+    setTimeout(() => {
+      if(time % 3){
+        console.log(company);
+        resolve(company);
+      } else {
+        reject(company);
+      }
+      
+    }, time);
+  });
+};
+
+const hh = doWorking('HH');
+const yandex = doWorking('Yandex');
+const ozone = doWorking('Ozone');
+const pikabu = doWorking('Pikabu');
+const politics = doWorking('Administrate Gavment');
+
+Promise.all([hh, yandex, ozone, pikabu, politics])
+.then(result => console.log(`'Invited for an interview in ${result} Company`))
+.catch(result => console.error(`Company ${result} denied!`));
+*/
+
+
+
+/*                                                 УРОК №18
+                                             Асинхронный JavaScript 
+                                                    Promise
+                     Контекст выполнения, асинхронное выполнение, стек вызовов и event loop 
+
+JavaScript однопоточный тип, он может выполнять только одну функцию за раз у неё есть стек задач, 
+следует по ним по очереди.
+Вот пример расскрывает суть:
+ const mult = (x, y) => {
+  return x * y;
+ };
+
+ const square = (num) => {
+  return mult(num, num);
+ };
+
+ const showSquare = (n) => {
+   const res = square(n);
+   console.log('res: ', res);
+ };
+ 
+ showSquare(2);
+
+ У нас будет по очерёдно заполняться стек и также поочерёдно чиститься
+Так-же можно не нужно зациклить функцию самовызова и тогда мы поймём что максимальное количество
+мест в стеке это 16000. Приведёт к зависанию
+
+Далее когда мы работали с нашим проектом  и через ajax добавляли синхронное выполнение команты без
+перезагрузки страници отправляли данные на сервер, при методе sleep для servera мы нарочно
+тормозили сервер чтобы с иметировать отправку данных, после нажатия sumbit мы производим
+отправку наших данных на севрер и указав sleep(10) ждём 10 секунду - во время ожидании отправки 
+в течении 10 секунд наша страница становиться замороженной, мы не можем с ней ничего делать и 
+никуда нажать, только на адресную строку. Это говорит что синхронный запрос занял наш стек операций
+и не мог выполнить другой код.
+
+как это работает глубже
+
+console.log(1);
+
+setTimeout(() => console.log(2), 2000);
+
+console.log(3);
+
+в консоле мы получим
+1
+3
+2
+
+Синхронный тип читки, также зовут построчный, сначала прочитал log1 добавил в стек => выполнил и
+вышел из стека, далее прочитал setTimout запустил счётчик и вышел из стека, далее прочитал log3
+выполнил и вышел из стека, а потом откуда не возьмись через 2 секунды появяился log2.
+где был код эти 2 секунды ? если код работает синхронно(построчно)
+Дело в том, что setTimout улетел не много в другую среду выполнения, а именно API браузера BOM, в 
+котором для setTimout есть своём местечко где он ведёт отсчёт 2х секунд а потом возвращается к нам
+обратно в виде выполнения.
+
+другое пример:
+console.log('Загружаем бельё в стриральную машинку');
+
+setTimeout(() => console.log('Закончилась стирка'), 2000);
+
+console.log('Развешатьт белье на балконе');
+
+мы получаем:
+
+Загружаем бельё в стриральную машинку
+Развешатьт белье на балконе
+Закончилась стирка
+
+мы же не можем развесить бельё пока стрирка не закончилась.
+Правильным это будет реализовать с помощью callback 
+
+const foo1 = () => {
+  console.log('Загружаем бельё в стриральную машинку');
+  foo2(foo3);
+};
+
+const foo2 = (callBack) => {
+  setTimeout(() => {
+    console.log('Закончилась стирка');
+    callBack();
+  }, 2000);
+
+};
+
+const foo3 = () => {
+  console.log('Развешатьт белье на балконе');
+
+};
+
+foo1();
+
+Запускаем функцию foo1 она выполняется "загружаем бельё..." запускает foo2, в свою очередь
+foo2 имеет callback функцию в которую мы передаём foo3.
+в foo2 запускается setTimout через 2 секунды выполняеться 'Закончилась стрика' и запускаеться 
+callback функция и эту та функция которую мы передали это функция foo3 и она выдаёт нам 
+развешать бельё на балконе
+
+получаем
+Загружаем бельё в стриральную машинку
+Закончилась стирка
+Развешатьт белье на балконе
+
+const foo1 = () => {
+  console.log('Загружаем бельё в стриральную машинку');
+  foo2(foo3);
+  foo4();
+};
+
+const foo2 = (callBack) => {
+  setTimeout(() => {
+    console.log('Закончилась стирка');
+    callBack();
+  }, 5000);
+
+};
+
+const foo3 = () => {
+  console.log('Развешатьт белье на балконе');
+
+};
+
+const foo4 = () => {
+  setTimeout(() => {
+    console.log('Помыли пол');
+  }, 3000);
+};
+
+foo1();
+
+Загружаем бельё в стриральную машинку
+Помыли пол
+Закончилась стирка
+Развешатьт белье на балконе
+
+Так и в javaScript пока выполняеться запрос к серверу пользователь на странице может покликать
+чтонибуть, слайдер полистать и тд.
+
+Пример по работе call stack 
+
+setTimeout(() => {
+  console.log(1);
+}, 1000);
+
+setTimeout(() => {
+  console.log(2);
+}, 1000);
+
+setTimeout(() => {
+  console.log(3);
+}, 1000);
+
+setTimeout(() => {
+  console.log(4);
+}, 1000);
+
+setTimeout(() => {
+  console.log(5);
+}, 1000);
+
+мы получим 1, 2, 3, 4, 5 в ряд, но как это произошло одновременно через 1 секунду
+
+Запускается наш setTimeout1 с таймером  в одну секунду, после этого таймер поместиться в web API 
+на 1 секунду, setTimeout1 завершит своё выполние и запустить следующий setTimeout, также попажёт в
+call stack он снова запускает ещё один таймер setTimeout2 на одну секунду и уйдёт из call stack
+ далее запускаеться setTimeout3 снова попадаёт в API на 1 секунду и так по всем setTimeout
+ после этого call stack пуст. После того как call stack пусть дожидаемся 1 секунду и наша задача
+ console.log попадает в очередь задач, так как web API не знает что сейчас в call stack'e. 
+ Попадаем 2 функция в очередь задач и остальные и тут работать начинает event loop, он проверяет
+ что у нас call stack'e, если там пусть, то переосит нащу туда команду. Команду переносит в call stack
+ и там выполняется выхожит из stack'a и так каждая функция по очереди.
+
+ У setTimeout есть особенно, что она всегда будет отпарвлять функцию в сторонюю API 
+ */
+
+
+
+
 /*                                      Работа с JSON, AJAX
                                 Получение и отправка данных на сервер 
 
