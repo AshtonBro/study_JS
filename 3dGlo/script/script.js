@@ -111,7 +111,6 @@ const togglePopup = () => {
 
     popup.addEventListener('click', (event) => {
         let target = event.target;
-
     if (document.documentElement.clientWidth > 720){
         if(target.classList.contains('popup-close')){
             popup.style.transform = 'translateX(-100%)';
@@ -286,7 +285,7 @@ const changePicture = () => {
 changePicture();
 
 // regex калькулятора валидация для цифр
-const validationNumber = () => {
+const validation = () => {
     const calcBlock = document.querySelector('.calc-block');
     let inputCalc = calcBlock.querySelectorAll('input');
 
@@ -295,8 +294,24 @@ const validationNumber = () => {
             element.value = element.value.replace(/\D/g, '');
         });
     });
+    document.querySelectorAll('.form-phone').forEach((element) => {
+        element.addEventListener('input', () => {
+            element.value = element.value.replace(/[^0-9\+]/, '');
+        });
+    });
+    document.getElementsByName('user_name').forEach((element) => {
+        element.addEventListener('input', () => {
+            element.value = element.value.replace(/[^а-яё _]/iu, '');
+        });
+    });
+    document.getElementsByName('user_message').forEach((element) => {
+        element.addEventListener('input', () => {
+            element.value = element.value.replace(/[^а-яё _]/iu, '');
+        });
+    });
+    
 };
-validationNumber();
+validation();
 
 // калькулятор типа обьекта
 const calculator = (prise = 100) => {
@@ -352,38 +367,45 @@ const sendForm = () => {
     const errorMessage = 'Что-то пошло не так',
     loadMessage = 'Загрузка...',
     successMessage = 'Спасибо! Мы скоро с Вами свяжемся';
-    // Получили нашу форму
-    const form = document.getElementById('form1');
+    // Получили наши формы
+    const allForm = document.getElementsByName('user_form');
     // Создали элемент который будем добавлять на страницу и добавили div стили
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = 'font-size: 2rem;';
-    // Прописали обработчик событий submit
-    form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        form.appendChild(statusMessage);
-            statusMessage.textContent = loadMessage;
-        const formData = new FormData(form);
-        let body = {};
-        
-        // for(let val of formData.entries()){
-        //     body[val[0]] = val[1];
-        // }
-
-        formData.forEach((val, key) => {
-            body[key] = val;
-        });
-
-        postData(body, 
-            () => {
-                statusMessage.textContent = successMessage;
-            },
-            (error) => {
-                statusMessage.textContent = errorMessage;
-                console.error(error);
+    allForm.forEach((elem) => {
+        elem.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if(elem !== allForm[2]){
+                elem.appendChild(statusMessage);
+                statusMessage.textContent = loadMessage;
+            } else {
+                elem.appendChild(statusMessage);
+                statusMessage.textContent = loadMessage;
+                statusMessage.style.cssText = 'font-size: 2rem; color: #fff';
             }
-        );
-    });
+            
+            const formData = new FormData(elem);
+            let body = {};
 
+            // for(let val of formData.entries()){
+            //    body[val[0]] = val[1];
+            // }
+    
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+    
+            postData(body, 
+                () => {
+                    statusMessage.textContent = successMessage;
+                },
+                (error) => {
+                    statusMessage.textContent = errorMessage;
+                    console.error(error);
+                }
+            );
+        });
+    });
 
     const postData = (body, outputData, errorData) => {
         const request = new XMLHttpRequest();
@@ -393,16 +415,32 @@ const sendForm = () => {
             }
             if(request.status === 200){
                 outputData();
+                clearInputs();
             } else {
                 errorData(request.status);
             }
         });
+        
         request.open('POST', './server.php');
         request.setRequestHeader('Content-type', 'application/json');
         request.send(JSON.stringify(body));
+       
     };
+
+    const clearInputs = () => {
+        let inputs = document.querySelectorAll('input');
+            inputs.forEach((elem) => {
+                elem.value = '';
+            });
+    };
+
+
 };
 sendForm();
+
+
+
+
 
 
 
