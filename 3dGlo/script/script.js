@@ -309,7 +309,6 @@ const validation = () => {
             element.value = element.value.replace(/[^а-яё _]/iu, '');
         });
     });
-    
 };
 validation();
 
