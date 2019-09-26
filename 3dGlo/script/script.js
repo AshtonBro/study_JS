@@ -399,8 +399,8 @@ const sendForm = () => {
                 if (response.status !== 200) {
                     throw new Error('Status network is not 200');
                 }
-                console.log(response);
                 statusMessage.textContent = successMessage;
+                clearInputs();
             })
             .catch((error) => {
                 statusMessage.textContent = errorMessage;
@@ -411,25 +411,13 @@ const sendForm = () => {
     });
 
     const postData = (body) => {
-        return fetch('./server.php');
-
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-            request.open('POST', './server.php');
-            request.addEventListener('readystatechange', () => {
-                if(request.readyState !== 4){
-                    return;
-                }
-                if(request.status === 200){
-                    resolve();
-                    clearInputs();
-                } else {
-                    reject();
-                }
-            });
-            request.setRequestHeader('Content-type', 'application/json');
-            request.send(JSON.stringify(body));
-      });
+        return fetch('./server.php', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
     };
 
     const clearInputs = () => {
