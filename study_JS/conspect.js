@@ -1,4 +1,178 @@
- 
+                                                   /*  УРОК №19    
+                                                      Fetch
+
+Технология Fetch - это API для осуществелния запросов с сервера. Новая и лучшая альтернатив XMLHttpRequest.
+Fetch представляет улчшенный интерфейс, имеет больше возможностей проще синтаксис и он построен на promise.
+
+fetch принимает параметры
+1. url запросы
+
+функция fetch возвращает promise и нам необходимо обрабатывать его с помощью then и catch также как и в promise
+
+ fetch('./cars.json')
+.then((response) => {
+    console.log('response: ', response);
+})
+.catch((error) => console.error(error));
+
+обрабатываем также как и promise, но есть особенность при fetch во время ошибки мы всё равно попадём 
+в .then и нам необходимо отфильтровывать всё кроме статуса 200.
+Даже при catch всё равно попадаем в then и отрабатывает у нас системная ошибка а не catch.
+обрабатываем с помощью исключения, есть в javaScript комманда throw, после неё мы можем написать любое
+выражение, например строку error.... метод throw будет прерывать нас и отправлять строку в ближайший catch.
+Но мы же не будем всё отправлять. делаем через if 
+if (response.status !== 200){
+    throw 'error с помощью исключения';
+    }
+Но инногда необходимо создать именно ошибку, тогда обратимся к конструктору ошибок
+throw new Error('Status network is not 200'); и унас будет выведена красивая ошибка, как надо
+
+  select.addEventListener('change', () => {
+        fetch('./car2s.json')
+        .then((response) => {
+           if (response.status !== 200){
+                throw new Error('Status network is not 200');
+           }
+            console.log('response: ', response);
+        })
+        .catch((error) => console.error(error));
+    });
+
+Востанавливаем наш пуст к серверу и запустим файл
+select.addEventListener('change', () => {
+        fetch('./cars.json')
+        .then((response) => {
+           if (response.status !== 200){
+                throw new Error('Status network is not 200');
+           }
+            console.log('response: ', response);
+        })
+        .catch((error) => console.error(error));
+    });
+
+then на выдаёт response если мы откроем в консоле response то увидим там наш обьект Response.
+У нашего обьекта Response помимо свойств, status, statusText, есть заголовки, редиректы и юрл нашего запроса 
+но важным являеться body, body и есть ответ от сервера, но не много в другом виде, если откроем body, то 
+увидмо ReadableStream.
+ReadableStream - это поток чтение который нам необходимо обработать, для этого есть три метода обработки
+1. text() - который вернёт строку в том формате в котором она пришла
+2. json() - возвращает обьект
+3. block() - он необходим для обработки при получении файлов
+
+
+
+ select.addEventListener('change', () => {
+        fetch('./cars.json')
+        .then((response) => {
+           if (response.status !== 200){
+                throw new Error('Status network is not 200');
+           }
+            return (response.json());
+        })
+        .then((response) => {
+            console.log('response: ', response);
+        })
+        .catch((error) => console.error(error));
+    });
+Как заметили мы, получаем promise и обработали его в следующем then.
+положительный then мы можем обработать и добавить на страницу полученный элементы как мы делали с cars
+
+ .then((data) => {
+            data.cars.forEach(item => {
+                if (item.brand === select.value) {
+                    const {brand, model, price} = item;
+                    output.innerHTML = `Тачка ${brand} ${model} <br>
+                     Цена: ${price}$`;
+                   }
+            });
+            
+        })
+
+Функция fetch имеет дополнительный необезательный параметр и это обьект с настройками
+    1 настройка это method по умолчанию стоит GET, поэтому мы его не прописывали и получили наши данные.
+    также мы можем прописать POST и другие.
+    2 настройка это mode - свойство mode это режимы правил ограничения домена, свойство которое мы тут напишем
+    будет указывать в каком режиме crossdomenosti будет запрос, по умолчанию стоит режим 'same-origin',
+    'same-origin' успешно выполняеться толькл для запросов в одном домене, все остальные запросы будут
+    отклонены, другое свойство это cors, работает также как и 'same-origin' + добавляет возможность
+    создавать запросы к сторонним сайтам - без cors мы не соможем получать данные со стороннего сервера
+    3 настройка свойство cache -это режим кеширования мы указываем какой у нас должен быть режим кешированния
+    по умолчание это default? его редко меняют, хотя в некоторых браузерах по умолчанию может быть стоять другой
+    режим из-за этого могут быть проблемы, поэтому рекомендуем указывать cache - default чтобы работало
+    корекно во всех современных браузерах.
+    4 настройка свойство credentials - оно указывает можно ли передавать учётные данные вместе с запросом, значения
+    есть такие как include - разрешаеться передавать, или 'same-origin' - разрешаеться передвать только в своём
+    домене 
+    5 это заголовки headers - это обьект {} где мы можем перечислить все заголовки которые хотим передавать, в 
+    основном используеться для пост запросов ('Conten-type': 'application/json')
+    6 это настройка redirect - бывает настройка redirect и мы должны указать как действовать нашему promis при 
+    redirect'e, значение 'follow' позволяет автоматически переадрессовавыть наш запрос, если значение укажем
+    'error' мы будем прерывать перенаправление с ошибкой и manual - управляет перенаправлениями в ручную.
+    7 это referrer позволяет указывать от куда пришел запрос. 'client'.
+    При пост запросах нам необходимо передавать body и данный body мы можем прописать в нашем обьекте в параметрах
+    к примеру мы хотим передать преобразуем JSON.stringify и передаём наш обьект data например.
+    Это основные свойства которые нужно знать, скорее всего знаний этих опций вам будет достаточно для настройки
+    любых запросов
+
+    fetch('./cars.json', {
+            method: 'GET',
+            mode: 'same-origin',
+            cache: 'default',
+            credentials: 'same-origin',
+            headers: {
+                'Conten-type': 'application/json'
+            },
+            redirect: 'follow',
+            referrer: 'client',
+            body: JSON.stringify(data)
+        })
+
+Теперь посомтрим как собственно отправлять запрос
+
+
+
+
+
+
+
+
+
+Promis к 18 уроку
+
+ return new Promise((resolve, reject) => {
+        const request = new XMLHttpRequest();
+            request.open('POST', './server.php');
+            request.addEventListener('readystatechange', () => {
+                if(request.readyState !== 4){
+                    return;
+                }
+                if(request.status === 200){
+                    resolve();
+                    clearInputs();
+                } else {
+                    reject();
+                }
+            });
+            request.setRequestHeader('Content-type', 'application/json');
+            request.send(JSON.stringify(body));
+      });
+
+
+       postData(body)
+            .then((response) => {
+                if (response.status !== 200) {
+                    throw new Error('Status network is not 200');
+                }
+                console.log(response);
+                statusMessage.textContent = successMessage;
+            })
+            .catch((error) => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
+            });
+*/
+
+
 
 
 /*                                                   УРОК №18
