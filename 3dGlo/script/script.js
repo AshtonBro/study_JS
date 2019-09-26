@@ -4,7 +4,7 @@ let count = 0;
 // Timer
 // Первое с чего начать это получить элементы со страницы
 function countTimer(deadline){
-    let timerHours = document.querySelector('#timer-hours'),
+        let timerHours = document.querySelector('#timer-hours'),
         timerMinutes = document.querySelector('#timer-minutes'),
         timerSeconds = document.querySelector('#timer-seconds'),
         timerNumbers = document.querySelectorAll('.timer-numbers');
@@ -294,7 +294,7 @@ const validation = () => {
             element.value = element.value.replace(/\D/g, '');
         });
     });
-    document.querySelectorAll('.form-phone').forEach((element) => {
+    document.getElementsByName('user_phone').forEach((element) => {
         element.addEventListener('input', () => {
             element.value = element.value.replace(/[^0-9\+]/, '');
         });
@@ -393,37 +393,34 @@ const sendForm = () => {
             formData.forEach((val, key) => {
                 body[key] = val;
             });
-    
-            postData(body, 
-                () => {
-                    statusMessage.textContent = successMessage;
-                },
-                (error) => {
-                    statusMessage.textContent = errorMessage;
-                    console.error(error);
-                }
-            );
+
+            postData(body).then((result) => {
+                console.log(result);
+            }, (reason) => {
+                console.error(reason);
+            });
+            
         });
     });
 
-    const postData = (body, outputData, errorData) => {
+    const postData = (body) => {
+      return new Promise((resolve, reject) => {
         const request = new XMLHttpRequest();
-        request.addEventListener('readystatechange', () => {
-            if(request.readyState !== 4){
-                return;
-            }
-            if(request.status === 200){
-                outputData();
-                clearInputs();
-            } else {
-                errorData(request.status);
-            }
-        });
-        
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-type', 'application/json');
-        request.send(JSON.stringify(body));
-       
+            request.open('POST', './server.php');
+            request.addEventListener('readystatechange', () => {
+                if(request.readyState !== 4){
+                    return;
+                }
+                if(request.status === 200){
+                    resolve(statusMessage.textContent = successMessage);
+                    clearInputs();
+                } else {
+                    reject(statusMessage.textContent = errorMessage);
+                }
+            });
+            request.setRequestHeader('Content-type', 'application/json');
+            request.send(JSON.stringify(body));
+      });
     };
 
     const clearInputs = () => {
@@ -433,12 +430,8 @@ const sendForm = () => {
             });
     };
 
-
 };
 sendForm();
-
-
-
 
 
 
