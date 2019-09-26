@@ -394,16 +394,25 @@ const sendForm = () => {
                 body[key] = val;
             });
 
-            postData(body).then((result) => {
-                console.log(result);
-            }, (reason) => {
-                console.error(reason);
+            postData(body)
+            .then((response) => {
+                if (response.status !== 200) {
+                    throw new Error('Status network is not 200');
+                }
+                console.log(response);
+                statusMessage.textContent = successMessage;
+            })
+            .catch((error) => {
+                statusMessage.textContent = errorMessage;
+                console.error(error);
             });
             
         });
     });
 
     const postData = (body) => {
+        return fetch('./server.php');
+
       return new Promise((resolve, reject) => {
         const request = new XMLHttpRequest();
             request.open('POST', './server.php');
@@ -412,10 +421,10 @@ const sendForm = () => {
                     return;
                 }
                 if(request.status === 200){
-                    resolve(statusMessage.textContent = successMessage);
+                    resolve();
                     clearInputs();
                 } else {
-                    reject(statusMessage.textContent = errorMessage);
+                    reject();
                 }
             });
             request.setRequestHeader('Content-type', 'application/json');
