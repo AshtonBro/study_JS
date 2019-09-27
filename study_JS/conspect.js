@@ -272,7 +272,6 @@ export default function moduleTwo(){
   }, 1000);
 }
 
- */
 
 let a = 3;
 let b = 5;
@@ -293,6 +292,9 @@ class Car {
 export { a as one, b as two, run, eat, Car };
 
 import { Car } from './moduleone';
+
+
+ */
 
 
 
