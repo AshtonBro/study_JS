@@ -294,20 +294,25 @@ const validation = () => {
             element.value = element.value.replace(/\D/g, '');
         });
     });
-    document.getElementsByName('user_phone').forEach((element) => {
-        element.addEventListener('input', () => {
-            element.value = element.value.replace(/[^0-9\+]/, '');
+
+    let input = document.querySelectorAll('input');
+
+    input.forEach((item) => {
+        item.addEventListener('input', () => {
+            if (item.classList.contains('form-name')) {
+                item.value = item.value.replace(/[^а-яё _]/iu, '');
+            }
+            if (item.classList.contains('form-phone')) {
+                item.value = item.value.replace(/[^0-9\+]/, '');
+            }
+            if (item.classList.contains('form-email')) {
+                item.value = item.value.replace(/[^\w+@\w+.\w{2,3}]/g, '');
+            }
+            if (item.classList.contains('mess')) {
+                item.value = item.value.replace(/[^а-яё _]/iu, '');
+            }
         });
-    });
-    document.getElementsByName('user_name').forEach((element) => {
-        element.addEventListener('input', () => {
-            element.value = element.value.replace(/[^а-яё _]/iu, '');
-        });
-    });
-    document.getElementsByName('user_message').forEach((element) => {
-        element.addEventListener('input', () => {
-            element.value = element.value.replace(/[^а-яё _]/iu, '');
-        });
+       
     });
 };
 validation();
@@ -419,14 +424,12 @@ const sendForm = () => {
             body: JSON.stringify(body)
         });
     };
-
     const clearInputs = () => {
         let inputs = document.querySelectorAll('input');
             inputs.forEach((elem) => {
                 elem.value = '';
             });
     };
-
 };
 sendForm();
 
