@@ -6,25 +6,4 @@ body{
   font-family: 'Courier New', Courier, monospace;
   
 }
-.text{
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 15px;
-  color: rgb(206, 22, 206);
-}
-.Clock{
-  margin-top: 50%;
-  font-size: 40px;
-}
-.split {
-  height: 50%;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  padding-top: 20px;
-}
-.screenUp {
-  top: 0%;
-}
-.screenDown {
-  top: 50%;
-}
+
