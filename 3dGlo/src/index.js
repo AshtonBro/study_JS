@@ -29,7 +29,7 @@ validation();
 calculator();
 //send-ajax-form
 sendForm();
-
+// Slider bar с клиентами
 const carousel = new SliderCarousel({
     main: '.companies-wrapper',
     wrap: '.companies-hor',
@@ -52,4 +52,4 @@ const carousel = new SliderCarousel({
 });
 
 carousel.init();
-// Slider bar с клиентами
+
