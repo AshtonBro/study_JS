@@ -9,6 +9,7 @@ import changePicture from './modules/changePicture';
 import validation from './modules/validation';
 import calculator from './modules/calculator';
 import sendForm from './modules/sendForm';
+import SliderCarousel from './modules/SliderCarousel';
 
 // Timer
 countTimer();
@@ -29,4 +30,26 @@ calculator();
 //send-ajax-form
 sendForm();
 
+const carousel = new SliderCarousel({
+    main: '.companies-wrapper',
+    wrap: '.companies-hor',
+    sliderToShow: 4,
+    infinity: true,
+    
+    responsive: [{
+        breakpoint: 1024,
+        sliderToShow: 3
+    }, 
+    {
+        breakpoint: 768,
+        sliderToShow: 2
+    }, 
+    {
+        breakpoint: 576,
+        sliderToShow: 1
+    },
+]
+});
+
+carousel.init();
 // Slider bar с клиентами

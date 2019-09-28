@@ -11,7 +11,7 @@ class SliderCarousel{
     
     }){
         if(!main || !wrap){
-            console.warn('slider-carusel: необходимо 2 свойства, "main" и "wrap"!');
+            console.warn('slider-carousel: необходимо 2 свойства, "main" и "wrap"!');
         }
         this.main = document.querySelector(main);
         this.wrap = document.querySelector(wrap);
@@ -55,7 +55,7 @@ class SliderCarousel{
     }
 
     addStyle(){ 
-        let style = document.getElementById('sliderCarusel-style');
+        let style = document.getElementById('sliderCarousel-style');
         if(!style){
         style = document.createElement('style');
         style.id = 'sliderCarousel-style';
