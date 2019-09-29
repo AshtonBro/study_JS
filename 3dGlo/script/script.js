@@ -294,19 +294,23 @@ const validation = () => {
             element.value = element.value.replace(/\D/g, '');
         });
     });
-    document.getElementsByName('user_phone').forEach((element) => {
-        element.addEventListener('input', () => {
-            element.value = element.value.replace(/[^0-9\+]/, '');
-        });
-    });
-    document.getElementsByName('user_name').forEach((element) => {
-        element.addEventListener('input', () => {
-            element.value = element.value.replace(/[^а-яё _]/iu, '');
-        });
-    });
-    document.getElementsByName('user_message').forEach((element) => {
-        element.addEventListener('input', () => {
-            element.value = element.value.replace(/[^а-яё _]/iu, '');
+
+    let input = document.querySelectorAll('input');
+
+    input.forEach((item) => {
+        item.addEventListener('input', () => {
+            if (item.classList.contains('form-name')) {
+                item.value = item.value.replace(/[^а-яА-яёЁ\ ]/g, '');
+            }
+            if (item.classList.contains('form-phone')) {
+                item.value = item.value.replace(/[^0-9\+]/, '');
+            }
+            if (item.classList.contains('form-email')) {
+                item.value = item.value.replace(/[^\w+@\w+.\w{2,3}]/g, '');
+            }
+            if (item.classList.contains('mess')) {
+                item.value = item.value.replace(/[^а-яА-яёЁ\ ]/g, ''); //(/[^а-яё _]/iu, '');
+            }
         });
     });
 };
@@ -362,13 +366,10 @@ calculator();
 
 //send-ajax-form
 const sendForm = () => {
-// Cделали предварительно сообщения которые будем показывать пользователю
     const errorMessage = 'Что-то пошло не так',
     loadMessage = 'Загрузка...',
     successMessage = 'Спасибо! Мы скоро с Вами свяжемся';
-    // Получили наши формы
     const allForm = document.getElementsByName('user_form');
-    // Создали элемент который будем добавлять на страницу и добавили div стили
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = 'font-size: 2rem;';
     allForm.forEach((elem) => {
@@ -386,10 +387,6 @@ const sendForm = () => {
             const formData = new FormData(elem);
             let body = {};
 
-            // for(let val of formData.entries()){
-            //    body[val[0]] = val[1];
-            // }
-    
             formData.forEach((val, key) => {
                 body[key] = val;
             });
