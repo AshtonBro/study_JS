@@ -1,4 +1,4 @@
-const validation = () => {
+  const validation = () => {
     const calcBlock = document.querySelector('.calc-block');
     let inputCalc = calcBlock.querySelectorAll('input');
 
@@ -25,7 +25,6 @@ const validation = () => {
                 item.value = item.value.replace(/[^а-яё _]/iu, '');
             }
         });
-       
     });
 };
 

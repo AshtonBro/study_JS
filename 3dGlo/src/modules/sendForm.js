@@ -46,7 +46,7 @@ const sendForm = () => {
             
         });
     });
-
+    
     const postData = (body) => {
         return fetch('./server.php', {
             method: 'POST',

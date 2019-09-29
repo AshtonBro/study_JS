@@ -25,6 +25,7 @@
     "es6-promise": "^4.2.8",
     "fetch-polyfill": "^0.8.2",
     "formdata-polyfill": "^3.0.19",
+    "js-polyfills": "^0.1.42",
     "nodelist-foreach-polyfill": "^1.2.0"
   }
 }
