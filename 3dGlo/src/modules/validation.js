@@ -13,7 +13,7 @@
     input.forEach((item) => {
         item.addEventListener('input', () => {
             if (item.classList.contains('form-name')) {
-                item.value = item.value.replace(/[^а-яё _]/iu, '');
+                item.value = item.value.replace(/[^а-яА-яёЁ\ ]/g, '');
             }
             if (item.classList.contains('form-phone')) {
                 item.value = item.value.replace(/[^0-9\+]/, '');
@@ -22,7 +22,7 @@
                 item.value = item.value.replace(/[^\w+@\w+.\w{2,3}]/g, '');
             }
             if (item.classList.contains('mess')) {
-                item.value = item.value.replace(/[^а-яё _]/iu, '');
+                item.value = item.value.replace(/[^а-яА-яёЁ\ ]/g, ''); //(/[^а-яё _]/iu, '');
             }
         });
     });

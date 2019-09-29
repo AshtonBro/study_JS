@@ -1,11 +1,9 @@
 const sendForm = () => {
-// Cделали предварительно сообщения которые будем показывать пользователю
     const errorMessage = 'Что-то пошло не так',
     loadMessage = 'Загрузка...',
     successMessage = 'Спасибо! Мы скоро с Вами свяжемся';
-    // Получили наши формы
     const allForm = document.getElementsByName('user_form');
-    // Создали элемент который будем добавлять на страницу и добавили div стили
+
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = 'font-size: 2rem;';
     allForm.forEach((elem) => {
@@ -23,10 +21,6 @@ const sendForm = () => {
             const formData = new FormData(elem);
             let body = {};
 
-            // for(let val of formData.entries()){
-            //    body[val[0]] = val[1];
-            // }
-    
             formData.forEach((val, key) => {
                 body[key] = val;
             });
@@ -41,12 +35,12 @@ const sendForm = () => {
             })
             .catch((error) => {
                 statusMessage.textContent = errorMessage;
-                console.error(error);
+                console.log(error);
             });
             
         });
     });
-    
+
     const postData = (body) => {
         return fetch('./server.php', {
             method: 'POST',
@@ -60,7 +54,7 @@ const sendForm = () => {
         let inputs = document.querySelectorAll('input');
             inputs.forEach((elem) => {
                 elem.value = '';
-            });
+        });
     };
 };
 
