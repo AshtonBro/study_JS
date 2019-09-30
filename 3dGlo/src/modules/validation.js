@@ -13,7 +13,7 @@ const validation = () => {
         if(item.classList.contains('form-name')) { 
             item.value = item.value.replace(/[^а-яА-ЯёЁ\ ]/g, '');
 
-        } else if (item.classList.contains('top-form')) { 
+        } else if (item.classList.contains('form2_name')) { 
             item.value = item.value.replace(/[^а-яА-ЯёЁ\ ]/g, '');
         
         } else if (item.classList.contains('form-phone')){
