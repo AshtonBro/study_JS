@@ -7,24 +7,27 @@ const validation = () => {
             element.value = element.value.replace(/\D/g, '');
         });
     });
+    
+    document.addEventListener('input', (event) => {
+        let item = event.target;
+        if(item.classList.contains('form-name')) { 
+            item.value = item.value.replace(/[^а-яА-ЯёЁ\ ]/g, '');
 
-    let input = document.querySelectorAll('input');
+        } else if (item.classList.contains('top-form')) { 
+            item.value = item.value.replace(/[^а-яА-ЯёЁ\ ]/g, '');
+        
+        } else if (item.classList.contains('form-phone')){
+            item.value = item.value.replace(/[^0-9+]/, '');
 
-    input.forEach((item) => {
-        item.addEventListener('input', () => {
-            if (item.classList.contains('form-name')) {
-                item.value = item.value.replace(/[^а-яА-яёЁ\ ]/g, '');
-            }
-            if (item.classList.contains('form-phone')) {
-                item.value = item.value.replace(/[^0-9\+]/, '');
-            }
-            if (item.classList.contains('form-email')) {
-                item.value = item.value.replace(/[^\w+@\w+.\w{2,3}]/g, '');
-            }
-            if (item.classList.contains('mess')) {
-                item.value = item.value.replace(/[^а-яА-яёЁ\ ]/g, ''); //(/[^а-яё _]/iu, '');
-            }
-        });
+        } else if (item.classList.contains('form-email')){
+            item.value = item.value.replace(/[^\w+@\w+.\w{2,3}]/g, '');
+
+        } else if (item.classList.contains('mess')){
+            item.value = item.value.replace(/[^а-яА-ЯёЁ\W\ ]/g, '');
+            
+        } else {
+            return;
+        }
     });
 };
 
