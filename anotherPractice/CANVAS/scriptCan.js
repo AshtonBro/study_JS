@@ -42,7 +42,7 @@ context.beginPath();
 context.moveTo(240, 180);
 context.lineWidth = '8';
 context.strokeStyle = '#F2CD24';
-context.arc(200, 180, 40, 0, Math.PI * 1.45, true);
+context.arc(200, 180, 40, 0, Math.PI * 1.44, true);
 context.stroke();
 
 context.beginPath();
