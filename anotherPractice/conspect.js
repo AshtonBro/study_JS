@@ -1,3 +1,291 @@
+/*                                      УРОК №21
+                            async await - асинхронные функции
+
+в этмо скрипт 8 в стандарт вошли 2 ключевых слова это async и await, которые позволяют создавать асинхронные
+функции. async делает функцию асинхронное и разрешает использовать функцию await внутри этой функции 
+как обьявляеться async для 
+
+async function funcFirst(){                - Function dicloration
+
+}
+
+const funcTwo = async function(){                   -Function Expression
+
+}
+
+const funcTree = async () => {                      -Arrow function
+  
+}
+
+const obj = {
+  async foo() {
+
+  }
+}
+
+class Class {
+  async foo(){
+    
+  }
+}
+
+async функция всегда возвращает promise и мы этот promise может обработать с помощью then 
+
+const funcTree = async () => {
+  return hello;
+}
+
+funcTree().then(res => console.log(res))
+.catch(error => console.warn(error));
+
+Лучше всего для ловли ошибки использовать catch чем then и обьект error
+смысл в том, что асинхронная функция сразу возвращает promise и мы можем обработать ошибки без подключение 
+promise отдельно.
+
+await сказываеться на выражениях, если выражение являеться promisom то async функция будет преостановлена
+до тех пор пока promise не выполнеться, если же выражение не являеться promise, то оно конвектируеться 
+в promise через promise resolve а потом завершаеться.
+
+const pause = () => {
+  return new Promise(resolve => {
+    const time = Math.floor(Math.random() * 5000);
+    setTimeout(resolve, time, 'Hello');
+    console.log(`Задержка на ${time}`);
+  })
+}
+
+const foo = async () => {
+  console.log(1);
+  const str = pause();
+  console.log(2);
+  pause();
+  return str;
+};
+
+foo();
+
+в консоле мы увидели:
+
+1
+ Задержка на 955
+2
+Задержка на 3585
+
+Но на самом деле задержек мы не заметили потому что функция pause() возвращает promise, но пока этот promise 
+отрабатывает то время которое у нас указанно то console.log отрабатывает сразуже и никакой задержки перед
+console.log(2) у нас нет. 
+В этом нам какраз и поможет ключевое слово await 
+ ещё давайте обработает ответ.
+
+ const pause = () => {
+  return new Promise(resolve => {
+    const time = Math.floor(Math.random() * 5000);
+    setTimeout(resolve, time, 'Hello');
+    console.log(`Задержка на ${time}`);
+  })
+}
+
+const foo = async () => {
+  await console.log(1);
+  const str = await pause();
+  await console.log(2);
+  await pause();
+  return str;
+};
+
+foo()
+.then(res => console.log(res));
+
+в консоле мы получили результат:
+
+1
+Задержка на 4606
+2
+Задержка на 1184
+Hello
+но на этот раз мы прождали именно это время.
+
+Произошло следующие.
+строка console.log(1) конвертируеться в строку Promise.resolve, т.е. она выглядить так 
+Promise.resolve(console.log(1)) и сразу выполняеться, так как у нас Promise.resolve, дальше при вызова
+pause() у нас слово await говорит подожди когда выполниться слово pause() не читай код дальше и когда 
+пауза выполниться и вернёться к нам promise тогда только мы увидим в консоле console.log(2) затем 
+снова await ждём и дальше вернулось наше значение
+
+const pause = () => {
+  return new Promise(resolve => {
+    const time = Math.floor(Math.random() * 5000);
+    setTimeout(resolve, time, 'Hello');
+    console.log(`Задержка на ${time}`);
+  });
+}
+
+const foo = async () => {
+  let str = 'hi';
+  await console.log(str);
+  str = await pause();
+  await console.log(str);
+  await pause();
+  return str;
+};
+
+foo()
+.then(res => console.log(res));
+
+здёсь мы можем чётко проследить как наша переменная поменяла значение.
+await останавливает функцию на время выполнения какого-то кода.
+
+Вот пример когда мы хотим что у нас функция была асинхронная и всё и не возвращала promise
+const pause = () => {
+  return new Promise(resolve => {
+    const time = Math.floor(Math.random() * 5000);
+    setTimeout(resolve, time, 'Hello');
+    console.log(`Задержка на ${time}`);
+  });
+}
+
+const foo = async () => {
+  await console.log(1);
+  const str = await pause();
+  await console.log(2);
+  await pause();
+  console.log(str);
+};
+
+foo();
+
+всё тоже самое только не обязательно функции что-то возвращать, в данном случае она выглядить как стандартная
+функция но выглядит асинхронно.
+
+Давайте с эмитируем ошибку
+const foo = async () => {
+  await console.log(1);
+  const str = await pause();
+  if (Math.random() > 0.5){
+    throw new Error('Упс');
+  }
+  await console.log(2);
+  await pause();
+  console.log(str);
+ 
+  в таком случае произойдёт ошибка и наш код остановиться... 
+  тогда обработаем нашу функцию с помощью try catch
+
+  const foo = async () => {
+  await console.log(1);
+  const str = await pause();
+  if (Math.random() > 0.5){
+    throw new Error('Упс');
+  }
+  await console.log(2);
+  await pause();
+  console.log(str);
+};
+
+try{
+  foo();
+} catch(err) {
+  console.warn('Ошибка' + err);
+}
+
+При таком случае всё равно выкатываеться ошибка и код останавливаеться, что бы обработать асинхронную
+функцию нам нужно дождаться её выполнения, потому что try её запустил и пошол дальше по своим делам
+
+const pause = () => {
+  return new Promise(resolve => {
+    const time = Math.floor(Math.random() * 5000);
+    setTimeout(resolve, time, 'Hello');
+    console.log(`Задержка на ${time}`);
+  });
+};
+
+const foo = async () => {
+  await console.log(1);
+  const str = await pause();
+  if (Math.random() > 0.5){
+    throw new Error('Упс');
+  }
+  await console.log(2);
+  await pause();
+  console.log(str);
+};
+
+try{
+  foo();
+} catch(err) {
+  console.warn('Ошибка' + err);
+}
+
+(async() => {
+  try{
+   await foo();
+  } catch(err) {
+    console.warn('Ошибка' + err);
+  }
+})();
+
+При ошибке отрпботал catch но код пошел дальше, мы можем не прееживать что код сломаеться + мы увидели в
+какой строке мы уловили ошибку
+
+(async () => {
+  const config = await readConfig('city');
+  const city = await dbRequest('Получить все города');
+  const html = await httpGet('http://site.com');
+  console.log('ready');
+  console.log(config, city, html);
+  
+  document.getElementById('app').innerHTML = html;
+  
+  city.forEach((item) => {
+    document.getElementById(config.id).innerHTML += `
+    <p>${item.name}</p>`;
+  });
+})();
+*/
+
+
+
+
+
+
+
+
+
+/*                                              УРОК №21
+                                        try catch - перехват ошибок
+
+синтаксис!
+try {
+  console.log('Hello World');
+  const a = () => {
+    console.lg('I am a sunjor of JavaScript');
+  };
+  a();
+} catch(err) {
+  console.warn(err);
+}
+
+console.log('I am stell a live');
+
+Смысл в том, что если ошибок нет работает блок try, если же в блоке try произошла ошибка, то она попадет в 
+блок catch и срабатывает блок catch, но особенность try catch в том, что код продолжает работать. При 
+выпадении ошибки catch обрабатывает её и показывает в консоле, но код при этом не останавливается а идёт дальше
+- можно это просмотреть на примере выше.
+
+Мы можем обернуть наши смысловые функции в try catch
+
+что такое error - это обьект ошибки, он содержит свойства 
+error.name 
+error.message
+error.stack
+finally {
+
+}
+
+Конструкция try catch помогает оставлять код рабочим даже если в каком-то блоке возникнет ошибка!
+*/
+
+
 /*                                                     УРОК №20
                                                       Модули в JS 
 Модули и их реализация.
