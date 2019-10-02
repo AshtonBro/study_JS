@@ -14,24 +14,6 @@ fontStyle.addEventListener('change', (event) => {
    context.lineWidth = `${target.value}`;
 });
 
-canvas.addEventListener('mousemove', (event) => {
-    // получать наши координаты мышки
-    const xMouse = event.offsetX,
-        yMouse = event.offsetY,
-    // координата указателя мыши относительно позиции последнего события mousemove
-    movementX = event.movementX,
-    movementY = event.movementY;
-    // на кнопку рисовать
-    if(event.buttons > 0){
-        context.beginPath();
-        context.moveTo(xMouse, yMouse);
-        context.lineTo(xMouse - movementX, yMouse - movementY);
-        context.stroke();
-        context.closePath();
-    }
-
-});
-
 context.beginPath();
 context.arc(150, 150, 40, 0, angle(360), false);
 context.lineWidth = '8';
@@ -58,7 +40,6 @@ context.lineWidth = '8';
 context.strokeStyle = 'black';
 context.arc(250, 150, 40, 0, Math.PI * 1.10, true);
 context.stroke();
-
 
 context.beginPath();
 context.moveTo(290, 150);
@@ -94,3 +75,21 @@ context.lineWidth = '8';
 context.strokeStyle = 'red';
 context.arc(350, 150, 40, 0, Math.PI * 1.04, false);
 context.stroke();
+
+canvas.addEventListener('mousemove', (event) => {
+    // получать наши координаты мышки
+    const xMouse = event.offsetX,
+        yMouse = event.offsetY,
+    // координата указателя мыши относительно позиции последнего события mousemove
+    movementX = event.movementX,
+    movementY = event.movementY;
+    // на кнопку рисовать
+    if(event.buttons > 0){
+        context.beginPath();
+        context.moveTo(xMouse, yMouse);
+        context.lineTo(xMouse - movementX, yMouse - movementY);
+        context.stroke();
+        context.closePath();
+    }
+
+});
