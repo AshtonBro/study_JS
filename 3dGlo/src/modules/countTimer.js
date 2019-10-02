@@ -5,7 +5,7 @@ function countTimer(){
     timerNumbers = document.querySelectorAll('.timer-numbers');
 
 function getTimeRemaining(){
-    let dateStop = new Date('30 september 2020').getTime(),
+    let dateStop = new Date('10 september 2019').getTime(),
     dateNow = new Date().getTime(),
     timeRemaining = (dateStop - dateNow) / 1000, // нам нужны секунды, переведём милисек в сек
     // имея секуды мы можем вычислить, часы, минуты.
