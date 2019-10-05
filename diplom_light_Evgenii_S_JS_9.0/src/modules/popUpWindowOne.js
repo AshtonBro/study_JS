@@ -6,7 +6,7 @@ const popUpWindowOne = () => {
     const openPopUp = () => {
         popupCall.style.display = 'block';
         popupCall.style.transform = 'translateX(-100%)';
-        setTimeout(function(){
+        setTimeout(() => {
             popupCall.style.transform = 'translateX(0%)';
             popupCall.style.transition = '0.8s';
         },450);
