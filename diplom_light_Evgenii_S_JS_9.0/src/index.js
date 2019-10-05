@@ -1,6 +1,6 @@
 'use strict';
 
-import popUpWindowOne from './modules/const popUpWindowOne';
+import popUpWindowOne from './modules/popUpWindowOne';
 
 
 
