@@ -9,7 +9,7 @@ const popUpWindowOne = () => {
         setTimeout(function(){
             popupCall.style.transform = 'translateX(0%)';
             popupCall.style.transition = '0.8s';
-        },500);
+        },450);
     };
 
     callBtn.forEach((element) => element.addEventListener('click', openPopUp));
