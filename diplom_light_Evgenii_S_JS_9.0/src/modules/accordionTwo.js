@@ -8,7 +8,7 @@ const accordionTwo = () => {
             if(index === i) {
                  collapse[i].classList.add('in');
             } else {
-                 collapse[i].classList.remove('in');
+                collapse[i].classList.remove('in');
             }
         }
     };
