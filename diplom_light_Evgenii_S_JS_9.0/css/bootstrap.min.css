@@ -4400,6 +4400,17 @@ input[type=submit].btn-block {
     transition: all 0.8s ease-out;
 }
 
+.offActive{
+    overflow:hidden;
+    max-height: 0;
+    transition: all 0.5s ease-out;
+}
+
+.onActive{
+    max-height: 500px;
+    transition: all 0.8s ease-out;
+}
+
 tr.collapse.in {
     display: table-row
 }
