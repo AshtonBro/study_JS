@@ -2,7 +2,6 @@ const accordionTwo = () => {
     const questions = document.querySelector('.questions'),
     panelHeading = questions.querySelectorAll('.panel-heading'),
     collapse = questions.querySelectorAll('.collapse'); 
-
     const toggleCollapse = (index) => {
         for(let i = 0; i < panelHeading.length; i++){
             if(index === i) {
