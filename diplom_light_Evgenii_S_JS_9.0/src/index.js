@@ -4,6 +4,7 @@ import popUpWindowOne from './modules/popUpWindowOne';
 import sendForm from './modules/sendForm';
 import validation from './modules/validation';
 import accordionTwo from './modules/accordionTwo';
+import calculatorAccordion from './modules/calculatorAccordion';
 
 // Модальное окно номер 1
 popUpWindowOne();
@@ -13,3 +14,5 @@ sendForm();
 validation();
 // аккордион
 accordionTwo();
+// калькулятор аккордион
+calculatorAccordion();
