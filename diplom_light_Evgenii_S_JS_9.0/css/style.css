@@ -65,6 +65,16 @@ a:hover {
     text-decoration: none
 }
 
+.hiddenUp {
+    transform :'translateX(-100%)';
+    transition : '0.8s';
+}
+
+.hiddenUp :in {
+    transform :'translateX(0%)';
+    transition : '0.8s';
+}
+
 a:visited {
     text-decoration: none
 }
@@ -723,7 +733,8 @@ header .logo img {
 }
 
 .sentence {
-    padding: 9rem 0
+    padding: 9rem 0;
+    margin-bottom: 10rem
 }
 
 .sentence h2 {
