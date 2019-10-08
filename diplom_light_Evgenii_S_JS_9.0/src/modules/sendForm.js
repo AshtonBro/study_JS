@@ -6,14 +6,19 @@ const sendForm = () => {
     const allSendForms = document.querySelectorAll('.text-center');
     window.statusMsg = document.createElement('div');
     window.statusMsg.style.cssText = 'font-size: 2rem';
-    
+    const questionInput = document.querySelector('.user_quest');
+    questionInput.addEventListener('input', () => {
+        window.globalObj["Вопрос Клиента"] = questionInput.value;
+    });
+
     allSendForms.forEach((element) => {
         element.addEventListener('submit', (event) => {
             event.preventDefault();
             element.appendChild(window.statusMsg);
             window.statusMsg.textContent = loadMsg;
-
+            
             const formData = new FormData(element);
+            
             formData.forEach((val, key) => {
                 window.globalObj[key] = val;
             });
