@@ -19,11 +19,13 @@ const popUpWindowOne = () => {
         if(target.classList.contains('popup-close')){
             element.style.transform = 'translateX(-100%)';
             element.style.transition = '0.8s';
+            window.statusMsg.remove('div');
         } else {
             target = target.closest('.popup-content');
             if(!target){
                 element.style.transform = 'translateX(-100%)';
                 element.style.transition = '0.8s';
+                window.statusMsg.remove('div');
             }
         }
     }));
