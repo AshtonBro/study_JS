@@ -7,7 +7,7 @@ const accordionTwo = () => {
     nextBtn = constructor.querySelectorAll('.next-btn'),
     panelHeadingTwo = constructor.querySelectorAll('.panel-heading'),
     accordion = document.getElementById('accordion');
-
+    
     const toggleCollapse = (index) => {
         for(let i = 0; i < panelHeading.length; i++){
             if(index === i) {
