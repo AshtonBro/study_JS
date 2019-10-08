@@ -54,6 +54,7 @@ const sendForm = () => {
         });
         setTimeout(() => {
             window.statusMsg.remove('div');
+            window.globalObj = {};
             clearTimeout();
         }, 2000);
     };
