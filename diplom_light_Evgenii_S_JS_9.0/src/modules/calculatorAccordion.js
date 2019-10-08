@@ -6,70 +6,101 @@ class CalculatorAccordion {
     this.totalResult = document.getElementById('calc-result');
     this.selectors = [...document.querySelectorAll('select')];
     this.inputs = document.querySelectorAll('input');
-    
-    this.body = {
-      total: 0,
-      whichSeptic: [],
-      distanceToHome: 0
+    window.globalObj = {};
+    this.data = {
+      "сумма" : 0,
+      "Тип септика" : "",
+      "Расстояние до дома" : 0,
+      "Диаметр" : "",
+      "Диаметр второго": "",
+      "Количество колец" : "",
+      "Количество колец второго" : "",
+      "Наличие днища" : ""
     };
   }
 
   calcSection1() {
     if (this.chbIsSingle.checked) {
-      this.body.total = +10000;
+      this.data['сумма'] = +10000;
       this.isHidden.forEach( item => item.classList.add('hidden'));
-      this.body.whichSeptic.splice(0,1,'Однокамерный');
+      this.data['Тип септика'] = 'Однокамерный';
     } else if (!this.chbIsSingle.checked) {
-      this.body.total = +15000;
+      this.data['сумма'] = +15000;
       this.isHidden.forEach( item => item.classList.remove('hidden'));
-      this.body.whichSeptic.splice(0,1,'Двухкамерный');
+      this.data['Тип септика'] = 'Двухкамерный';
     } 
   }
 
   calcSection2() {
     let isTwo = !this.chbIsSingle.checked;
     let diametrProcent = 0;
+    if (this.selectors[0].value == 0) {
+      this.data['Диаметр'] = '1.4 метра';
+    }
     if (this.selectors[0].value == 1 ){
       diametrProcent += 0.2;
+      this.data['Диаметр'] = '2 метра';
+    }
+    if(isTwo && this.selectors[2].value == 0) {
+      this.data['Диаметр второго'] = '1.4 метра';
     }
     if(isTwo && this.selectors[2].value == 1) {
       diametrProcent += 0.2;
+      this.data['Диаметр второго'] = '2 метра';
     }
-    this.body.total += this.body.total * diametrProcent;
+    this.data['сумма'] += this.data['сумма'] * diametrProcent;
+
     let ringsProcent = 0;
+
+    if (this.selectors[1].value == 0){
+      this.data['Количество колец'] = '1 штуки';
+    }
     if (this.selectors[1].value == 1){
       ringsProcent += 0.3;
+      this.data['Количество колец'] = '2 штуки';
     } else if (this.selectors[1].value == 2){
       ringsProcent += 0.5;
+      this.data['Количество колец'] = '3 штуки';
     }
     if(isTwo) {
+      if (this.selectors[3].value == 0){
+        this.data['Количество колец второго'] = '1 штука';
+      }
       if (this.selectors[3].value == 1){
         ringsProcent += 0.3;
+        this.data['Количество колец второго'] = '2 штуки';
       } else if (this.selectors[3].value == 2){
         ringsProcent += 0.5;
+        this.data['Количество колец второго'] = '3 штука';
       }
     }
-    this.body.total += this.body.total * ringsProcent;
+    this.data['сумма'] += this.data['сумма'] * ringsProcent;
+   
   }
 
   calcSection3() {
     let isTwo = !this.chbIsSingle.checked;
     let isFilterSelected = this.chbIsBottom.checked;
     if(isFilterSelected) {
-      this.body.total += 1000 * (isTwo + 1);
+      this.data['сумма'] += 1000;
+      this.data['Наличие днища'] = 'Да';
+      if(isTwo) {
+        this.data['сумма'] += 1000;
+        this.data['Наличие днища'] = 'Да';
+      }
+    } else {
+      this.data['Наличие днища'] = 'Нет';
     }
   }
 
-  saveSection4() {
-    this.distanceToHome = this.inputs[5].value;
-  }
-
   calculateAll() {
-    this.body.total = 0;
+    this.data['сумма'] = 0;
     this.calcSection1();
     this.calcSection2();
     this.calcSection3();
-    this.totalResult.value = this.body.total;
+    this.data['Расстояние до дома']  = +this.inputs[5].value + ' метров';
+    this.totalResult.value = this.data['сумма'];
+    window.globalObj = this.data;
   }
 
   init() {
@@ -81,7 +112,7 @@ class CalculatorAccordion {
       this.selectors[i].addEventListener('change', this.calculateAll.bind(this));
     }
     this.chbIsBottom.addEventListener('change', this.calculateAll.bind(this));
-    this.inputs[5].addEventListener('input', this.saveSection4.bind(this));
+    this.inputs[5].addEventListener('change', this.calculateAll.bind(this));
   }
 
 }
