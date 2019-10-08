@@ -1,10 +1,11 @@
 'use strict';
 
-import popUpWindowOne from './modules/popUpWindowOne';
+import popUpWindowOne from './modules/modalWindows';
 import sendForm from './modules/sendForm';
 import validation from './modules/validation';
 import accordionTwo from './modules/accordionTwo';
 import CalculatorAccordion from './modules/calculatorAccordion';
+import buttonMore from './modules/buttonMore';
 
 // Модальное окно номер 1
 popUpWindowOne();
@@ -17,3 +18,6 @@ accordionTwo();
 // калькулятор аккордион
 const calcAccord = new CalculatorAccordion();
 calcAccord.init();
+// кнопка больше
+buttonMore();
+
