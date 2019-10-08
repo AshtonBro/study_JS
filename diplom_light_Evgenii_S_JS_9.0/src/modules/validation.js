@@ -7,6 +7,9 @@ const validation = () => {
         if (element.classList.contains('user-name')) {
             element.value = element.value.replace(/[^а-яА-ЯёЁ\ ]/g, '');
         }
+        if (element.classList.contains('user-quest')) {
+            element.value = element.value.replace(/[^а-яА-ЯёЁ\W\ ]/g, '');
+        }
     });
 };
 
