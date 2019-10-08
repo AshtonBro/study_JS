@@ -2,7 +2,6 @@ const popUpWindowOne = () => {
     const popupCall = document.querySelector('.popup-call'),
     callBtn = document.querySelectorAll('.call-btn'),
     popup = document.querySelectorAll('.popup');
-   
     const openPopUp = () => {
         popupCall.style.display = 'block';
         popupCall.style.transform = 'translateX(-100%)';
