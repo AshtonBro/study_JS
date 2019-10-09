@@ -99,7 +99,7 @@ class CalculatorAccordion {
     this.calcSection2();
     this.calcSection3();
     this.data['Расстояние до дома']  = +this.inputs[5].value + ' метров';
-    this.totalResult.value = this.data['сумма'];
+    this.totalResult.value = 'примерная стоимость: ' + this.data['сумма'];
     window.globalObj = this.data;
   }
 
