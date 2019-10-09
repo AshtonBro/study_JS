@@ -48,15 +48,17 @@ const sendForm = () => {
     };
     
     const clearInputs = () => {
-        let inputs = document.querySelectorAll('input');
-        inputs.forEach((elem) => {
-            elem.value = '';
+        const formInputs = [...document.querySelectorAll('input')];
+        formInputs.forEach(item => {
+            if (item.value !== '') {
+                item.value = '';
+            }
+            setTimeout(() => {
+                window.statusMsg.remove('div');
+                window.globalObj = {};
+                clearTimeout();
+            }, 2000);
         });
-        setTimeout(() => {
-            window.statusMsg.remove('div');
-            window.globalObj = {};
-            clearTimeout();
-        }, 2000);
     };
 };
 
