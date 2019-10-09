@@ -7,24 +7,27 @@ import "formdata-polyfill";
 import "es6-promise";
 import "fetch-polyfill";
 
-import popUpWindowOne from './modules/modalWindows';
+import modalWindows from './modules/modalWindows';
 import sendForm from './modules/sendForm';
 import validation from './modules/validation';
-import accordionTwo from './modules/accordionTwo';
+import accordionOneTwo from './modules/accordionOneTwo';
 import CalculatorAccordion from './modules/calculatorAccordion';
 import buttonMore from './modules/buttonMore';
 
-// Модальное окно номер 1
-popUpWindowOne();
-// Отправка формы для блока 1 и блока 2
-sendForm();
-// Валидация форм
-validation();
-// аккордион
-accordionTwo();
-// калькулятор аккордион
-const calcAccord = new CalculatorAccordion();
-calcAccord.init();
-// кнопка больше
-buttonMore();
+window.addEventListener('DOMContentLoaded', () => {
+    // Модальное окно номер 1
+    modalWindows();
+    // Отправка формы для блока 1 и блока 2
+    sendForm();
+    // Валидация форм
+    validation();
+    // аккордион
+    accordionOneTwo();
+    // калькулятор аккордион
+    const calcAccord = new CalculatorAccordion();
+    calcAccord.init();
+    // кнопка больше
+    buttonMore();
+});
+
 
